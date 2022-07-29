@@ -327,8 +327,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 							color={useColorModeValue('gray.900', 'gray.400')}
 							fontWeight={300}
 							fontSize={'2xl'}>
-							<Trans>Realm:</Trans> {realm} &bull;
-							<Trans>Last Updated:</Trans> {marketboardData?.meta?.lastUpdate > 0 ? ago(new Date(marketboardData?.meta?.lastUpdate)) : <Trans>Never</Trans>}
+							<Trans>Realm:</Trans> {realm} &bull; <Trans>Last Updated:</Trans> {marketboardData?.meta?.lastUpdate > 0 ? ago(new Date(marketboardData?.meta?.lastUpdate)) : <Trans>Never</Trans>}
 							{marketboardData?.meta?.lastUpdate <= (Date.now() - (3600 * 1000)) ? (
 								<>
 									<IconButton aria-label={t`Update marketboard`} variant='link'
