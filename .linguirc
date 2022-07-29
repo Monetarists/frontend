@@ -1,0 +1,12 @@
+{
+	"locales": ["en", "ja", "fr", "de"],
+	fallbackLocales: {
+		default: 'en'
+	},
+	"catalogs": [
+		{
+			"path": "locales/{locale}/messages",
+			"include": ["pages", "components"]
+		}
+	]
+}

@@ -1,0 +1,60 @@
+// Variables
+@import 'variables';
+
+// Fonts
+@import 'fonts';
+@import '@thewakingsands/axis-font-icons/index.css';
+
+i.xiv {
+	font-size: inherit;
+	vertical-align: text-bottom;
+}
+
+//noinspection CssNoGenericFontName
+[class*='xiv-']:before {
+	display: inline-block;
+	font-family: 'xivicons';
+	font-style: normal;
+	font-weight: normal;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	vertical-align: middle;
+	font-size: 22px;
+	padding: 6px;
+}
+
+.sidebarIcon {
+	i {
+		width: 34px;
+	}
+}
+
+.recipeIcon {
+	position: relative;
+	top: 3px;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.select-none {
+	-webkit-user-select: none;  /* Chrome 49+ */
+	-moz-user-select: none;     /* Firefox 43+ */
+	-ms-user-select: none;      /* No support yet */
+	user-select: none;          /* Likely future */
+}
+
+.marketBoard {
+	&--profit {
+		color: green;
+	}
+
+	&--loss {
+		color: red;
+	}
+}
+
+@import 'xivicons.css';
