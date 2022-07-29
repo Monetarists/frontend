@@ -49,7 +49,7 @@ const SidebarContent = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 			borderRightColor={useColorModeValue('gray.200', 'gray.700')}
 			w={{ base: 'full', md: 60 }}
 			pos="fixed"
-			overflowY="scroll"
+			overflowY="hidden"
 			h="full"
 			{...rest}>
 			<Flex h="20" alignItems="center" justifyContent="space-between">
