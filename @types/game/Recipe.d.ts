@@ -18,8 +18,8 @@ interface Item {
 	IsUntradable: boolean;
 	CanBeHq: boolean;
 
-	ItemSearchCategory: Category;
-	ItemUICategory: Category;
+	ItemSearchCategory?: Category;
+	ItemUICategory?: Category;
 }
 
 export interface Recipe {
@@ -33,7 +33,7 @@ export interface Recipe {
 	IsExpert: boolean;
 	IsSpecializationRequired: boolean;
 
-	ClassJob: ClassJob;
+	ClassJob?: ClassJob;
 
 	ItemResult: Item;
 
