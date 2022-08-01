@@ -62,4 +62,5 @@ const handler = async (
 	res.status(200).json(JSON.parse(JSON.stringify(data)));
 };
 
-export default csrf(handler);
+// export default csrf(handler);
+export default handler;

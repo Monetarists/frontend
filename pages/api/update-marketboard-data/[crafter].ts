@@ -197,4 +197,5 @@ const handler = async (
 	}
 };
 
-export default csrf(handler);
+// export default csrf(handler);
+export default handler;
