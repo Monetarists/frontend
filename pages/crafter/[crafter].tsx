@@ -501,7 +501,8 @@ function DebouncedNumberInput({value: initialValue, onValueChange, debounce = 50
 		}, debounce)
 
 		return () => clearTimeout(timeout)
-	}, [value, onValueChange, debounce])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce])
 
 	return (
 		<NumberInput {...props} value={value} step={1} type='numeric' onChange={(valueAsString: string, valueAsNumber: number) => {
@@ -534,7 +535,8 @@ function DebouncedInput({value: initialValue, onChange, debounce = 500, ...props
 		}, debounce)
 
 		return () => clearTimeout(timeout)
-	}, [value, onChange, debounce])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce])
 
 	return (
 		<Input {...props} value={value} onChange={e => setValue(e.target.value)} />
