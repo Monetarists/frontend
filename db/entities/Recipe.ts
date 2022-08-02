@@ -43,7 +43,7 @@ export interface IRecipe {
 export const Recipe = new EntitySchema<IRecipe>({
 	name: "Recipe",
 	properties: {
-		ID: { type: "number", primary: true },
+		ID: { type: "number", primary: true, autoincrement: false },
 		Name_en: { type: "string" },
 		Name_de: { type: "string" },
 		Name_fr: { type: "string" },

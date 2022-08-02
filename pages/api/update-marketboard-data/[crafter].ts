@@ -61,7 +61,7 @@ const handler = async (
 		realm: realm,
 		status: 'completed',
 		lastUpdate: 0
-	}, { realm: realm, ClassJob: { Abbreviation: parsedCrafter }});
+	}, { realm: realm, ClassJob: classJob.ID });
 
 	if (!meta) {
 		res.status(403).json({ error: "Could not create meta" });

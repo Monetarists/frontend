@@ -1,5 +1,4 @@
 import { EntitySchema } from "@mikro-orm/core";
-import { IClassJob } from "./ClassJob";
 
 export enum Status {
 	Pending = 'pending',
@@ -7,28 +6,25 @@ export enum Status {
 }
 
 export interface IMarketBoardMeta {
-	id: number;
 	realm: string;
 	status: Status;
 	lastUpdate: number;
 
-	ClassJob: IClassJob;
+	ClassJob: number;
 }
 
 export const MarketBoardMeta = new EntitySchema<IMarketBoardMeta>({
 	name: "MarketBoardMeta",
 	properties: {
-		id: { type: 'number', primary: true },
-		realm: { type: "string" },
+		realm: { type: "string", primary: true },
 		status: { enum: true, default: Status.Pending, items: () => Status },
 		lastUpdate: { type: "number", onCreate: () => Date.now() / 1000 },
 
 		ClassJob: {
 			reference: "m:1",
 			entity: "ClassJob",
-			inversedBy: "MarketBoardMetaEntries",
-			nullable: true,
 			mapToPk: true,
+			primary: true
 		},
 	},
 });

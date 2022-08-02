@@ -21,6 +21,9 @@ export interface IClassJob {
 
 export const ClassJob = new EntitySchema<IClassJob>({
 	name: "ClassJob",
+	indexes: [
+		{ properties: ['Abbreviation'] },
+	],
 	properties: {
 		ID: { type: "number", primary: true, autoincrement: false },
 		Name_en: { type: "string" },
