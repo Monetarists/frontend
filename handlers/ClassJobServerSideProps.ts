@@ -1,11 +1,12 @@
 import {NextApiHandler} from "next";
 import dbConnect from "../lib/dbConnect";
-import ClassJob from "../models/ClassJob";
+import { ClassJob } from "../db/entities/ClassJob";
 
 const handler: NextApiHandler = async (context) => {
-	await dbConnect();
+	let orm = await dbConnect();
 
-	const classJobs = await ClassJob.find({});
+	const classJobRepo = orm.em.getRepository(ClassJob);
+	const classJobs = await classJobRepo.findAll();
 
 	return {
 		props: {

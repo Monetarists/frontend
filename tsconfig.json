@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -18,5 +18,5 @@
     "emitDecoratorMetadata": true
   },
   "include": ["next-env.d.ts", "environment.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "tools"]
+  "exclude": ["node_modules", "tools", "update-game-data.ts"]
 }

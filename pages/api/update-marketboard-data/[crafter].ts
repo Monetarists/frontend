@@ -1,13 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { csrf } from "../../../lib/csrf";
+import type {NextApiRequest, NextApiResponse} from 'next'
+// import { csrf } from "../../../lib/csrf";
 import dbConnect from "../../../lib/dbConnect";
-import Recipe from "../../../models/Recipe";
-import MarketBoard from "../../../models/MarketBoard";
-import MarketBoardMeta from "../../../models/MarketBoardMeta";
-import {Recipe as RecipeInterface} from "../../../@types/game/Recipe";
-import {CurrentlyShownMultiViewV2, MarketboardData} from "../../../@types/MarketboardData";
-import {AnyBulkWriteOperation} from "mongodb";
-import {MarketboardMetaData} from "../../../@types/MarketboardMetaData";
+import { IRecipe, Recipe } from "../../../db/entities/Recipe";
+import { IMarketBoard, MarketBoard } from "../../../db/entities/MarketBoard";
+import { IMarketBoardMeta, MarketBoardMeta, Status } from "../../../db/entities/MarketBoardMeta";
+import { CurrentlyShownMultiViewV2 } from "../../../@types/MarketboardData";
+import {ClassJob, IClassJob} from "../../../db/entities/ClassJob";
+import {IItem, Item} from "../../../db/entities/Item";
+import { CustomBaseRepository } from "../../../db/CustomBaseRepository";
+import {wrap} from "@mikro-orm/core";
 
 type RecipeKey =
 	| "ItemIngredient0"
@@ -41,54 +42,72 @@ const handler = async (
 
 	let realm = req.cookies.monetarist_server ?? 'Ragnarok';
 
-	await dbConnect();
+	let orm = await dbConnect();
+	const classJobRepo: CustomBaseRepository<IClassJob> = orm.em.getRepository(ClassJob);
+	const itemRepo: CustomBaseRepository<IItem> = orm.em.getRepository(Item);
+	const marketBoardRepo: CustomBaseRepository<IMarketBoard> = orm.em.getRepository(MarketBoard);
+	const marketBoardMetaRepo: CustomBaseRepository<IMarketBoardMeta> = orm.em.getRepository(MarketBoardMeta);
+	const recipeRepo: CustomBaseRepository<IRecipe> = orm.em.getRepository(Recipe);
 
-	let meta: MarketboardMetaData | null = await MarketBoardMeta.findOne({ crafter: parsedCrafter, realm: realm })
-	if (meta === null) {
-		meta = await MarketBoardMeta.create<MarketboardMetaData>({
-			crafter: parsedCrafter,
-			realm: realm,
-			status: 'completed',
-			lastUpdate: 0
-		})
+	const classJob = await classJobRepo.findOne({ Abbreviation: parsedCrafter });
+	if (!classJob) {
+		return {
+			notFound: true,
+		};
 	}
 
-	// @ts-ignore
-	if (meta?.status === 'pending' || meta?.lastUpdate > Date.now() - (3600 * 1000)) {
-		// Updated too recently or we have a pending request, so just fetch the existing data
+	let meta = await marketBoardMetaRepo.findOrCreate({
+		ClassJob: classJob,
+		realm: realm,
+		status: 'completed',
+		lastUpdate: 0
+	}, { realm: realm, ClassJob: { Abbreviation: parsedCrafter }});
 
-		const data = await MarketBoard.find({
-			crafter: parsedCrafter,
-			realm: realm
-		});
-		let m = new Map<number | string, MarketboardData>();
+	if (!meta) {
+		res.status(403).json({ error: "Could not create meta" });
+		return;
+	}
+
+	let timeNow = Math.floor(Date.now() / 1000);
+
+	if (
+		(
+			meta.status === 'pending'
+			&& meta.lastUpdate > (timeNow - 300)
+		)
+		|| meta.lastUpdate > (timeNow - 3600)
+	) {
+		// If the update has been stuck in "pending" for less than 5 minutes
+		// or it completed less than an hour ago
+
+		let data = await marketBoardRepo.find({ realm: realm, ClassJob: classJob.ID});
+
+		let m = new Map<number | string, IMarketBoard>();
 		for (let i in data) {
-			m.set(data[i].itemID, data[i]);
+			m.set(data[i].Item, data[i]);
 		}
 
 		res.status(200).json(Object.fromEntries(m));
 		return;
 	}
 
-	await MarketBoardMeta.updateOne({
-		crafter: parsedCrafter,
-		realm: realm,
-	}, {
-		status: 'pending',
-		lastUpdate: Date.now()
-	})
+	meta.status = Status.Pending;
+	meta.lastUpdate = timeNow;
+	await marketBoardMetaRepo.flush();
 
-	let data = await Recipe.find({ "ClassJob.Abbreviation": parsedCrafter });
+	const data = await recipeRepo.find({ ClassJob: { Abbreviation: parsedCrafter } });
 
 	let itemSet = new Set<number>();
-	data.map((recipe: RecipeInterface) => {
-		itemSet.add(recipe.ItemResult.ID);
-		for (let i = 0; i <= 9; i++) {
-			let ingredientIndex = ("ItemIngredient" + i) as RecipeKey;
-			if (recipe[ingredientIndex] !== null) {
-				let itemId = recipe[ingredientIndex]?.ID || 0;
-				if (itemId > 0) {
-					itemSet.add(itemId);
+	data.map((recipe) => {
+		if (recipe) {
+			itemSet.add(recipe.ItemResult.ID);
+			for (let i = 0; i <= 9; i++) {
+				let ingredientIndex = ("ItemIngredient" + i) as RecipeKey;
+				if (recipe[ingredientIndex] !== null) {
+					let itemId = recipe[ingredientIndex]?.ID || 0;
+					if (itemId > 0) {
+						itemSet.add(itemId);
+					}
 				}
 			}
 		}
@@ -98,7 +117,7 @@ const handler = async (
 	let max = itemIds.length;
 
 	let n = 0;
-	let m = new Map<number | string, MarketboardData>();
+	let m = new Map<number | string, Omit<IMarketBoard, "id"|"Item"|"ClassJob">>();
 
 	let promises: Promise<any>[] = [];
 
@@ -106,6 +125,7 @@ const handler = async (
 		let currentItemIds = itemIds.slice(n, n + 100);
 		n = n + 100;
 
+		let items = await itemRepo.find({ ID: currentItemIds });
 		promises.push(
 			fetch("https://universalis.app/api/v2/" + realm + "/" + currentItemIds.join(","))
 				.then((response) => response.json())
@@ -147,12 +167,11 @@ const handler = async (
 						});
 
 						m.set(item.itemID, {
-							itemID: item.itemID,
-							crafter: parsedCrafter,
 							realm: realm,
 							minPriceNQ: item.minPriceNQ,
 							minPriceHQ: item.minPriceHQ,
-							listings: listings,
+							nqListings: listings.nq,
+							hqListings: listings.hq,
 							sold: sold,
 							soldHistoryNQ: soldHistoryNQ,
 							soldHistoryHQ: soldHistoryHQ,
@@ -166,29 +185,45 @@ const handler = async (
 		await Promise.all(promises);
 
 		let entries = Object.fromEntries(m);
-		let bulkWrites: Array<AnyBulkWriteOperation> = [];
+		const newEntries = [];
 
 		console.log(
 			"Inserting market board data for " + realm + " / " + parsedCrafter
 		);
-		Object.values(entries).map((entry) => {
-			bulkWrites.push({
-				updateOne: {
-					filter: { itemID: entry.itemID, crafter: entry.crafter, realm: entry.realm },
-					update: entry,
-					upsert: true
-				}
-			})
-		});
-		await MarketBoard.bulkWrite(bulkWrites);
+		for (let i in entries) {
+			let entry = entries[i];
 
-		await MarketBoardMeta.updateOne({
-			crafter: parsedCrafter,
-			realm: realm,
-		}, {
-			status: 'completed',
-			lastUpdate: Date.now()
-		})
+			let insertEntry: Omit<IMarketBoard, "id"> = {
+				realm: realm,
+				minPriceNQ: entry.minPriceNQ,
+				minPriceHQ: entry.minPriceHQ,
+				nqListings: entry.nqListings,
+				hqListings: entry.hqListings,
+				sold: entry.sold,
+				soldHistoryNQ: entry.soldHistoryNQ,
+				soldHistoryHQ: entry.soldHistoryHQ,
+				Item: orm.em.getReference(Item, i).ID,
+				ClassJob: orm.em.getReference(ClassJob, classJob?.ID).ID,
+			};
+
+			let e = await marketBoardRepo.findOne({
+				realm: realm,
+				Item: insertEntry.Item,
+				ClassJob: classJob.ID
+			});
+			if (!e) {
+				e = marketBoardRepo.create(insertEntry);
+				newEntries.push(e);
+			} else {
+				wrap(e).assign(insertEntry);
+			}
+		}
+
+		await marketBoardRepo.persistAndFlush(newEntries);
+
+		meta.status = Status.Completed;
+		meta.lastUpdate = Date.now() / 1000;
+		await marketBoardMetaRepo.flush();
 
 		res.status(200).json(entries);
 	}

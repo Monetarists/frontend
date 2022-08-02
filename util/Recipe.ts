@@ -1,5 +1,5 @@
 import {Recipe} from "../@types/game/Recipe";
-import {MarketboardData} from "../@types/MarketboardData";
+import {IMarketBoard} from "../db/entities/MarketBoard";
 
 type AmountKey = 'AmountIngredient0' | 'AmountIngredient1' | 'AmountIngredient2' | 'AmountIngredient3' | 'AmountIngredient4'
 	| 'AmountIngredient5' | 'AmountIngredient6' | 'AmountIngredient7' | 'AmountIngredient8' | 'AmountIngredient9';
@@ -14,7 +14,7 @@ type IngredientKey = 'ItemIngredient0' | 'ItemIngredient1' | 'ItemIngredient2' |
  * @param marketData
  * @param quantity
  */
-function getLowestMarketPrice(marketData: MarketboardData, quantity: number): number {
+function getLowestMarketPrice(marketData: IMarketBoard, quantity: number): number {
 	let lowestMarketNQ = marketData?.minPriceNQ || 0;
 	let lowestMarketHQ = marketData?.minPriceHQ || 0;
 
@@ -32,7 +32,7 @@ function getLowestMarketPrice(marketData: MarketboardData, quantity: number): nu
  * @param recipe
  * @param marketboardData
  */
-export function calculateCraftingCost(recipe: Recipe, marketboardData: MarketboardData[]) {
+export function calculateCraftingCost(recipe: Recipe, marketboardData: IMarketBoard[]) {
 	let craftingCost = 0;
 
 	for (let i = 0; i <= 9; i++) {
@@ -56,7 +56,7 @@ export function calculateCraftingCost(recipe: Recipe, marketboardData: Marketboa
  * @param recipe
  * @param marketboardData
  */
-export function calculateAvgSalePrice(recipe: Recipe, marketboardData: MarketboardData[]) {
+export function calculateAvgSalePrice(recipe: Recipe, marketboardData: IMarketBoard[]) {
 	let item = recipe.ItemResult;
 	let marketData = marketboardData[item.ID] ?? [];
 
@@ -87,6 +87,6 @@ export function calculateAvgSalePrice(recipe: Recipe, marketboardData: Marketboa
  * @param recipe
  * @param marketboardData
  */
-export function calculateProfitLoss(recipe: Recipe, marketboardData: MarketboardData[]) {
+export function calculateProfitLoss(recipe: Recipe, marketboardData: IMarketBoard[]) {
 	return calculateAvgSalePrice(recipe, marketboardData) - calculateCraftingCost(recipe, marketboardData);
 }

@@ -1,26 +1,5 @@
-import {ClassJob} from "./ClassJob";
-
-interface Category {
-	ID: number;
-	Name_de: string;
-	Name_en: string;
-	Name_fr: string;
-	Name_ja: string;
-}
-
-interface Item {
-	ID: number;
-	Name_de: string;
-	Name_en: string;
-	Name_fr: string;
-	Name_ja: string;
-	IconID: number;
-	IsUntradable: boolean;
-	CanBeHq: boolean;
-
-	ItemSearchCategory?: Category;
-	ItemUICategory?: Category;
-}
+import { ClassJob } from "./ClassJob";
+import { Item } from "./Item";
 
 export interface Recipe {
 	ID: number;
@@ -33,7 +12,7 @@ export interface Recipe {
 	IsExpert: boolean;
 	IsSpecializationRequired: boolean;
 
-	ClassJob?: ClassJob;
+	ClassJob: ClassJob;
 
 	ItemResult: Item;
 

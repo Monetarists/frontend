@@ -1,11 +1,10 @@
-import mongoose from 'mongoose'
+import { MikroORM } from "@mikro-orm/core";
+import { MariaDbDriver } from "@mikro-orm/mariadb";
+import config from "./../mikro-orm.config";
 
-const MONGODB_URI = process.env.MONGODB_URI || '';
-const MONGODB_DB = process.env.MONGODB_DB || '';
-
-if (!MONGODB_URI) {
+if (!config.host) {
 	throw new Error(
-		'Please define the MONGODB_URI environment variable inside .env.local'
+		'Please define the DB_HOST environment variable inside .env.local'
 	)
 }
 
@@ -14,32 +13,23 @@ if (!MONGODB_URI) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-// @ts-ignore
-let cached = global.mongoose
+let cached = global.mikro;
 
 if (!cached) {
-	// @ts-ignore
-	cached = global.mongoose = { conn: null, promise: null }
+	cached = global.mikro = { orm: null, promise: null }
 }
 
 async function dbConnect() {
-	if (cached.conn) {
-		return cached.conn
+	if (cached.orm) {
+		return cached.orm;
 	}
 
 	if (!cached.promise) {
-		const opts = {
-			bufferCommands: false,
-			useNewUrlParser: true,
-			dbName: MONGODB_DB,
-		}
-
-		cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-			return mongoose
-		})
+		cached.promise = MikroORM.init<MariaDbDriver>(config);
 	}
-	cached.conn = await cached.promise
-	return cached.conn
+
+	cached.orm = await cached.promise
+	return cached.orm;
 }
 
 export default dbConnect;

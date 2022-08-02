@@ -47,11 +47,10 @@ import NumberFormat from 'react-number-format';
 import {SWRConfig} from "swr";
 import CrafterServerSidePropsHandler from "../../handlers/CrafterServerSideProps";
 import GameItemIcon from "../../components/GameItemIcon";
-import {ucwords} from "../../lib/ucwords";
 import {useRecipeData} from "../../hooks/useRecipeData";
 import {useMarketboardData} from "../../hooks/useMarketboardData";
 import {Recipe} from "../../@types/game/Recipe"
-import {MarketboardData} from "../../@types/MarketboardData";
+import { IMarketBoard } from "../../db/entities/MarketBoard";
 import {MarketboardMetaData} from "../../@types/MarketboardMetaData";
 import {CrafterProps} from "../../@types/layout/Crafter";
 import {calculateCraftingCost, calculateAvgSalePrice, calculateProfitLoss} from "../../util/Recipe";
@@ -79,7 +78,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 
 	const { data: recipes } = useRecipeData(crafter.Abbreviation);
 	const { data: marketboardData }: { isLoading: boolean; isError: any; data: {
-		meta: MarketboardMetaData, data: MarketboardData[]
+		meta: MarketboardMetaData, data: IMarketBoard[]
 	} } = useMarketboardData(crafter.Abbreviation);
 
 	const columnHelper = createColumnHelper<Recipe>();
@@ -155,7 +154,21 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 			sortDescFirst: true
 		}),
 
-		columnHelper.accessor((row) => marketboardData?.data[row.ItemResult.ID]?.listings || 0, {
+		columnHelper.accessor((row) => {
+			let listings = {
+				nq: 0,
+				hq: 0
+			}
+
+			if (!marketboardData?.data[row.ItemResult.ID]) {
+				return listings;
+			}
+
+			listings.nq = marketboardData.data[row.ItemResult.ID].nqListings;
+			listings.hq = marketboardData.data[row.ItemResult.ID].hqListings;
+
+			return listings;
+		}, {
 			id: 'listings',
 			header: () => <span><Trans>Listings</Trans></span>,
 			cell: info => {
@@ -242,7 +255,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		}),
 	];
 
-	const title = `${ucwords(jobName)} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
+	const title = `${jobName} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
 	const [data, setData] = React.useState(() => [...recipes || []])
 	const rerender = React.useReducer(() => ({}), {})[1]
@@ -258,9 +271,11 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		}
 	]);
 
-	if (!data.length && recipes && recipes.length) {
-		setData(recipes);
-	}
+	useEffect(() => {
+		if (!data.length && recipes && recipes.length) {
+			setData(recipes);
+		}
+	}, [data, recipes]);
 
 	const table = useReactTable({
 		data,
@@ -308,6 +323,8 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		}
 	}, [toast, crafter]);
 
+	console.log(marketboardData?.data);
+
 	return (
 		<SWRConfig value={{ fallback }}>
 			<Head>
@@ -320,15 +337,15 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 						lineHeight={1.1}
 						fontWeight={600}
 						fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-						{ucwords(jobName)}
+						{jobName}
 					</Heading>
 					<Skeleton isLoaded={!!marketboardData}>
 						<Text
 							color={useColorModeValue('gray.900', 'gray.400')}
 							fontWeight={300}
 							fontSize={'2xl'}>
-							<Trans>Realm:</Trans> {realm} &bull; <Trans>Last Updated:</Trans> {marketboardData?.meta?.lastUpdate > 0 ? ago(new Date(marketboardData?.meta?.lastUpdate)) : <Trans>Never</Trans>}
-							{marketboardData?.meta?.lastUpdate <= (Date.now() - (3600 * 1000)) ? (
+							<Trans>Realm:</Trans> {realm} &bull; <Trans>Last Updated:</Trans> {marketboardData?.meta?.lastUpdate > 0 ? ago(new Date(marketboardData?.meta?.lastUpdate * 1000)) : <Trans>Never</Trans>}
+							{marketboardData?.meta?.lastUpdate <= ((Date.now() - (3600 * 1000)) / 1000) ? (
 								<>
 									<IconButton aria-label={t`Update marketboard`} variant='link'
 												isLoading={isUpdatingData}
@@ -344,7 +361,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 					</Skeleton>
 				</Box>
 
-				<Skeleton isLoaded={recipes && recipes.length > 0 && marketboardData}>
+				<Skeleton isLoaded={recipes && recipes.length > 0 && marketboardData && marketboardData?.data}>
 					<VStack
 						spacing={4}
 						align='stretch'>
@@ -501,7 +518,8 @@ function DebouncedNumberInput({value: initialValue, onValueChange, debounce = 50
 		}, debounce)
 
 		return () => clearTimeout(timeout)
-	}, [value, onValueChange, debounce])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce])
 
 	return (
 		<NumberInput {...props} value={value} step={1} type='numeric' onChange={(valueAsString: string, valueAsNumber: number) => {
@@ -534,7 +552,8 @@ function DebouncedInput({value: initialValue, onChange, debounce = 500, ...props
 		}, debounce)
 
 		return () => clearTimeout(timeout)
-	}, [value, onChange, debounce])
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce])
 
 	return (
 		<Input {...props} value={value} onChange={e => setValue(e.target.value)} />

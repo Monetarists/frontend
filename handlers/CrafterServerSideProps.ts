@@ -1,26 +1,6 @@
 import {GetServerSideProps} from "next";
-import {ClassJob as ClassJobType} from "../@types/game/ClassJob";
 import dbConnect from '../lib/dbConnect';
-import ClassJob from "../models/ClassJob";
-
-function initClassJob(options?: Partial<ClassJobType>): ClassJobType {
-	const defaults = {
-		ID: 0,
-		Abbreviation: '',
-		Name_de: '',
-		Name_en: '',
-		Name_fr: '',
-		Name_ja: '',
-		Icon: '',
-		ClassJobCategoryTargetID: 0,
-		DohDolJobIndex: 0,
-	};
-
-	return {
-		...defaults,
-		...options,
-	};
-}
+import { ClassJob } from "../db/entities/ClassJob";
 
 const handler: GetServerSideProps = async (context) => {
 	let crafterParam = context.params?.crafter ?? '';
@@ -32,16 +12,11 @@ const handler: GetServerSideProps = async (context) => {
 		};
 	}
 
-	await dbConnect();
+	let orm = await dbConnect();
 
-	const classJobs = await ClassJob.find({});
-
-	let jobData: ClassJobType = initClassJob();
-	classJobs.map((classJob) => {
-		if (classJob.Abbreviation === crafter) {
-			jobData = classJob;
-		}
-	});
+	const repo = orm.em.getRepository(ClassJob);
+	const classJobs = await repo.findAll();
+	const jobData = await repo.findOne({ Abbreviation: crafter });
 
 	return {
 		props: {

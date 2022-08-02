@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { csrf } from "../../lib/csrf";
+// import { csrf } from "../../lib/csrf";
 import dbConnect from "../../lib/dbConnect";
-import DataCenter from "../../models/DataCenter";
+import { DataCenter } from "../../db/entities/DataCenter";
 
 type Data = {
   name: string
@@ -18,10 +18,12 @@ const handler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-	await dbConnect();
+	let orm = await dbConnect();
 
-	const data = await DataCenter.find({});
-  	res.status(200).json(JSON.parse(JSON.stringify(data)));
+	const repo = orm.em.getRepository(DataCenter);
+	const data = await repo.findAll();
+
+	res.status(200).json(JSON.parse(JSON.stringify(data)));
 };
 
 // export default csrf(handler);
