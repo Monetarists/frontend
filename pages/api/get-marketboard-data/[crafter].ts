@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { csrf } from "../../../lib/csrf";
+// import { csrf } from "../../../lib/csrf";
 import dbConnect from "../../../lib/dbConnect";
 import MarketBoard from "../../../models/MarketBoard";
 import {MarketboardData} from "../../../@types/MarketboardData";

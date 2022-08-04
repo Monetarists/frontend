@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { csrf } from "../../../lib/csrf";
+// import { csrf } from "../../../lib/csrf";
 import Recipe from "../../../models/Recipe";
 import dbConnect from "../../../lib/dbConnect";
 import {Recipe as RecipeInterface} from "../../../@types/game/Recipe";
