@@ -15,8 +15,7 @@ import {useClassJobs} from "../hooks/useClassJobs";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function DefaultLayout({ fallback, children, ...rest }: {
-	fallback?: Array<object>,
+export default function DefaultLayout({ children, ...rest }: {
 	children: ReactNode;
 }) {
 	const [settings] = useSettings();
