@@ -171,7 +171,7 @@ const handler = async (
 		console.log(
 			"Inserting market board data for " + realm + " / " + parsedCrafter
 		);
-		Object.values(entries).map((entry) => {
+		Object.values(entries).forEach((entry) => {
 			bulkWrites.push({
 				updateOne: {
 					filter: { itemID: entry.itemID, crafter: entry.crafter, realm: entry.realm },
