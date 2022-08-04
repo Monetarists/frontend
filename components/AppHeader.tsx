@@ -2,17 +2,16 @@ import React from 'react';
 import {
 	Flex,
 	Button,
+	Stack,
+	IconButton,
 	useColorModeValue,
-	useColorMode, Stack, IconButton,
+	useColorMode,
 } from '@chakra-ui/react';
 import {HamburgerIcon, MoonIcon, SettingsIcon, SunIcon} from '@chakra-ui/icons';
 import { AppHeaderProps } from '../@types/layout/AppHeader';
 
 export default function AppHeader({ onOpenSidebar, onSettingsClicked }: AppHeaderProps) {
 	const { colorMode, toggleColorMode } = useColorMode();
-
-	const flexBgColor = useColorModeValue('gray.50', 'gray.800');
-	const boxBgColor = useColorModeValue('white', 'gray.700');
 
 	return (
 		<Flex

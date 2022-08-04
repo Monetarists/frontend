@@ -22,7 +22,7 @@ function initClassJob(options?: Partial<ClassJobType>): ClassJobType {
 	};
 }
 
-const handler: GetServerSideProps = async (context) => {
+const CrafterServerSideProps: GetServerSideProps = async (context) => {
 	let crafterParam = context.params?.crafter ?? '';
 	const crafter = typeof (crafterParam) === "string" ? crafterParam: '';
 
@@ -54,4 +54,4 @@ const handler: GetServerSideProps = async (context) => {
 	}
 };
 
-export default handler;
+export default CrafterServerSideProps;

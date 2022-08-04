@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { csrf } from "../../../lib/csrf";
+// import { csrf } from "../../../lib/csrf";
 import dbConnect from "../../../lib/dbConnect";
 import Recipe from "../../../models/Recipe";
 import MarketBoard from "../../../models/MarketBoard";
@@ -54,7 +54,7 @@ const handler = async (
 	}
 
 	// @ts-ignore
-	if (meta?.status === 'pending' || meta?.lastUpdate > Date.now() - (3600 * 1000)) {
+	if ((meta?.status === 'pending' && meta?.lastUpdate > (Date.now() - (300 * 1000))) || meta?.lastUpdate > (Date.now() - (3600 * 1000))) {
 		// Updated too recently or we have a pending request, so just fetch the existing data
 
 		const data = await MarketBoard.find({
@@ -171,7 +171,7 @@ const handler = async (
 		console.log(
 			"Inserting market board data for " + realm + " / " + parsedCrafter
 		);
-		Object.values(entries).map((entry) => {
+		Object.values(entries).forEach((entry) => {
 			bulkWrites.push({
 				updateOne: {
 					filter: { itemID: entry.itemID, crafter: entry.crafter, realm: entry.realm },

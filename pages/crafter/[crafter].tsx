@@ -258,9 +258,11 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		}
 	]);
 
-	if (!data.length && recipes && recipes.length) {
-		setData(recipes);
-	}
+	useEffect(() => {
+		if (!data.length && recipes && recipes.length) {
+			setData(recipes);
+		}
+	}, [data, setData, recipes]);
 
 	const table = useReactTable({
 		data,
@@ -294,7 +296,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		setIsUpdatingData(true);
 
 		try {
-			fetch(`/api/update-marketboard-data/${crafter.Abbreviation}`, { method: 'POST' })
+			await fetch(`/api/update-marketboard-data/${crafter.Abbreviation}`, { method: 'POST' })
 				.then((response) => response.json())
 				.then(() => location.reload())
 		} catch (error: any) {

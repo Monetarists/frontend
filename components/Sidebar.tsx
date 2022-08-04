@@ -35,13 +35,14 @@ const SidebarCrafter = ({ classJob, children, ...rest }: SidebarCrafterProps) =>
 					{...rest}>
 					<i className={`xiv-${getClassJobIcon(classJob.ID)}`} />
 					<Text textTransform={'capitalize'}>{jobName}</Text>
+					{children}
 				</Flex>
 			</Link>
 		</>
 	);
 };
 
-const SidebarContent = ({ classJobs, onClose, ...rest }: SidebarProps) => {
+const Sidebar = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 	return (
 		<Box
 			bg={useColorModeValue('white', 'gray.900')}
@@ -70,4 +71,4 @@ const SidebarContent = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 	);
 };
 
-export default SidebarContent;
+export default Sidebar;
