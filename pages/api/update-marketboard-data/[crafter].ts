@@ -54,7 +54,7 @@ const handler = async (
 	}
 
 	// @ts-ignore
-	if (meta?.status === 'pending' || meta?.lastUpdate > Date.now() - (3600 * 1000)) {
+	if ((meta?.status === 'pending' && meta?.lastUpdate > (Date.now() - (300 * 1000))) || meta?.lastUpdate > (Date.now() - (3600 * 1000))) {
 		// Updated too recently or we have a pending request, so just fetch the existing data
 
 		const data = await MarketBoard.find({
