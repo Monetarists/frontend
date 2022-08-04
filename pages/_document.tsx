@@ -15,7 +15,7 @@ export default class Document extends NextDocument {
 
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
 
-                    <meta name="title" content={process.env.NEXT_PUBLIC_APP_NAME} key="metaTitle" />
+                    <meta name="title" content={title} key="metaTitle" />
                     <meta name="description" content="Decide the most profitable craft." key="description" />
 
 					<link
