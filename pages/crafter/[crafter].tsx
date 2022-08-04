@@ -294,7 +294,7 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		setIsUpdatingData(true);
 
 		try {
-			fetch(`/api/update-marketboard-data/${crafter.Abbreviation}`, { method: 'POST' })
+			await fetch(`/api/update-marketboard-data/${crafter.Abbreviation}`, { method: 'POST' })
 				.then((response) => response.json())
 				.then(() => location.reload())
 		} catch (error: any) {
