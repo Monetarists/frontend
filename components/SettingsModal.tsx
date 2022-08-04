@@ -8,7 +8,7 @@ import {
 	ModalHeader,
 	ModalOverlay
 } from "@chakra-ui/modal";
-import {Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Select, Stack} from "@chakra-ui/react";
+import {Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Select, Skeleton, Stack} from "@chakra-ui/react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import useSettings from "../hooks/useSettings";
 import {SettingsModalProps, SettingsModalFormValues} from "../@types/layout/SettingsModal";
@@ -24,9 +24,7 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 	const {
 		handleSubmit,
 		register,
-		setError,
 		setValue,
-		control,
 		formState: {errors, isSubmitting},
 	} = useForm<SettingsModalFormValues>();
 
@@ -65,16 +63,18 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 									<Box w='50%'>
 										<FormControl isRequired isInvalid={!!errors.server}>
 											<FormLabel><Trans>Server</Trans></FormLabel>
-											<Select placeholder={t`Select server`} id="server"
-													{...register('server', {required: true})}>
-												{(dataCenters || []).map((dataCenter) => (
-													<optgroup key={`dc-${dataCenter.Name}`} label={dataCenter.Name}>
-														{dataCenter.Servers.map((server: string) => (
-															<option key={`server-${server}`}>{server}</option>
-														))}
-													</optgroup>
-												))}
-											</Select>
+											<Skeleton isLoaded={!isLoading}>
+												<Select placeholder={t`Select server`} id="server"
+														{...register('server', {required: true})}>
+													{(dataCenters || []).map((dataCenter) => (
+														<optgroup key={`dc-${dataCenter.Name}`} label={dataCenter.Name}>
+															{dataCenter.Servers.map((server: string) => (
+																<option key={`server-${server}`}>{server}</option>
+															))}
+														</optgroup>
+													))}
+												</Select>
+											</Skeleton>
 										</FormControl>
 										<FormErrorMessage>
 											{errors.server && errors.server.message}
