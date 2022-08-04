@@ -4,7 +4,7 @@ import {
 	useColorModeValue,
 	Drawer,
 	DrawerContent,
-	useDisclosure,
+	useDisclosure, Skeleton,
 } from '@chakra-ui/react';
 import AppHeader from "../components/AppHeader";
 import AppFooter from "../components/AppFooter";
@@ -48,25 +48,27 @@ export default function DefaultLayout({ fallback, children, ...rest }: {
 
 	return (
 		<Box minH="100vh" bg={useColorModeValue('white', 'gray.900')}>
-			<SidebarContent
-				classJobs={data || []}
-				onClose={() => onCloseSidebar}
-				display={{ base: 'none', md: 'block' }}
-			/>
-			<Drawer
-				autoFocus={false}
-				isOpen={isOpenSidebar}
-				placement="left"
-				onClose={onCloseSidebar}
-				returnFocusOnClose={false}
-				onOverlayClick={onCloseSidebar}
-				size="full">
-				<DrawerContent>
-					<SidebarContent
-						classJobs={data || []}
-						onClose={onCloseSidebar} />
-				</DrawerContent>
-			</Drawer>
+			<Skeleton isLoaded={!isLoading}>
+				<SidebarContent
+					classJobs={data}
+					onClose={() => onCloseSidebar}
+					display={{ base: 'none', md: 'block' }}
+				/>
+				<Drawer
+					autoFocus={false}
+					isOpen={isOpenSidebar}
+					placement="left"
+					onClose={onCloseSidebar}
+					returnFocusOnClose={false}
+					onOverlayClick={onCloseSidebar}
+					size="full">
+					<DrawerContent>
+						<SidebarContent
+							classJobs={data}
+							onClose={onCloseSidebar} />
+					</DrawerContent>
+				</Drawer>
+			</Skeleton>
 			<AppHeader onOpenSidebar={onOpenSidebar} onSettingsClicked={() => onOpenSettingsModal()} />
 			<Box ml={{ base: 0, md: 60 }} p="4">
 				{children}
