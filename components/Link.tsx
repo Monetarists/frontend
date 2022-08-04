@@ -2,7 +2,7 @@ import { forwardRef, Link as ChakraLink} from "@chakra-ui/react"
 import NextLink from "next/link"
 import React from "react";
 
-const Link = forwardRef((props, ref) => {
+const Link = forwardRef((props) => {
 	const { children, href, ...rest } = props;
 
 	return (
