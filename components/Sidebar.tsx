@@ -35,6 +35,7 @@ const SidebarCrafter = ({ classJob, children, ...rest }: SidebarCrafterProps) =>
 					{...rest}>
 					<i className={`xiv-${getClassJobIcon(classJob.ID)}`} />
 					<Text textTransform={'capitalize'}>{jobName}</Text>
+					{children}
 				</Flex>
 			</Link>
 		</>
