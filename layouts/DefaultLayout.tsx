@@ -49,7 +49,7 @@ export default function DefaultLayout({ children, ...rest }: {
 		<Box minH="100vh" bg={useColorModeValue('white', 'gray.900')}>
 			<Skeleton isLoaded={!isLoading}>
 				<SidebarContent
-					classJobs={data}
+					classJobs={data || []}
 					onClose={() => onCloseSidebar}
 					display={{ base: 'none', md: 'block' }}
 				/>
@@ -63,7 +63,7 @@ export default function DefaultLayout({ children, ...rest }: {
 					size="full">
 					<DrawerContent>
 						<SidebarContent
-							classJobs={data}
+							classJobs={data || []}
 							onClose={onCloseSidebar} />
 					</DrawerContent>
 				</Drawer>
