@@ -258,9 +258,11 @@ const Crafter = ({ crafter, fallback }: CrafterProps) => {
 		}
 	]);
 
-	if (!data.length && recipes && recipes.length) {
-		setData(recipes);
-	}
+	useEffect(() => {
+		if (!data.length && recipes && recipes.length) {
+			setData(recipes);
+		}
+	}, [data, setData, recipes]);
 
 	const table = useReactTable({
 		data,
