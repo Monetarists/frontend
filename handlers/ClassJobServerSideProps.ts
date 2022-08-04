@@ -2,7 +2,7 @@ import {NextApiHandler} from "next";
 import dbConnect from "../lib/dbConnect";
 import ClassJob from "../models/ClassJob";
 
-const ClassJobServerSideProps: NextApiHandler = async (context) => {
+const ClassJobServerSideProps: NextApiHandler = async () => {
 	await dbConnect();
 
 	const classJobs = await ClassJob.find({});
