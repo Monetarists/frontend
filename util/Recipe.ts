@@ -1,12 +1,6 @@
 import {Recipe} from "../@types/game/Recipe";
 import {UniversalisEntry} from "../@types/game/UniversalisEntry";
 
-type AmountKey = 'AmountIngredient0' | 'AmountIngredient1' | 'AmountIngredient2' | 'AmountIngredient3' | 'AmountIngredient4'
-	| 'AmountIngredient5' | 'AmountIngredient6' | 'AmountIngredient7' | 'AmountIngredient8' | 'AmountIngredient9';
-
-type IngredientKey = 'ItemIngredient0' | 'ItemIngredient1' | 'ItemIngredient2' | 'ItemIngredient3' | 'ItemIngredient4'
-	| 'ItemIngredient5' | 'ItemIngredient6' | 'ItemIngredient7' | 'ItemIngredient8' | 'ItemIngredient9';
-
 /**
  * Fetch the lowest price across both NQ and HQ.
  * Sometimes, someone tries to troll the market board by putting up a NQ item for tens of millions of gil.
