@@ -8,18 +8,17 @@ import {
 	ModalHeader,
 	ModalOverlay
 } from "@chakra-ui/modal";
-import {Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Select, Skeleton, Stack} from "@chakra-ui/react";
+import {Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Select, Stack} from "@chakra-ui/react";
 import {useForm, SubmitHandler} from "react-hook-form";
 import useSettings from "../hooks/useSettings";
 import {SettingsModalProps, SettingsModalFormValues} from "../@types/layout/SettingsModal";
-import {useDataCenters} from "../hooks/useDataCenters";
+import {getDataCenters} from "../data";
 import timezones from 'timezones-list';
-import {DataCenter} from "../@types/game/DataCenter";
 import {t, Trans} from "@lingui/macro";
 
 export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onSave}: SettingsModalProps) {
 	const [settings, setSetting] = useSettings();
-	const { data: dataCenters, isLoading }: { isLoading: boolean; isError: any; data: DataCenter[] } = useDataCenters();
+	const dataCenters = getDataCenters();
 
 	const {
 		handleSubmit,
@@ -29,7 +28,7 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 	} = useForm<SettingsModalFormValues>();
 
 	useEffect(() => {
-		if (settings.monetarist_server && dataCenters) {
+		if (settings.monetarist_server) {
 			setValue('server', settings.monetarist_server);
 		}
 		if (settings.monetarist_language) {
@@ -38,7 +37,7 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 		if (settings.monetarist_timezone) {
 			setValue('timezone', settings.monetarist_timezone);
 		}
-	}, [settings, setValue, dataCenters]);
+	}, [settings, setValue]);
 
 	const onSubmit: SubmitHandler<SettingsModalFormValues> = data => {
 		setSetting('monetarist_server', data.server);
@@ -63,18 +62,16 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 									<Box w='50%'>
 										<FormControl isRequired isInvalid={!!errors.server}>
 											<FormLabel><Trans>Server</Trans></FormLabel>
-											<Skeleton isLoaded={!isLoading}>
-												<Select placeholder={t`Select server`} id="server"
-														{...register('server', {required: true})}>
-													{(dataCenters || []).map((dataCenter) => (
-														<optgroup key={`dc-${dataCenter.Name}`} label={dataCenter.Name}>
-															{dataCenter.Servers.map((server: string) => (
-																<option key={`server-${server}`}>{server}</option>
-															))}
-														</optgroup>
-													))}
-												</Select>
-											</Skeleton>
+											<Select placeholder={t`Select server`} id="server"
+													{...register('server', {required: true})}>
+												{(dataCenters || []).map((dataCenter) => (
+													<optgroup key={`dc-${dataCenter.Name}`} label={dataCenter.Name}>
+														{dataCenter.Servers.map((server: string) => (
+															<option key={`server-${server}`}>{server}</option>
+														))}
+													</optgroup>
+												))}
+											</Select>
 										</FormControl>
 										<FormErrorMessage>
 											{errors.server && errors.server.message}

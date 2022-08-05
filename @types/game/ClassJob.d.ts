@@ -5,7 +5,6 @@ export interface ClassJob {
 	Name_en: string;
 	Name_fr: string;
 	Name_ja: string;
-	Icon: string | null;
 	ClassJobCategoryTargetID: number;
 	DohDolJobIndex: number;
 }

@@ -10,18 +10,14 @@ import {
 	Text,
 	useColorModeValue
 } from "@chakra-ui/react";
-import { SWRConfig } from "swr";
-import ClassJobServerSidePropsHandler from "../handlers/ClassJobServerSideProps";
 import {t, Trans} from '@lingui/macro';
 
-const Home = ({ fallback }: {
-	fallback: Array<object>
-}) => {
+const Home = () => {
 	const iconColor = useColorModeValue('gray.800', 'gray.300');
 	const title = `Welcome to ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
 	return (
-		<SWRConfig value={{ fallback }}>
+		<>
 			<Head>
 				<title key="title">{title}</title>
 			</Head>
@@ -105,7 +101,7 @@ const Home = ({ fallback }: {
 					</Stack>
 				</Container>
 			</DefaultLayout>
-		</SWRConfig>
+		</>
 	)
 };
 
@@ -195,7 +191,5 @@ const TestimonialAvatar = ({id, name, title,}: {
 		</Flex>
 	);
 };
-
-export const getServerSideProps = ClassJobServerSidePropsHandler;
 
 export default Home
