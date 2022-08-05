@@ -16,7 +16,7 @@ export default class Document extends NextDocument {
                     <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
 
                     <meta name="title" content={title} key="metaTitle" />
-                    <meta name="description" content="Decide the most profitable craft." key="description" />
+                    <meta name="description" content="Final Fantasy XIV Online: Crafting helper. Decide the most profitable craft." key="description" />
 
 					<link
 						href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
