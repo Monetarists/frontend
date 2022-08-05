@@ -1,7 +1,6 @@
 import {Box, CloseButton, Flex, Link, Skeleton, Text, useColorModeValue} from "@chakra-ui/react";
 import {Logo} from "./Logo";
 import React, {useEffect, useState} from "react";
-import {getClassJobIcon} from "../util/ClassJob";
 import {SidebarCrafterProps, SidebarProps} from "../@types/layout/Sidebar";
 import useSettings from "../hooks/useSettings";
 
@@ -33,7 +32,7 @@ const SidebarCrafter = ({ classJob, children, ...rest }: SidebarCrafterProps) =>
 					}}
 					className='sidebarIcon'
 					{...rest}>
-					<i className={`xiv-${getClassJobIcon(classJob.ID)}`} />
+					<i className={`xiv-ItemCategory_${classJob.Abbreviation}`} />
 					<Text textTransform={'capitalize'}>{jobName}</Text>
 					{children}
 				</Flex>
