@@ -9,7 +9,6 @@ export function getClassJobs(): ClassJob[] {
 
 export function getClassJob(crafter: string): ClassJob|null {
 	let jobData: ClassJob|undefined = undefined;
-	let classJobs = getClassJobs();
 
 	classJobs.forEach((classJob) => {
 		if (classJob.Abbreviation === crafter) {
