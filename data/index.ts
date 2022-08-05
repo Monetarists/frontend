@@ -11,7 +11,7 @@ export function getClassJob(crafter: string): ClassJob|null {
 	let jobData: ClassJob|undefined = undefined;
 	let classJobs = getClassJobs();
 
-	classJobs.map((classJob) => {
+	classJobs.forEach((classJob) => {
 		if (classJob.Abbreviation === crafter) {
 			jobData = classJob;
 		}
