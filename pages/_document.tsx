@@ -15,23 +15,9 @@ export default class Document extends NextDocument {
 
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 
-					<meta name="title" content={title} key="metaTitle" />
-					<meta
-						name="description"
-						content="Final Fantasy XIV Online: Crafting helper. Decide the most profitable craft."
-						key="description"
-					/>
-
 					<link
 						href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap"
 						rel="stylesheet"
-					/>
-
-					<meta property="og:type" content="website" />
-					<meta property="og:url" content="https://monetarist.app" />
-					<meta
-						property="og:image"
-						content="https://monetarist.app/images/monetarist.png"
 					/>
 					<link rel="shortcut icon" href="/favicon.ico" />
 					<link

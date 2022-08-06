@@ -1,4 +1,3 @@
-import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
@@ -56,8 +55,9 @@ import useSettings from "../../hooks/useSettings";
 import { InputProps } from "@chakra-ui/input/dist/declarations/src/input";
 import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps } from "next";
+import SEO from "../../components/SEO";
 
-const Crafter = ({ crafter }: CrafterProps) => {
+const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
@@ -395,10 +395,12 @@ const Crafter = ({ crafter }: CrafterProps) => {
 
 	return (
 		<>
-			<Head>
-				<title key="title">{title}</title>
-				<meta name="title" content={title} key="metaTitle" />
-			</Head>
+			<SEO
+				url={`https://${url}/crafter/${crafter.Abbreviation}`}
+				openGraphType="website"
+				schemaType="WebPage"
+				title={jobName}
+			/>
 
 			<DefaultLayout>
 				<Box as={"header"}>
@@ -703,6 +705,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 	return {
 		props: {
+			url: context?.req?.headers?.host,
 			classJobs: getClassJobs(),
 			crafter: crafter,
 		},

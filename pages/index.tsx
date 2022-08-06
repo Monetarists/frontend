@@ -1,4 +1,3 @@
-import Head from "next/head";
 import React, { ReactNode, useEffect, useState } from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
 import {
@@ -13,15 +12,20 @@ import {
 	useColorModeValue,
 } from "@chakra-ui/react";
 import { t, Trans } from "@lingui/macro";
+import SEO from "../components/SEO";
+import { GetServerSideProps } from "next";
 
-const Home = () => {
+const Home = ({ url }: { url: string }) => {
 	const title = `Welcome to ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
 	return (
 		<>
-			<Head>
-				<title key="title">{title}</title>
-			</Head>
+			<SEO
+				url={`https://${url}/`}
+				openGraphType="website"
+				schemaType="WebPage"
+				title={title}
+			/>
 
 			<DefaultLayout>
 				<Container maxW={"3xl"}>
@@ -212,6 +216,14 @@ const TestimonialAvatar = ({
 			</Stack>
 		</Flex>
 	);
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	return {
+		props: {
+			url: context?.req?.headers?.host,
+		},
+	};
 };
 
 export default Home;
