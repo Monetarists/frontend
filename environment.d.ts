@@ -10,13 +10,6 @@ declare global {
 			COOKIE_NAME: string;
 			COOKIE_SALT: string;
 
-			DB_CONNECTION: string;
-			DB_HOST: string;
-			DB_PORT: number;
-			DB_DATABASE: string;
-			DB_USERNAME: string;
-			DB_PASSWORD: string;
-
 			DISCORD_CLIENT_ID: string;
 			DISCORD_CLIENT_SECRET: string;
 
