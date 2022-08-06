@@ -1,5 +1,5 @@
-import {BoxProps, FlexProps} from "@chakra-ui/react";
-import {ClassJob} from "../game/ClassJob";
+import { BoxProps, FlexProps } from "@chakra-ui/react";
+import { ClassJob } from "../game/ClassJob";
 
 export interface SidebarCategoryGroupProps {
 	sectionName: string;
@@ -13,6 +13,6 @@ export interface SidebarCrafterProps extends FlexProps {
 }
 
 export interface SidebarProps extends BoxProps {
-	classJobs: ClassJob[],
+	classJobs: ClassJob[];
 	onClose: () => void;
 }

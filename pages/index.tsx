@@ -1,80 +1,81 @@
-import Head from 'next/head'
-import React, {ReactNode, useEffect, useState} from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import DefaultLayout from "../layouts/DefaultLayout";
 import {
 	Avatar,
 	Box,
-	Container, Flex,
-	Heading, SimpleGrid,
+	Container,
+	Flex,
+	Heading,
+	SimpleGrid,
 	Stack,
 	Text,
-	useColorModeValue
+	useColorModeValue,
 } from "@chakra-ui/react";
-import { SWRConfig } from "swr";
-import ClassJobServerSidePropsHandler from "../handlers/ClassJobServerSideProps";
-import {t, Trans} from '@lingui/macro';
+import { t, Trans } from "@lingui/macro";
+import SEO from "../components/SEO";
+import { GetServerSideProps } from "next";
 
-const Home = ({ fallback }: {
-	fallback: Array<object>
-}) => {
-	const iconColor = useColorModeValue('gray.800', 'gray.300');
+const Home = ({ url }: { url: string }) => {
 	const title = `Welcome to ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
 	return (
-		<SWRConfig value={{ fallback }}>
-			<Head>
-				<title key="title">{title}</title>
-			</Head>
+		<>
+			<SEO
+				url={`https://${url}/`}
+				openGraphType="website"
+				schemaType="WebPage"
+				title={title}
+			/>
 
 			<DefaultLayout>
-				<Container maxW={'3xl'}>
+				<Container maxW={"3xl"}>
 					<Stack
 						as={Box}
-						textAlign={'center'}
+						textAlign={"center"}
 						spacing={{ base: 8, md: 14 }}
 						pt={{ base: 12, md: 20 }}
-						pb={{ base: 20, md: 36 }}>
+						pb={{ base: 20, md: 36 }}
+					>
 						<Heading
 							fontWeight={600}
-							fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
-							lineHeight={'110%'}>
+							fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
+							lineHeight={"110%"}
+						>
 							<Trans>
 								Welcome,&nbsp;
-								<Text as={'span'} color={'green.400'}>
+								<Text as={"span"} color={"green.400"}>
 									Monetarist
 								</Text>
 							</Trans>
 						</Heading>
 
-						<Text color={'gray.500'}>
-							Put your crafters to good use by figuring out the most profitable crafts.
+						<Text color={"gray.500"}>
+							Put your crafters to good use by figuring out the
+							most profitable crafts.
 						</Text>
 
 						<Box p={4}>
-							<SimpleGrid columns={{ base: 1, md: 3 }} spacing={10}>
+							<SimpleGrid
+								columns={{ base: 1, md: 3 }}
+								spacing={10}
+							>
 								<Feature
 									title={t`Configurable`}
-									text={
-										t`Choose your server, language and timezone, and break down recipes by crafter.`
-									}
+									text={t`Choose your server, language and timezone, and break down recipes by crafter.`}
 								/>
 								<Feature
 									title={t`Profit Driven`}
-									text={
-										t`Shows you only profitable recipes by default. Maximise profits by filtering the results by number of items sold recently and minimum profit.`
-									}
+									text={t`Shows you only profitable recipes by default. Maximise profits by filtering the results by number of items sold recently and minimum profit.`}
 								/>
 								<Feature
 									title={t`Integrated`}
-									text={
-										t`Links to GarlandTools and Universalis to help you craft the perfect items once you've decided what to craft.`
-									}
+									text={t`Links to GarlandTools and Universalis to help you craft the perfect items once you've decided what to craft.`}
 								/>
 							</SimpleGrid>
 						</Box>
 
 						<Flex
-							align={'center'}
+							align={"center"}
 							_before={{
 								content: '""',
 								flexGrow: 1,
@@ -84,18 +85,23 @@ const Home = ({ fallback }: {
 								content: '""',
 								flexGrow: 1,
 								ml: 8,
-							}}>
+							}}
+						>
 							<Stack
-								direction={{ base: 'column', md: 'row' }}
-								spacing={{ base: 10, md: 4, lg: 10 }}>
+								direction={{ base: "column", md: "row" }}
+								spacing={{ base: 10, md: 4, lg: 10 }}
+							>
 								<Testimonial>
 									<TestimonialContent>
 										<TestimonialText>
-											<Trans>A shrewd businessman makes use of all tools at their disposal.</Trans>
+											<Trans>
+												A shrewd businessman makes use
+												of all tools at their disposal.
+											</Trans>
 										</TestimonialText>
 									</TestimonialContent>
 									<TestimonialAvatar
-										id={'lolorito'}
+										id={"lolorito"}
 										name={t`Lord Lolorito Nanarito`}
 										title={t`Chairman of the East Aldenard Trading Company`}
 									/>
@@ -105,8 +111,8 @@ const Home = ({ fallback }: {
 					</Stack>
 				</Container>
 			</DefaultLayout>
-		</SWRConfig>
-	)
+		</>
+	);
 };
 
 interface FeatureProps {
@@ -118,7 +124,7 @@ const Feature = ({ title, text }: FeatureProps) => {
 	return (
 		<Stack>
 			<Text fontWeight={600}>{title}</Text>
-			<Text color={'gray.600'}>{text}</Text>
+			<Text color={"gray.600"}>{text}</Text>
 		</Stack>
 	);
 };
@@ -130,28 +136,29 @@ const Testimonial = ({ children }: { children: ReactNode }) => {
 const TestimonialContent = ({ children }: { children: ReactNode }) => {
 	return (
 		<Stack
-			bg={useColorModeValue('white', 'gray.800')}
-			boxShadow={'lg'}
+			bg={useColorModeValue("white", "gray.800")}
+			boxShadow={"lg"}
 			p={8}
-			rounded={'xl'}
-			align={'center'}
-			pos={'relative'}
+			rounded={"xl"}
+			align={"center"}
+			pos={"relative"}
 			_after={{
 				content: `""`,
 				w: 0,
 				h: 0,
-				borderLeft: 'solid transparent',
+				borderLeft: "solid transparent",
 				borderLeftWidth: 16,
-				borderRight: 'solid transparent',
+				borderRight: "solid transparent",
 				borderRightWidth: 16,
-				borderTop: 'solid',
+				borderTop: "solid",
 				borderTopWidth: 16,
-				borderTopColor: useColorModeValue('white', 'gray.800'),
-				pos: 'absolute',
-				bottom: '-16px',
-				left: '50%',
-				transform: 'translateX(-50%)',
-			}}>
+				borderTopColor: useColorModeValue("white", "gray.800"),
+				pos: "absolute",
+				bottom: "-16px",
+				left: "50%",
+				transform: "translateX(-50%)",
+			}}
+		>
 			{children}
 		</Stack>
 	);
@@ -160,15 +167,20 @@ const TestimonialContent = ({ children }: { children: ReactNode }) => {
 const TestimonialText = ({ children }: { children: ReactNode }) => {
 	return (
 		<Text
-			textAlign={'center'}
-			color={useColorModeValue('gray.600', 'gray.400')}
-			fontSize={'sm'}>
+			textAlign={"center"}
+			color={useColorModeValue("gray.600", "gray.400")}
+			fontSize={"sm"}
+		>
 			{children}
 		</Text>
 	);
 };
 
-const TestimonialAvatar = ({id, name, title,}: {
+const TestimonialAvatar = ({
+	id,
+	name,
+	title,
+}: {
 	id: string;
 	name: string;
 	title: string;
@@ -177,18 +189,28 @@ const TestimonialAvatar = ({id, name, title,}: {
 		`https://monetarists.github.io/icon-assets/avatars/${id}.png`
 	);
 	useEffect(
-		() => setUrl(`https://monetarists.github.io/icon-assets/avatars/${id}.png`),
+		() =>
+			setUrl(
+				`https://monetarists.github.io/icon-assets/avatars/${id}.png`
+			),
 		[id]
 	);
 
 	return (
-		<Flex align={'center'} mt={8} direction={'column'}>
-			<Avatar src={url} mb={2} onError={() => {
-				setUrl('/images/items/error.png');
-			}} />
-			<Stack spacing={-1} align={'center'}>
+		<Flex align={"center"} mt={8} direction={"column"}>
+			<Avatar
+				src={url}
+				mb={2}
+				onError={() => {
+					setUrl("/images/items/error.png");
+				}}
+			/>
+			<Stack spacing={-1} align={"center"}>
 				<Text fontWeight={600}>{name}</Text>
-				<Text fontSize={'sm'} color={useColorModeValue('gray.600', 'gray.400')}>
+				<Text
+					fontSize={"sm"}
+					color={useColorModeValue("gray.600", "gray.400")}
+				>
 					{title}
 				</Text>
 			</Stack>
@@ -196,6 +218,12 @@ const TestimonialAvatar = ({id, name, title,}: {
 	);
 };
 
-export const getServerSideProps = ClassJobServerSidePropsHandler;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	return {
+		props: {
+			url: context?.req?.headers?.host,
+		},
+	};
+};
 
-export default Home
+export default Home;

@@ -1,9 +1,7 @@
-import {ClassJob} from "../game/ClassJob";
+import { ClassJob } from "../game/ClassJob";
 
 export interface CrafterProps {
-	classJobs: ClassJob[],
-	crafter: ClassJob,
-	fallback: {
-		ClassJob: ClassJob[]
-	}
+	url: string;
+	classJobs: ClassJob[];
+	crafter: ClassJob;
 }

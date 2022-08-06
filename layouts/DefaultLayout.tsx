@@ -1,78 +1,78 @@
-import React, {ReactNode, useEffect} from 'react';
+import React, { useEffect } from "react";
 import {
 	Box,
 	useColorModeValue,
 	Drawer,
 	DrawerContent,
-	useDisclosure, Skeleton,
-} from '@chakra-ui/react';
+	useDisclosure,
+} from "@chakra-ui/react";
 import AppHeader from "../components/AppHeader";
 import AppFooter from "../components/AppFooter";
 import SidebarContent from "../components/Sidebar";
 import SettingsModal from "../components/SettingsModal";
 import useSettings from "../hooks/useSettings";
-import {useClassJobs} from "../hooks/useClassJobs";
+import { getClassJobs } from "../data";
+import { DefaultLayoutProps } from "../@types/layout/DefaultLayout";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-export default function DefaultLayout({ children, ...rest }: {
-	children: ReactNode;
-}) {
+export default function DefaultLayout({ children }: DefaultLayoutProps) {
 	const [settings] = useSettings();
 
 	const {
 		isOpen: isOpenSidebar,
 		onOpen: onOpenSidebar,
-		onClose: onCloseSidebar
+		onClose: onCloseSidebar,
 	} = useDisclosure();
 	const {
 		isOpen: isOpenSettingsModal,
 		onOpen: onOpenSettingsModal,
-		onClose: onCloseSettingsModal
+		onClose: onCloseSettingsModal,
 	} = useDisclosure();
 
 	useEffect(() => {
-		if (!settings['monetarist_server']) {
+		if (!settings["monetarist_server"]) {
 			onOpenSettingsModal();
 		}
 	}, [settings, onOpenSettingsModal]);
 
 	useEffect(() => {
-		if (!settings['monetarist_language']) {
+		if (!settings["monetarist_language"]) {
 			onCloseSidebar();
 		}
 	}, [settings, onCloseSidebar]);
 
-	const { data, isLoading } = useClassJobs();
+	const classJobs = getClassJobs();
 
 	return (
-		<Box minH="100vh" bg={useColorModeValue('white', 'gray.900')}>
-			<Skeleton isLoaded={!isLoading}>
-				<SidebarContent
-					classJobs={data || []}
-					onClose={() => onCloseSidebar}
-					display={{ base: 'none', md: 'block' }}
-				/>
-				<Drawer
-					autoFocus={false}
-					isOpen={isOpenSidebar}
-					placement="left"
-					onClose={onCloseSidebar}
-					returnFocusOnClose={false}
-					onOverlayClick={onCloseSidebar}
-					size="full">
-					<DrawerContent>
-						<SidebarContent
-							classJobs={data || []}
-							onClose={onCloseSidebar} />
-					</DrawerContent>
-				</Drawer>
-			</Skeleton>
-			<AppHeader onOpenSidebar={onOpenSidebar} onSettingsClicked={() => onOpenSettingsModal()} />
+		<Box minH="100vh" bg={useColorModeValue("white", "gray.900")}>
+			<SidebarContent
+				classJobs={classJobs}
+				onClose={() => onCloseSidebar}
+				display={{ base: "none", md: "block" }}
+			/>
+			<Drawer
+				autoFocus={false}
+				isOpen={isOpenSidebar}
+				placement="left"
+				onClose={onCloseSidebar}
+				returnFocusOnClose={false}
+				onOverlayClick={onCloseSidebar}
+				size="full"
+			>
+				<DrawerContent>
+					<SidebarContent
+						classJobs={classJobs}
+						onClose={onCloseSidebar}
+					/>
+				</DrawerContent>
+			</Drawer>
+			<AppHeader
+				onOpenSidebar={onOpenSidebar}
+				onSettingsClicked={() => onOpenSettingsModal()}
+			/>
 			<Box ml={{ base: 0, md: 60 }} p="4">
 				{children}
 
-				<AppFooter {...rest} />
+				<AppFooter />
 			</Box>
 
 			{isOpenSettingsModal && (
