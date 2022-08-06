@@ -25,6 +25,7 @@ import {
 	Thead,
 	Tooltip,
 	Tr,
+	InputProps,
 	useColorModeValue,
 	useToast,
 } from "@chakra-ui/react";
@@ -52,7 +53,6 @@ import { CrafterProps } from "../../@types/layout/Crafter";
 import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
 import Link from "../../components/Link";
 import useSettings from "../../hooks/useSettings";
-import { InputProps } from "@chakra-ui/input/dist/declarations/src/input";
 import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps } from "next";
 import SEO from "../../components/SEO";
