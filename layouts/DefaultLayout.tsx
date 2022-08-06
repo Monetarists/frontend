@@ -76,7 +76,7 @@ export default function DefaultLayout({
 			<Box ml={{ base: 0, md: 60 }} p="4">
 				{children}
 
-				<AppFooter {...rest} />
+				<AppFooter />
 			</Box>
 
 			{isOpenSettingsModal && (
