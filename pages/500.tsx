@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import Error from "../layouts/Error";
 
-export default function ServerError({ ...props }) {
+export default function ServerError() {
 	return (
 		<Error
 			statusCode={500}

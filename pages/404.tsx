@@ -2,7 +2,7 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import Error from "../layouts/Error";
 
-export default function NotFound({ ...props }) {
+export default function NotFound() {
 	return (
 		<Error
 			statusCode={404}
