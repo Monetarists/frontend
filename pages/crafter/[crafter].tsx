@@ -328,8 +328,12 @@ const Crafter = ({ crafter }: CrafterProps) => {
 			),
 			cell: (info) => {
 				let value = info.getValue();
-				let className =
-					value < 0 ? "loss" : value > 0 ? "profit" : "neutral";
+				let className = "neutral";
+				if (value > 0) {
+					className = "profit";
+				} else if (value < 0) {
+					className = "loss";
+				}
 
 				return (
 					<NumberFormat
@@ -418,9 +422,8 @@ const Crafter = ({ crafter }: CrafterProps) => {
 						<Box>
 							<FilterNumber
 								label={t`Profit`}
-								initialMinFilterValue={0}
+								initialMinFilterValue={1}
 								column={table.getColumn("craftingProfit")}
-								table={table}
 							/>
 						</Box>
 
@@ -429,7 +432,6 @@ const Crafter = ({ crafter }: CrafterProps) => {
 								label={t`Sold`}
 								initialMinFilterValue={1}
 								column={table.getColumn("sold")}
-								table={table}
 							/>
 						</Box>
 
@@ -528,13 +530,11 @@ const Crafter = ({ crafter }: CrafterProps) => {
 function FilterNumber({
 	label,
 	column,
-	table,
 	initialMinFilterValue,
 	initialMaxFilterValue,
 }: {
 	label: string | JSX.Element;
 	column: Column<any>;
-	table: ReactTable<any>;
 	initialMinFilterValue?: string | number;
 	initialMaxFilterValue?: string | number;
 }) {
@@ -640,7 +640,7 @@ function DebouncedNumberInput({
 			value={value}
 			step={1}
 			type="numeric"
-			onChange={(valueAsString: string, valueAsNumber: number) => {
+			onChange={(valueAsString: string, _valueAsNumber: number) => {
 				setValue(valueAsString);
 			}}
 		>

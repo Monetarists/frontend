@@ -15,7 +15,6 @@ import {
 import { t, Trans } from "@lingui/macro";
 
 const Home = () => {
-	const iconColor = useColorModeValue("gray.800", "gray.300");
 	const title = `Welcome to ${process.env.NEXT_PUBLIC_APP_NAME}`;
 
 	return (
