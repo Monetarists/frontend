@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
 	Box,
 	useColorModeValue,
@@ -12,13 +12,9 @@ import SidebarContent from "../components/Sidebar";
 import SettingsModal from "../components/SettingsModal";
 import useSettings from "../hooks/useSettings";
 import { getClassJobs } from "../data";
+import { DefaultLayoutProps } from "../@types/layout/DefaultLayout";
 
-export default function DefaultLayout({
-	children,
-	...rest
-}: {
-	children: ReactNode;
-}) {
+export default function DefaultLayout({ children }: DefaultLayoutProps) {
 	const [settings] = useSettings();
 
 	const {
