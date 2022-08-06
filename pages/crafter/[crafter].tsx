@@ -365,8 +365,6 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		}),
 	];
 
-	const title = `${jobName} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
-
 	const table = useReactTable({
 		data,
 		columns,
