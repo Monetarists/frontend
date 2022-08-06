@@ -30,6 +30,7 @@ export default function Error({
 		<>
 			<Head>
 				<title key="title">{title}</title>
+				<meta name="title" content={title} key="metaTitle" />
 			</Head>
 
 			<Box>
