@@ -1,6 +1,6 @@
-import {ClassJob} from "./ClassJob";
-import {Item} from "./Item";
-import {UniversalisEntry} from "./UniversalisEntry";
+import { ClassJob } from "./ClassJob";
+import { Item } from "./Item";
+import { UniversalisEntry } from "./UniversalisEntry";
 
 export interface Recipe {
 	id: number;

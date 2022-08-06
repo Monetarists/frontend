@@ -1,7 +1,7 @@
-import {DataCenter} from "../@types/game/DataCenter";
+import { DataCenter } from "../@types/game/DataCenter";
 
 export async function updateDataCenters(xiv: any) {
-	const fs = require('fs');
+	const fs = require("fs");
 
 	try {
 		console.log("Fetching DataCenter data");
@@ -18,11 +18,11 @@ export async function updateDataCenters(xiv: any) {
 		for (let i in response) {
 			data.push({
 				Name: i,
-				Servers: response[i]
+				Servers: response[i],
 			});
 		}
 
-		fs.writeFileSync('data/DataCenter.json', JSON.stringify(data));
+		fs.writeFileSync("data/DataCenter.json", JSON.stringify(data));
 	} catch (error) {
 		console.log("Error: ", error);
 	}

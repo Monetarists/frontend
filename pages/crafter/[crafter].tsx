@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import React, {useEffect, useState} from "react";
-import {t, Trans} from "@lingui/macro";
+import Head from "next/head";
+import React, { useEffect, useState } from "react";
+import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
 	Box,
@@ -27,9 +27,9 @@ import {
 	Tooltip,
 	Tr,
 	useColorModeValue,
-	useToast
+	useToast,
 } from "@chakra-ui/react";
-import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons'
+import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
 	Column,
 	Table as ReactTable,
@@ -40,71 +40,80 @@ import {
 	getFilteredRowModel,
 	getSortedRowModel,
 	SortingState,
-	useReactTable, getFacetedRowModel, getFacetedUniqueValues, getFacetedMinMaxValues,
-} from '@tanstack/react-table';
-import NumberFormat from 'react-number-format';
+	useReactTable,
+	getFacetedRowModel,
+	getFacetedUniqueValues,
+	getFacetedMinMaxValues,
+} from "@tanstack/react-table";
+import NumberFormat from "react-number-format";
 import axios from "axios";
 import GameItemIcon from "../../components/GameItemIcon";
-import {Recipe} from "../../@types/game/Recipe"
-import {CrafterProps} from "../../@types/layout/Crafter";
-import {getLowestMarketPrice, calculateProfitLoss} from "../../util/Recipe";
+import { Recipe } from "../../@types/game/Recipe";
+import { CrafterProps } from "../../@types/layout/Crafter";
+import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
 import Link from "../../components/Link";
 import useSettings from "../../hooks/useSettings";
-import {InputProps} from "@chakra-ui/input/dist/declarations/src/input";
-import {getClassJob, getClassJobs} from "../../data";
-import {GetServerSideProps} from "next";
+import { InputProps } from "@chakra-ui/input/dist/declarations/src/input";
+import { getClassJob, getClassJobs } from "../../data";
+import { GetServerSideProps } from "next";
 
 const Crafter = ({ crafter }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
-	const [recipeNameKey, setRecipeNameKey] = useState('name_en');
-	const [realm, setRealm] = useState('');
+	const [recipeNameKey, setRecipeNameKey] = useState("name_en");
+	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
-	const [data, setData] = useState<Recipe[]>(() => [])
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-		[]
-	);
+	const [data, setData] = useState<Recipe[]>(() => []);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [sorting, setSorting] = useState<SortingState>([
 		{
-			id: 'sold',
-			desc: true
+			id: "sold",
+			desc: true,
 		},
 		{
-			id: 'craftingProfit',
-			desc: true
-		}
+			id: "craftingProfit",
+			desc: true,
+		},
 	]);
 
 	useEffect(() => {
 		switch (settings.monetarist_language) {
-			case 'de': setNewJobName(crafter.Name_de); break;
-			case 'fr': setNewJobName(crafter.Name_fr); break;
-			case 'ja': setNewJobName(crafter.Name_ja); break;
+			case "de":
+				setNewJobName(crafter.Name_de);
+				break;
+			case "fr":
+				setNewJobName(crafter.Name_fr);
+				break;
+			case "ja":
+				setNewJobName(crafter.Name_ja);
+				break;
 		}
 
-		setRecipeNameKey('name_' + settings.monetarist_language);
-		setRealm(settings.monetarist_server ?? 'Ragnarok');
+		setRecipeNameKey("name_" + settings.monetarist_language);
+		setRealm(settings.monetarist_server ?? "Ragnarok");
 	}, [settings, setNewJobName, setRecipeNameKey, setRealm, crafter]);
 
 	useEffect(() => {
 		if (crafter && realm) {
 			axios
-				.get(`${process.env.NEXT_PUBLIC_API_URL}/recipes/${crafter.Abbreviation}/${realm}`)
+				.get(
+					`${process.env.NEXT_PUBLIC_API_URL}/recipes/${crafter.Abbreviation}/${realm}`
+				)
 				.then((res) => {
 					setRecipes(res.data.recipes);
 					setData(res.data.recipes);
 				})
 				.catch((err) => {
 					toast({
-						title: 'Recipe data fetching failed.',
+						title: "Recipe data fetching failed.",
 						description: err?.message,
-						status: 'error',
+						status: "error",
 						duration: 5000,
 						isClosable: true,
-					})
-				})
+					});
+				});
 		}
 	}, [realm, crafter, setRecipes, setData, toast]);
 
@@ -112,13 +121,15 @@ const Crafter = ({ crafter }: CrafterProps) => {
 
 	const columns = [
 		columnHelper.accessor((row) => row[recipeNameKey as keyof Recipe], {
-			id: 'name',
+			id: "name",
 			header: () => (
 				// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
-					<span><Trans>Recipe</Trans></span>
+				<span>
+					<Trans>Recipe</Trans>
+				</span>
 				// </Tooltip>
 			),
-			cell: info => {
+			cell: (info) => {
 				let recipe = info.row.original;
 				let recipeName = (
 					recipe as unknown as {
@@ -127,11 +138,13 @@ const Crafter = ({ crafter }: CrafterProps) => {
 				)[recipeNameKey as keyof Recipe];
 
 				return (
-					<Link href={`https://www.garlandtools.org/db/#item/${recipe.item.id}`}
-						  isExternal={true}
-						  _hover={{
-							  textDecoration: 'none'
-						  }}>
+					<Link
+						href={`https://www.garlandtools.org/db/#item/${recipe.item.id}`}
+						isExternal={true}
+						_hover={{
+							textDecoration: "none",
+						}}
+					>
 						<Flex
 							key={recipe.id}
 							align="center"
@@ -139,131 +152,212 @@ const Crafter = ({ crafter }: CrafterProps) => {
 							cursor="pointer"
 							position="relative"
 							_hover={{
-								bg: 'gray.700',
-								color: 'white',
-							}}>
-							<GameItemIcon id={recipe.item.id} width='34px' height='34px' className='recipeIcon' />
+								bg: "gray.700",
+								color: "white",
+							}}
+						>
+							<GameItemIcon
+								id={recipe.item.id}
+								width="34px"
+								height="34px"
+								className="recipeIcon"
+							/>
 							&nbsp;
-							<Tooltip label={t`Recipe ID: ${recipe.id}`} aria-label={t`Recipe ID helper`}>
-								<Text textTransform={'capitalize'}>{recipeName}</Text>
+							<Tooltip
+								label={t`Recipe ID: ${recipe.id}`}
+								aria-label={t`Recipe ID helper`}
+							>
+								<Text textTransform={"capitalize"}>
+									{recipeName}
+								</Text>
 							</Tooltip>
 						</Flex>
 					</Link>
 				);
 			},
-			footer: info => info.column.id
+			footer: (info) => info.column.id,
 		}),
 
-		columnHelper.accessor((row) => row.universalisEntry?.craftingCost || 0, {
-			id: 'craftingCost',
-			header: () => (
-				<Tooltip label={t`The cost to buy NQ materials off the Market Board.`} aria-label={t`Crafting cost column explanation`}>
-					<span><Trans>Crafting Cost</Trans></span>
-				</Tooltip>
-			),
-			cell: info => {
-				return <NumberFormat value={info.getValue()}
-									 displayType={'text'} thousandSeparator={true}
-									 renderText={formattedValue => (
-										 <>
-											 <i className="xiv gil"></i>
-											 &nbsp;
-											 {formattedValue}
-										 </>
-									 )}
-				/>;
-			},
-			footer: info => info.column.id,
-			sortDescFirst: true
-		}),
+		columnHelper.accessor(
+			(row) => row.universalisEntry?.craftingCost || 0,
+			{
+				id: "craftingCost",
+				header: () => (
+					<Tooltip
+						label={t`The cost to buy NQ materials off the Market Board.`}
+						aria-label={t`Crafting cost column explanation`}
+					>
+						<span>
+							<Trans>Crafting Cost</Trans>
+						</span>
+					</Tooltip>
+				),
+				cell: (info) => {
+					return (
+						<NumberFormat
+							value={info.getValue()}
+							displayType={"text"}
+							thousandSeparator={true}
+							renderText={(formattedValue) => (
+								<>
+									<i className="xiv gil"></i>
+									&nbsp;
+									{formattedValue}
+								</>
+							)}
+						/>
+					);
+				},
+				footer: (info) => info.column.id,
+				sortDescFirst: true,
+			}
+		),
 
-		columnHelper.accessor((row) => ({
-			nq: row.universalisEntry?.nqListingsCount,
-			hq: row.universalisEntry?.hqListingsCount
-		}), {
-			id: 'listings',
-			header: () => <span><Trans>Listings</Trans></span>,
-			cell: info => {
-				let value = info.getValue();
-				return (
-					<>
-						NQ: <NumberFormat value={value.nq} displayType={'text'} thousandSeparator={true} /> &bull;
-						HQ: <NumberFormat value={value.hq} displayType={'text'} thousandSeparator={true} />
-					</>
-				);
-			},
-			footer: info => info.column.id,
-			enableSorting: false
-		}),
+		columnHelper.accessor(
+			(row) => ({
+				nq: row.universalisEntry?.nqListingsCount,
+				hq: row.universalisEntry?.hqListingsCount,
+			}),
+			{
+				id: "listings",
+				header: () => (
+					<span>
+						<Trans>Listings</Trans>
+					</span>
+				),
+				cell: (info) => {
+					let value = info.getValue();
+					return (
+						<>
+							NQ:{" "}
+							<NumberFormat
+								value={value.nq}
+								displayType={"text"}
+								thousandSeparator={true}
+							/>{" "}
+							&bull; HQ:{" "}
+							<NumberFormat
+								value={value.hq}
+								displayType={"text"}
+								thousandSeparator={true}
+							/>
+						</>
+					);
+				},
+				footer: (info) => info.column.id,
+				enableSorting: false,
+			}
+		),
 
-		columnHelper.accessor((row) => (row.universalisEntry?.nqSaleCount || 0) + (row.universalisEntry?.hqSaleCount || 0), {
-			id: 'sold',
-			header: () => (
-				<Tooltip label={t`The total number of items recently sold, across both NQ and HQ.`} aria-label={t`Sold column explanation`}>
-					<span><Trans>Sold</Trans></span>
-				</Tooltip>
-			),
-			cell: info => <NumberFormat value={info.getValue()} displayType={'text'} thousandSeparator={true} />,
-			footer: info => info.column.id,
-			sortDescFirst: true,
-			enableMultiSort: true
-		}),
+		columnHelper.accessor(
+			(row) =>
+				(row.universalisEntry?.nqSaleCount || 0) +
+				(row.universalisEntry?.hqSaleCount || 0),
+			{
+				id: "sold",
+				header: () => (
+					<Tooltip
+						label={t`The total number of items recently sold, across both NQ and HQ.`}
+						aria-label={t`Sold column explanation`}
+					>
+						<span>
+							<Trans>Sold</Trans>
+						</span>
+					</Tooltip>
+				),
+				cell: (info) => (
+					<NumberFormat
+						value={info.getValue()}
+						displayType={"text"}
+						thousandSeparator={true}
+					/>
+				),
+				footer: (info) => info.column.id,
+				sortDescFirst: true,
+				enableMultiSort: true,
+			}
+		),
 
-		columnHelper.accessor(row => getLowestMarketPrice(row.universalisEntry, row.amountResult), {
-			id: 'minListingPrice',
-			header: () => (
-				<Tooltip label={t`Minimum listing price, using HQ price if the item can be HQ.`} aria-label={t`Minimum listing price column explanation`}>
-					<span><Trans>Min. Listing Price</Trans></span>
-				</Tooltip>
-			),
-			cell: info => {
-				return <NumberFormat value={info.getValue()}
-									 displayType={'text'} thousandSeparator={true}
-									 renderText={formattedValue => (
-										 <>
-											 <i className="xiv gil"></i>
-											 &nbsp;
-											 {formattedValue}
-										 </>
-									 )}
-				/>;
-			},
-			footer: info => info.column.id,
-			sortDescFirst: true
-		}),
+		columnHelper.accessor(
+			(row) =>
+				getLowestMarketPrice(row.universalisEntry, row.amountResult),
+			{
+				id: "minListingPrice",
+				header: () => (
+					<Tooltip
+						label={t`Minimum listing price, using HQ price if the item can be HQ.`}
+						aria-label={t`Minimum listing price column explanation`}
+					>
+						<span>
+							<Trans>Min. Listing Price</Trans>
+						</span>
+					</Tooltip>
+				),
+				cell: (info) => {
+					return (
+						<NumberFormat
+							value={info.getValue()}
+							displayType={"text"}
+							thousandSeparator={true}
+							renderText={(formattedValue) => (
+								<>
+									<i className="xiv gil"></i>
+									&nbsp;
+									{formattedValue}
+								</>
+							)}
+						/>
+					);
+				},
+				footer: (info) => info.column.id,
+				sortDescFirst: true,
+			}
+		),
 
 		columnHelper.accessor((row) => calculateProfitLoss(row), {
-			id: 'craftingProfit',
+			id: "craftingProfit",
 			header: () => (
-				<Tooltip label={t`The expected profit, assuming you craft a HQ item and sell it at current market value.`} aria-label={t`Crafting profit column explanation`}>
-					<span><Trans>Crafting Profit</Trans></span>
+				<Tooltip
+					label={t`The expected profit, assuming you craft a HQ item and sell it at current market value.`}
+					aria-label={t`Crafting profit column explanation`}
+				>
+					<span>
+						<Trans>Crafting Profit</Trans>
+					</span>
 				</Tooltip>
 			),
-			cell: info => {
+			cell: (info) => {
 				let value = info.getValue();
-				let className = value < 0 ? 'loss' : (value > 0 ? 'profit' : 'neutral');
+				let className =
+					value < 0 ? "loss" : value > 0 ? "profit" : "neutral";
 
-				return <NumberFormat value={info.getValue()}
-									 displayType={'text'} thousandSeparator={true}
-									 renderText={formattedValue => (
-										 <Link href={`https://universalis.app/market/${info.row.original.item.id}/`}
-											   isExternal={true}
-											   _hover={{
-												   textDecoration: 'none'
-											   }}>
-											 <span className={`marketBoard--${className}`}>
-												 <i className="xiv gil"></i>
-												 &nbsp;
-												 {formattedValue}
-											 </span>
-										 </Link>
-									 )}
-				/>;
+				return (
+					<NumberFormat
+						value={info.getValue()}
+						displayType={"text"}
+						thousandSeparator={true}
+						renderText={(formattedValue) => (
+							<Link
+								href={`https://universalis.app/market/${info.row.original.item.id}/`}
+								isExternal={true}
+								_hover={{
+									textDecoration: "none",
+								}}
+							>
+								<span className={`marketBoard--${className}`}>
+									<i className="xiv gil"></i>
+									&nbsp;
+									{formattedValue}
+								</span>
+							</Link>
+						)}
+					/>
+				);
 			},
-			footer: info => info.column.id,
-			filterFn: 'inNumberRange',
+			footer: (info) => info.column.id,
+			filterFn: "inNumberRange",
 			sortDescFirst: true,
-			enableMultiSort: true
+			enableMultiSort: true,
 		}),
 	];
 
@@ -279,7 +373,7 @@ const Crafter = ({ crafter }: CrafterProps) => {
 		initialState: {
 			columnFilters: [
 				{
-					id: 'craftingProfit',
+					id: "craftingProfit",
 					value: [0, 500],
 				},
 			],
@@ -302,91 +396,122 @@ const Crafter = ({ crafter }: CrafterProps) => {
 			</Head>
 
 			<DefaultLayout>
-				<Box as={'header'}>
+				<Box as={"header"}>
 					<Heading
 						lineHeight={1.1}
 						fontWeight={600}
-						fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
+						fontSize={{ base: "2xl", sm: "4xl", lg: "5xl" }}
+					>
 						{jobName}
 					</Heading>
 					<Text
-						color={useColorModeValue('gray.900', 'gray.400')}
+						color={useColorModeValue("gray.900", "gray.400")}
 						fontWeight={300}
-						fontSize={'2xl'}>
+						fontSize={"2xl"}
+					>
 						<Trans>Realm:</Trans> {realm}
 					</Text>
 				</Box>
 
 				<Skeleton isLoaded={!!recipes}>
-					<VStack
-						spacing={4}
-						align='stretch'>
+					<VStack spacing={4} align="stretch">
 						<Box>
-							<FilterNumber label={t`Profit`}
-									initialMinFilterValue={0}
-									column={table.getColumn('craftingProfit')}
-									table={table} />
+							<FilterNumber
+								label={t`Profit`}
+								initialMinFilterValue={0}
+								column={table.getColumn("craftingProfit")}
+								table={table}
+							/>
 						</Box>
 
 						<Box>
-							<FilterNumber label={t`Sold`}
-									initialMinFilterValue={1}
-									column={table.getColumn('sold')}
-									table={table} />
+							<FilterNumber
+								label={t`Sold`}
+								initialMinFilterValue={1}
+								column={table.getColumn("sold")}
+								table={table}
+							/>
 						</Box>
 
 						<Box>
-							<FilterText label={t`Recipe`}
-									column={table.getColumn('name')}
-									table={table} />
+							<FilterText
+								label={t`Recipe`}
+								column={table.getColumn("name")}
+								table={table}
+							/>
 						</Box>
 					</VStack>
 
 					<TableContainer>
 						<Table>
 							<Thead>
-								{table.getHeaderGroups().map(headerGroup => (
+								{table.getHeaderGroups().map((headerGroup) => (
 									<Tr key={headerGroup.id}>
-										{headerGroup.headers.map(header => {
+										{headerGroup.headers.map((header) => {
 											return (
-												<Th key={header.id} colSpan={header.colSpan}>
+												<Th
+													key={header.id}
+													colSpan={header.colSpan}
+												>
 													{header.isPlaceholder ? null : (
 														<div
 															{...{
-																className: header.column.getCanSort()
-																	? 'cursor-pointer select-none'
-																	: '',
-																onClick: header.column.getToggleSortingHandler(),
+																className:
+																	header.column.getCanSort()
+																		? "cursor-pointer select-none"
+																		: "",
+																onClick:
+																	header.column.getToggleSortingHandler(),
 															}}
 														>
 															{flexRender(
-																header.column.columnDef.header,
+																header.column
+																	.columnDef
+																	.header,
 																header.getContext()
 															)}
 															{{
-																asc: (<chakra.span pl='1'><TriangleUpIcon aria-label={t`sorted ascending`} /></chakra.span>),
-																desc: (<chakra.span pl='1'><TriangleDownIcon aria-label={t`sorted descending`} /></chakra.span>),
-															}[header.column.getIsSorted() as string] ?? null}
+																asc: (
+																	<chakra.span pl="1">
+																		<TriangleUpIcon
+																			aria-label={t`sorted ascending`}
+																		/>
+																	</chakra.span>
+																),
+																desc: (
+																	<chakra.span pl="1">
+																		<TriangleDownIcon
+																			aria-label={t`sorted descending`}
+																		/>
+																	</chakra.span>
+																),
+															}[
+																header.column.getIsSorted() as string
+															] ?? null}
 														</div>
 													)}
 												</Th>
-											)
+											);
 										})}
 									</Tr>
 								))}
 							</Thead>
 							<Tbody>
-								{table.getRowModel().rows.map(row => (
-									<Tr key={row.id}
+								{table.getRowModel().rows.map((row) => (
+									<Tr
+										key={row.id}
 										borderRadius="lg"
 										_hover={{
-											bg: 'gray.700',
-											color: 'white',
+											bg: "gray.700",
+											color: "white",
 										}}
 									>
-										{row.getVisibleCells().map(cell => (
-											<Td key={cell.id} pb='0' pt='0'>
-												{flexRender(cell.column.columnDef.cell, cell.getContext())}
+										{row.getVisibleCells().map((cell) => (
+											<Td key={cell.id} pb="0" pt="0">
+												{flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)}
 											</Td>
 										))}
 									</Tr>
@@ -397,128 +522,177 @@ const Crafter = ({ crafter }: CrafterProps) => {
 				</Skeleton>
 			</DefaultLayout>
 		</>
-	)
-}
+	);
+};
 
-function FilterNumber({label, column, table, initialMinFilterValue, initialMaxFilterValue}: {
-	label: string | JSX.Element
-	column: Column<any>
-	table: ReactTable<any>
-	initialMinFilterValue?: string | number
-	initialMaxFilterValue?: string | number
+function FilterNumber({
+	label,
+	column,
+	table,
+	initialMinFilterValue,
+	initialMaxFilterValue,
+}: {
+	label: string | JSX.Element;
+	column: Column<any>;
+	table: ReactTable<any>;
+	initialMinFilterValue?: string | number;
+	initialMaxFilterValue?: string | number;
 }) {
-	const columnFilterValue = column.getFilterValue()
+	const columnFilterValue = column.getFilterValue();
 
 	return (
 		<HStack>
-			<Box minW={'60px'}>{label}:</Box>
+			<Box minW={"60px"}>{label}:</Box>
 			<DebouncedNumberInput
-				value={(columnFilterValue as [number, number])?.[0] ?? (initialMinFilterValue ?? '')}
-				onValueChange={value =>
-					column.setFilterValue((old: [number, number]) => [value, old?.[1]])
+				value={
+					(columnFilterValue as [number, number])?.[0] ??
+					initialMinFilterValue ??
+					""
+				}
+				onValueChange={(value) =>
+					column.setFilterValue((old: [number, number]) => [
+						value,
+						old?.[1],
+					])
 				}
 			/>
 			<Box> - </Box>
 			<DebouncedNumberInput
-				value={(columnFilterValue as [number, number])?.[1] ?? (initialMaxFilterValue ?? '')}
-				onValueChange={value =>
-					column.setFilterValue((old: [number, number]) => [old?.[0], value])
+				value={
+					(columnFilterValue as [number, number])?.[1] ??
+					initialMaxFilterValue ??
+					""
+				}
+				onValueChange={(value) =>
+					column.setFilterValue((old: [number, number]) => [
+						old?.[0],
+						value,
+					])
 				}
 			/>
 		</HStack>
-	)
+	);
 }
 
-function FilterText({label, column, table, initialFilterValue}: {
-	label: string
-	column: Column<any>
-	table: ReactTable<any>
-	initialFilterValue?: string
+function FilterText({
+	label,
+	column,
+	table,
+	initialFilterValue,
+}: {
+	label: string;
+	column: Column<any>;
+	table: ReactTable<any>;
+	initialFilterValue?: string;
 }) {
 	const firstValue = table
 		.getPreFilteredRowModel()
-		.flatRows[0]?.getValue(column.id)
+		.flatRows[0]?.getValue(column.id);
 
-	const columnFilterValue = column.getFilterValue()
+	const columnFilterValue = column.getFilterValue();
 
 	return (
 		<HStack>
-			<Box minW={'60px'}>{label}:</Box>
+			<Box minW={"60px"}>{label}:</Box>
 			<DebouncedInput
 				type="text"
-				value={(columnFilterValue ?? (initialFilterValue ?? '')) as string}
-				onChange={value => column.setFilterValue(value)}
+				value={
+					(columnFilterValue ?? initialFilterValue ?? "") as string
+				}
+				onChange={(value) => column.setFilterValue(value)}
 				placeholder={`Search...`}
-				list={column.id + 'list'}
+				list={column.id + "list"}
 			/>
-			<Box width={'100%'}>&nbsp;</Box>
+			<Box width={"100%"}>&nbsp;</Box>
 		</HStack>
-	)
+	);
 }
 
 // A debounced number input react component
-function DebouncedNumberInput({value: initialValue, onValueChange, debounce = 500, ...props}: {
-	value: string | number
-	onValueChange: (value: string | number) => void
-	debounce?: number
-} & Omit<NumberInputProps, 'onChange'>) {
-	const [value, setValue] = React.useState(initialValue)
+function DebouncedNumberInput({
+	value: initialValue,
+	onValueChange,
+	debounce = 500,
+	...props
+}: {
+	value: string | number;
+	onValueChange: (value: string | number) => void;
+	debounce?: number;
+} & Omit<NumberInputProps, "onChange">) {
+	const [value, setValue] = React.useState(initialValue);
 
 	React.useEffect(() => {
-		setValue(initialValue)
-	}, [initialValue])
+		setValue(initialValue);
+	}, [initialValue]);
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			onValueChange(value)
-		}, debounce)
+			onValueChange(value);
+		}, debounce);
 
-		return () => clearTimeout(timeout)
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, debounce])
+		return () => clearTimeout(timeout);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce]);
 
 	return (
-		<NumberInput {...props} value={value} step={1} type='numeric' onChange={(valueAsString: string, valueAsNumber: number) => {
-			setValue(valueAsString);
-		}}>
+		<NumberInput
+			{...props}
+			value={value}
+			step={1}
+			type="numeric"
+			onChange={(valueAsString: string, valueAsNumber: number) => {
+				setValue(valueAsString);
+			}}
+		>
 			<NumberInputField />
 			<NumberInputStepper>
 				<NumberIncrementStepper />
 				<NumberDecrementStepper />
 			</NumberInputStepper>
 		</NumberInput>
-	)
+	);
 }
 
 // A debounced input react component
-function DebouncedInput({value: initialValue, onChange, debounce = 500, ...props}: {
-	value: string | number
-	onChange: (value: string | number) => void
-	debounce?: number
-} & Omit<InputProps, 'onChange'>) {
-	const [value, setValue] = React.useState(initialValue)
+function DebouncedInput({
+	value: initialValue,
+	onChange,
+	debounce = 500,
+	...props
+}: {
+	value: string | number;
+	onChange: (value: string | number) => void;
+	debounce?: number;
+} & Omit<InputProps, "onChange">) {
+	const [value, setValue] = React.useState(initialValue);
 
 	React.useEffect(() => {
-		setValue(initialValue)
-	}, [initialValue])
+		setValue(initialValue);
+	}, [initialValue]);
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
-			onChange(value)
-		}, debounce)
+			onChange(value);
+		}, debounce);
 
-		return () => clearTimeout(timeout)
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, debounce])
+		return () => clearTimeout(timeout);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce]);
 
 	return (
-		<Input {...props} value={value} onChange={e => setValue(e.target.value)} />
-	)
+		<Input
+			{...props}
+			value={value}
+			onChange={(e) => setValue(e.target.value)}
+		/>
+	);
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	let crafterParam = context.params?.crafter ?? '';
-	const crafter = getClassJob(typeof (crafterParam) === "string" ? crafterParam: '');
+	let crafterParam = context.params?.crafter ?? "";
+	const crafter = getClassJob(
+		typeof crafterParam === "string" ? crafterParam : ""
+	);
 
 	if (crafter === null) {
 		return {
@@ -529,9 +703,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 	return {
 		props: {
 			classJobs: getClassJobs(),
-			crafter: crafter
-		}
-	}
+			crafter: crafter,
+		},
+	};
 };
 
-export default Crafter
+export default Crafter;

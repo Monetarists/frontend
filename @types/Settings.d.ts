@@ -1,4 +1,4 @@
-import {Language} from "./Language";
+import { Language } from "./Language";
 
 export interface Settings {
 	monetarist_server: string;
