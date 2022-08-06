@@ -13,8 +13,6 @@ import SettingsModal from "../components/SettingsModal";
 import useSettings from "../hooks/useSettings";
 import {getClassJobs} from "../data";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 export default function DefaultLayout({ children, ...rest }: {
 	children: ReactNode;
 }) {
