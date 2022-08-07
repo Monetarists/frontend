@@ -17,6 +17,7 @@ import {
 	HStack,
 	Select,
 	Stack,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useSettings from "../hooks/useSettings";
@@ -62,6 +63,8 @@ export default function SettingsModal({
 		setSetting("monetarist_timezone", data.timezone);
 		onSave();
 	};
+
+	const optionBackground = useColorModeValue("white", "gray.700");
 
 	return (
 		<>
@@ -110,6 +113,10 @@ export default function SettingsModal({
 																) => (
 																	<option
 																		key={`server-${server}`}
+																		style={{
+																			background:
+																				optionBackground,
+																		}}
 																	>
 																		{server}
 																	</option>
