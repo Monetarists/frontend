@@ -1,13 +1,17 @@
-import { useEffect } from 'react';
-import { useCookies } from 'react-cookie';
-import { Settings } from '../@types/Settings';
+import { useEffect } from "react";
+import { useCookies } from "react-cookie";
+import { Settings } from "../@types/Settings";
 
 function validateLanguage(
 	settings: Partial<Settings>,
 	setSettings: (name: keyof Settings, value: any) => void
 ) {
-	if (!['ja', 'en', 'fr', 'de'].includes(settings['monetarist_language'] ?? 'en')) {
-		setSettings('monetarist_language', '');
+	if (
+		!["ja", "en", "fr", "de"].includes(
+			settings["monetarist_language"] ?? "en"
+		)
+	) {
+		setSettings("monetarist_language", "");
 	}
 }
 
@@ -21,24 +25,26 @@ export default function useSettings(): [
 	(name: keyof Settings, value: any) => void
 ] {
 	const keys: (keyof Settings)[] = [
-		'monetarist_server',
-		'monetarist_language',
-		'monetarist_timezone',
+		"monetarist_server",
+		"monetarist_language",
+		"monetarist_timezone",
 	];
 
-	const [cookies, setCookie] = useCookies<keyof Settings, Partial<Settings>>(keys);
+	const [cookies, setCookie] = useCookies<keyof Settings, Partial<Settings>>(
+		keys
+	);
 	const setSetting = (name: keyof Settings, value: any) => {
 		const date = new Date();
 		date.setDate(date.getDate() + 365);
 
-		if (typeof window !== 'undefined') {
+		if (typeof window !== "undefined") {
 			localStorage.setItem(name, value);
 		}
 
 		setCookie(name, value, {
 			expires: date,
-			path: '/',
-			sameSite: 'none',
+			path: "/",
+			sameSite: "none",
 			secure: true,
 		});
 	};

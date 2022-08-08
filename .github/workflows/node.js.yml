@@ -8,6 +8,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   build:
@@ -22,6 +23,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -39,26 +43,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-main-${{ hashFiles('**/package-lock.json') }}-
 
-      - name: Start MongoDB v${{ matrix.mongodb-version }}
-        uses: supercharge/mongodb-github-action@1.7.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
-
       - name: Install dependencies
         run: npm install
 
       - name: Compile translations
         run: npm run locale:compile
 
-      - name: CI
-        run: npm ci
+      - name: Test and coverage
+        run: npm run test --coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build
         run: npm run build --if-present
         env:
-          MONGODB_URI: mongodb://localhost:27017/test?retryWrites=true&w=majority
-          MONGODB_DB: github
           NODE_OPTIONS: "--max-old-space-size=8192"
-
-      #- name: Run the tests
-      #  run: npm test

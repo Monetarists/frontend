@@ -1,18 +1,25 @@
-import React from 'react';
+import React from "react";
 import {
 	Flex,
 	Button,
+	Stack,
+	IconButton,
 	useColorModeValue,
-	useColorMode, Stack, IconButton,
-} from '@chakra-ui/react';
-import {HamburgerIcon, MoonIcon, SettingsIcon, SunIcon} from '@chakra-ui/icons';
-import { AppHeaderProps } from '../@types/layout/AppHeader';
+	useColorMode,
+} from "@chakra-ui/react";
+import {
+	HamburgerIcon,
+	MoonIcon,
+	SettingsIcon,
+	SunIcon,
+} from "@chakra-ui/icons";
+import { AppHeaderProps } from "../@types/layout/AppHeader";
 
-export default function AppHeader({ onOpenSidebar, onSettingsClicked }: AppHeaderProps) {
+export default function AppHeader({
+	onOpenSidebar,
+	onSettingsClicked,
+}: AppHeaderProps) {
 	const { colorMode, toggleColorMode } = useColorMode();
-
-	const flexBgColor = useColorModeValue('gray.50', 'gray.800');
-	const boxBgColor = useColorModeValue('white', 'gray.700');
 
 	return (
 		<Flex
@@ -20,25 +27,26 @@ export default function AppHeader({ onOpenSidebar, onSettingsClicked }: AppHeade
 			px={{ base: 4, md: 4 }}
 			height="20"
 			alignItems="center"
-			bg={useColorModeValue('white', 'gray.900')}
+			bg={useColorModeValue("white", "gray.900")}
 			borderBottomWidth="1px"
-			borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-			justifyContent={{ base: 'space-between', md: 'flex-end' }}>
+			borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+			justifyContent={{ base: "space-between", md: "flex-end" }}
+		>
 			<IconButton
-				display={{ base: 'flex', md: 'none' }}
+				display={{ base: "flex", md: "none" }}
 				onClick={onOpenSidebar}
 				variant="outline"
 				aria-label="open menu"
 				icon={<HamburgerIcon />}
 			/>
 
-			<Stack direction={'row'} spacing={4}>
+			<Stack direction={"row"} spacing={4}>
 				<Button onClick={onSettingsClicked}>
 					<SettingsIcon />
 				</Button>
 
 				<Button onClick={toggleColorMode}>
-					{colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+					{colorMode === "light" ? <MoonIcon /> : <SunIcon />}
 				</Button>
 			</Stack>
 		</Flex>

@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import {
 	Modal,
 	ModalBody,
@@ -6,106 +6,186 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	ModalOverlay
+	ModalOverlay,
 } from "@chakra-ui/modal";
-import {Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Select, Stack} from "@chakra-ui/react";
-import {useForm, SubmitHandler} from "react-hook-form";
+import {
+	Box,
+	Button,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
+	HStack,
+	Select,
+	Stack,
+	useColorModeValue,
+} from "@chakra-ui/react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import useSettings from "../hooks/useSettings";
-import {SettingsModalProps, SettingsModalFormValues} from "../@types/layout/SettingsModal";
-import {useDataCenters} from "../hooks/useDataCenters";
-import timezones from 'timezones-list';
-import {DataCenter} from "../@types/game/DataCenter";
-import {t, Trans} from "@lingui/macro";
+import {
+	SettingsModalProps,
+	SettingsModalFormValues,
+} from "../@types/layout/SettingsModal";
+import { getDataCenters } from "../data";
+import timezones from "timezones-list";
+import { t, Trans } from "@lingui/macro";
 
-export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onSave}: SettingsModalProps) {
+export default function SettingsModal({
+	closeOnOverlayClick,
+	isOpen,
+	onClose,
+	onSave,
+}: SettingsModalProps) {
 	const [settings, setSetting] = useSettings();
-	const { data: dataCenters, isLoading }: { isLoading: boolean; isError: any; data: DataCenter[] } = useDataCenters();
+	const dataCenters = getDataCenters();
 
 	const {
 		handleSubmit,
 		register,
-		setError,
 		setValue,
-		control,
-		formState: {errors, isSubmitting},
+		formState: { errors, isSubmitting },
 	} = useForm<SettingsModalFormValues>();
 
 	useEffect(() => {
-		if (settings.monetarist_server && dataCenters) {
-			setValue('server', settings.monetarist_server);
+		if (settings.monetarist_server) {
+			setValue("server", settings.monetarist_server);
 		}
 		if (settings.monetarist_language) {
-			setValue('language', settings.monetarist_language);
+			setValue("language", settings.monetarist_language);
 		}
 		if (settings.monetarist_timezone) {
-			setValue('timezone', settings.monetarist_timezone);
+			setValue("timezone", settings.monetarist_timezone);
 		}
-	}, [settings, setValue, dataCenters]);
+	}, [settings, setValue]);
 
-	const onSubmit: SubmitHandler<SettingsModalFormValues> = data => {
-		setSetting('monetarist_server', data.server);
-		setSetting('monetarist_language', data.language);
-		setSetting('monetarist_timezone', data.timezone);
+	const onSubmit: SubmitHandler<SettingsModalFormValues> = (data) => {
+		setSetting("monetarist_server", data.server);
+		setSetting("monetarist_language", data.language);
+		setSetting("monetarist_timezone", data.timezone);
 		onSave();
 	};
 
+	const optionBackground = useColorModeValue("white", "gray.700");
+
 	return (
 		<>
-			<Modal isOpen={isOpen} closeOnOverlayClick={closeOnOverlayClick} size='xl' onClose={onClose}>
-				<ModalOverlay
-					bg='blackAlpha.300'
-					backdropFilter='blur(10px)'/>
+			<Modal
+				isOpen={isOpen}
+				closeOnOverlayClick={closeOnOverlayClick}
+				size="xl"
+				onClose={onClose}
+			>
+				<ModalOverlay bg="blackAlpha.300" backdropFilter="blur(10px)" />
 				<ModalContent>
 					<form onSubmit={handleSubmit(onSubmit)}>
-						<ModalHeader><Trans>Settings</Trans></ModalHeader>
-						{closeOnOverlayClick ? <ModalCloseButton/> : ''}
+						<ModalHeader>
+							<Trans>Settings</Trans>
+						</ModalHeader>
+						{closeOnOverlayClick ? <ModalCloseButton /> : ""}
 						<ModalBody>
 							<Stack spacing={4}>
 								<HStack>
-									<Box w='50%'>
-										<FormControl isRequired isInvalid={!!errors.server}>
-											<FormLabel><Trans>Server</Trans></FormLabel>
-											<Select placeholder={t`Select server`} id="server"
-													{...register('server', {required: true})}>
-												{(dataCenters || []).map((dataCenter) => (
-													<optgroup key={`dc-${dataCenter.Name}`} label={dataCenter.Name}>
-														{dataCenter.Servers.map((server: string) => (
-															<option key={`server-${server}`}>{server}</option>
-														))}
-													</optgroup>
-												))}
+									<Box w="50%">
+										<FormControl
+											isRequired
+											isInvalid={!!errors.server}
+										>
+											<FormLabel>
+												<Trans>Server</Trans>
+											</FormLabel>
+											<Select
+												placeholder={t`Select server`}
+												id="server"
+												{...register("server", {
+													required: true,
+												})}
+												sx={{
+													"> optgroup > option": {
+														bg: optionBackground,
+													},
+												}}
+											>
+												{(dataCenters || []).map(
+													(dataCenter) => (
+														<optgroup
+															key={`dc-${dataCenter.Name}`}
+															label={
+																dataCenter.Name
+															}
+														>
+															{dataCenter.Servers.map(
+																(
+																	server: string
+																) => (
+																	<option
+																		key={`server-${server}`}
+																	>
+																		{server}
+																	</option>
+																)
+															)}
+														</optgroup>
+													)
+												)}
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.server && errors.server.message}
+											{errors.server &&
+												errors.server.message}
 										</FormErrorMessage>
 									</Box>
-									<Box w='50%'>
-										<FormControl isRequired isInvalid={!!errors.language}>
-											<FormLabel><Trans>Language</Trans></FormLabel>
-											<Select placeholder={t`Select language`} id="language"
-													{...register('language', { required: true })}>
-												<option value="en">English</option>
-												<option value="fr">Français</option>
-												<option value="de">Deutsch</option>
-												<option value="ja">日本語</option>
+									<Box w="50%">
+										<FormControl
+											isRequired
+											isInvalid={!!errors.language}
+										>
+											<FormLabel>
+												<Trans>Language</Trans>
+											</FormLabel>
+											<Select
+												placeholder={t`Select language`}
+												id="language"
+												{...register("language", {
+													required: true,
+												})}
+											>
+												<option value="en">
+													English
+												</option>
+												<option value="fr">
+													Français
+												</option>
+												<option value="de">
+													Deutsch
+												</option>
+												<option value="ja">
+													日本語
+												</option>
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.language && errors.language.message}
+											{errors.language &&
+												errors.language.message}
 										</FormErrorMessage>
 									</Box>
 								</HStack>
 								<FormControl isInvalid={!!errors.timezone}>
-									<FormLabel><Trans>Timezone</Trans></FormLabel>
-									<Select placeholder={t`Select timezone`} id="timezone"
-											{...register('timezone')}>
-										{timezones
-											.map(timeZone => (
-												<option key={timeZone.tzCode} value={timeZone.tzCode}>
-													(UTC{timeZone.utc}) {timeZone.label}
-												</option>
-											))}
+									<FormLabel>
+										<Trans>Timezone</Trans>
+									</FormLabel>
+									<Select
+										placeholder={t`Select timezone`}
+										id="timezone"
+										{...register("timezone")}
+									>
+										{timezones.map((timeZone) => (
+											<option
+												key={timeZone.tzCode}
+												value={timeZone.tzCode}
+											>
+												(UTC{timeZone.utc}){" "}
+												{timeZone.label}
+											</option>
+										))}
 									</Select>
 								</FormControl>
 								<FormErrorMessage>
@@ -120,7 +200,8 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 								loadingText="Saving..."
 								type="submit"
 								size="lg"
-								colorScheme='blue'>
+								colorScheme="blue"
+							>
 								<Trans>Save Settings</Trans>
 							</Button>
 						</ModalFooter>
@@ -128,5 +209,5 @@ export default function SettingsModal({closeOnOverlayClick, isOpen, onClose, onS
 				</ModalContent>
 			</Modal>
 		</>
-	)
+	);
 }

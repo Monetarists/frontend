@@ -9,4 +9,4 @@ export type SettingsModalFormValues = {
 	server: string;
 	language: string;
 	timezone: string;
-}
+};

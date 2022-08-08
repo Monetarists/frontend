@@ -1,17 +1,17 @@
-import { forwardRef, Link as ChakraLink} from "@chakra-ui/react"
-import NextLink from "next/link"
+import { forwardRef, Link as ChakraLink } from "@chakra-ui/react";
+import NextLink from "next/link";
 import React from "react";
 
-const Link = forwardRef((props, ref) => {
-	const { children, href, ...rest } = props;
-
+const Link = forwardRef(({ href, children, ...props }, ref) => {
 	return (
 		<NextLink passHref href={href}>
-			<ChakraLink {...rest}>{children}</ChakraLink>
+			<ChakraLink ref={ref} {...props}>
+				{children}
+			</ChakraLink>
 		</NextLink>
-	)
+	);
 });
 
-Link.displayName = 'Link';
+Link.displayName = "Link";
 
 export default Link;

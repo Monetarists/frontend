@@ -1,9 +1,5 @@
-let PATTERN = /^(.)|\s+(.)/g;
-
 function ucwords(str: string) {
-	return str.replace(PATTERN, function(match) {
-		return match.toUpperCase();
-	});
+	return (" " + str).replace(/ \w/g, (a) => a.toLocaleUpperCase()).trim();
 }
 
 export { ucwords };
