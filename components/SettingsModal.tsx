@@ -98,6 +98,11 @@ export default function SettingsModal({
 												{...register("server", {
 													required: true,
 												})}
+												sx={{
+													"> optgroup > option": {
+														bg: optionBackground,
+													},
+												}}
 											>
 												{(dataCenters || []).map(
 													(dataCenter) => (
@@ -113,10 +118,6 @@ export default function SettingsModal({
 																) => (
 																	<option
 																		key={`server-${server}`}
-																		style={{
-																			background:
-																				optionBackground,
-																		}}
 																	>
 																		{server}
 																	</option>
