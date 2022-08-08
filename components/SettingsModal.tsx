@@ -17,6 +17,7 @@ import {
 	HStack,
 	Select,
 	Stack,
+	useColorModeValue,
 } from "@chakra-ui/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import useSettings from "../hooks/useSettings";
@@ -63,6 +64,8 @@ export default function SettingsModal({
 		onSave();
 	};
 
+	const optionBackground = useColorModeValue("white", "gray.700");
+
 	return (
 		<>
 			<Modal
@@ -95,6 +98,11 @@ export default function SettingsModal({
 												{...register("server", {
 													required: true,
 												})}
+												sx={{
+													"> optgroup > option": {
+														bg: optionBackground,
+													},
+												}}
 											>
 												{(dataCenters || []).map(
 													(dataCenter) => (
