@@ -31,7 +31,7 @@ export default function GameItemIcon({
 					setUrl("/images/items/error.png");
 				}}
 				priority={priority}
-				unoptimized
+				unoptimized={true}
 			/>
 		</Box>
 	);
