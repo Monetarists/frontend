@@ -4,15 +4,20 @@ const nextConfig = {
 	swcMinify: true,
 	productionBrowserSourceMaps: true,
 	compress: false,
-	output: 'standalone',
+	output: "standalone",
 	images: {
 		domains: [
-			'xivapi.com',
-			'monetarists.github.io',
-			'img2.finalfantasyxiv.com',
-			'cdn.discordapp.com'
-		]
-	}
+			"xivapi.com",
+			"monetarists.github.io",
+			"img2.finalfantasyxiv.com",
+			"cdn.discordapp.com",
+		],
+	},
+	experimental: {
+		images: {
+			unoptimized: true,
+		},
+	},
 	/*
 	webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
 		// Note: we provide webpack above so you should not `require` it
@@ -30,9 +35,9 @@ const nextConfig = {
 		return config
 	}
 	 */
-}
+};
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-	enabled: process.env.ANALYZE === 'true'
-})
-module.exports = withBundleAnalyzer(nextConfig)
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+	enabled: process.env.ANALYZE === "true",
+});
+module.exports = withBundleAnalyzer(nextConfig);
