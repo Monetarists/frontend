@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
@@ -27,7 +27,7 @@ import {
 	Tr,
 	InputProps,
 	useColorModeValue,
-	useToast,
+	useToast, Select, SelectProps,
 } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -57,6 +57,8 @@ import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps } from "next";
 import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
+import { getItemSearchCategories } from "../../data";
+import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 
 const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
@@ -64,8 +66,10 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [localisedNameKey, setLocalisedNameKey] = useState("name_en");
+	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] = useState("Name_en");
 	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
+	const [iscGrouped, setIscGrouped] = useState<Record<number, Array<ItemSearchCategory>>>({});
 	const [data, setData] = useState<Recipe[]>(() => []);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [sorting, setSorting] = useState<SortingState>([
@@ -93,8 +97,21 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		}
 
 		setLocalisedNameKey("name_" + settings.monetarist_language);
+		setLocalisedNameKeyUpper("Name_" + settings.monetarist_language);
 		setRealm(settings.monetarist_server ?? "Ragnarok");
-	}, [settings, setNewJobName, setLocalisedNameKey, setRealm, crafter]);
+	}, [settings, setNewJobName, setLocalisedNameKey, setLocalisedNameKeyUpper, setRealm, crafter]);
+
+	useEffect(() => {
+		const isc = getItemSearchCategories();
+		const grouped: Record<number, Array<ItemSearchCategory>> = {};
+
+		isc.forEach((category) => {
+			grouped[category.Category] = grouped[category.Category] ?? [];
+			grouped[category.Category].push(category);
+		});
+
+		setIscGrouped(grouped);
+	}, [setIscGrouped]);
 
 	useEffect(() => {
 		if (crafter && realm) {
@@ -179,7 +196,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 									<Text textTransform={"capitalize"}>
 										{recipeName}
 										<br />
-										<Text fontSize='xs' color={useColorModeValue("white", "gray.300")}>
+										<Text as='span' fontSize='xs' color={useColorModeValue("white", "gray.300")}>
 											{searchCategoryName}
 										</Text>
 									</Text>
@@ -191,6 +208,30 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			},
 			footer: (info) => info.column.id,
 		}),
+
+		columnHelper.accessor(
+			(row) => (row.item.itemSearchCategory?.id || 0) + "",
+			{
+				id: "recipeCategory",
+				header: () => '',
+				cell: (info) => {
+					let recipe = info.row.original;
+
+					let searchCategoryName = (
+						recipe.item.itemSearchCategory as unknown as {
+							[key: string]: string | number | boolean;
+						}
+					)[localisedNameKey as keyof Category];
+
+					return (
+						<Text>
+							{searchCategoryName}
+						</Text>
+					);
+				},
+				footer: (info) => info.column.id,
+			}
+		),
 
 		columnHelper.accessor(
 			(row) => row.universalisEntry?.craftingCost || 0,
@@ -393,6 +434,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 					value: [0, 500],
 				},
 			],
+			columnVisibility: {"recipeCategory": false}
 		},
 		enableSortingRemoval: false,
 		onSortingChange: setSorting,
@@ -448,6 +490,71 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 								initialMinFilterValue={1}
 								column={table.getColumn("sold")}
 							/>
+						</Box>
+
+						<Box>
+							<FilterDropdown
+								label={t`Category`}
+								column={table.getColumn("recipeCategory")}
+								table={table}>
+								<option></option>
+								<optgroup label={t`Weapons`}>
+									{(iscGrouped[1] || []).map(
+										(
+											category
+										) => (
+											<option
+												value={category.ID}
+												key={`filter-category-${category.ID}`}
+											>
+												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
+											</option>
+										)
+									)}
+								</optgroup>
+								<optgroup label={t`Armour`}>
+									{(iscGrouped[2] || []).map(
+										(
+											category
+										) => (
+											<option
+												value={category.ID}
+												key={`filter-category-${category.ID}`}
+											>
+												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
+											</option>
+										)
+									)}
+								</optgroup>
+								<optgroup label={t`Items`}>
+									{(iscGrouped[3] || []).map(
+										(
+											category
+										) => (
+											<option
+												value={category.ID}
+												key={`filter-category-${category.ID}`}
+											>
+												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
+											</option>
+										)
+									)}
+								</optgroup>
+								<optgroup label={t`Housing`}>
+									{(iscGrouped[4] || []).map(
+										(
+											category
+										) => (
+											<option
+												value={category.ID}
+												key={`filter-category-${category.ID}`}
+											>
+												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
+											</option>
+										)
+									)}
+								</optgroup>
+							</FilterDropdown>
 						</Box>
 
 						<Box>
@@ -557,7 +664,7 @@ function FilterNumber({
 
 	return (
 		<HStack>
-			<Box minW={"60px"}>{label}:</Box>
+			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedNumberInput
 				value={
 					(columnFilterValue as [number, number])?.[0] ??
@@ -600,15 +707,11 @@ function FilterText({
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) {
-	const firstValue = table
-		.getPreFilteredRowModel()
-		.flatRows[0]?.getValue(column.id);
-
 	const columnFilterValue = column.getFilterValue();
 
 	return (
 		<HStack>
-			<Box minW={"60px"}>{label}:</Box>
+			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedInput
 				type="text"
 				value={
@@ -618,6 +721,36 @@ function FilterText({
 				placeholder={`Search...`}
 				list={column.id + "list"}
 			/>
+			<Box width={"100%"}>&nbsp;</Box>
+		</HStack>
+	);
+}
+
+function FilterDropdown({
+	label,
+	column,
+	table,
+	initialFilterValue,
+	children
+}: {
+	label: string;
+	column: Column<any>;
+	table: ReactTable<any>;
+	initialFilterValue?: string;
+	children: ReactNode[];
+}) {
+	const columnFilterValue = column.getFilterValue();
+
+	return (
+		<HStack>
+			<Box minW={"80px"}>{label}:</Box>
+			<DebouncedSelect
+				value={
+					(columnFilterValue ?? initialFilterValue ?? "") as string
+				}
+				onChange={(value) => column.setFilterValue(value)}>
+				{children}
+			</DebouncedSelect>
 			<Box width={"100%"}>&nbsp;</Box>
 		</HStack>
 	);
@@ -700,6 +833,51 @@ function DebouncedInput({
 			value={value}
 			onChange={(e) => setValue(e.target.value)}
 		/>
+	);
+}
+
+// A debounced select react component
+function DebouncedSelect({
+	value: initialValue,
+	onChange,
+	debounce = 500,
+	children,
+	...props
+}: {
+	value: string | number;
+	onChange: (value: string | number) => void;
+	debounce?: number;
+	children: ReactNode[];
+} & Omit<SelectProps, "onChange">) {
+	const [value, setValue] = React.useState(initialValue);
+
+	React.useEffect(() => {
+		setValue(initialValue);
+	}, [initialValue]);
+
+	React.useEffect(() => {
+		const timeout = setTimeout(() => {
+			onChange(value);
+		}, debounce);
+
+		return () => clearTimeout(timeout);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value, debounce]);
+
+	const optionBackground = useColorModeValue("white", "gray.700");
+
+	return (
+		<Select
+			{...props}
+			sx={{
+				"> optgroup > option": {
+					bg: optionBackground,
+				},
+			}}
+			value={value}
+			onChange={(e) => setValue(e.target.value)}>
+			{children}
+		</Select>
 	);
 }
 
