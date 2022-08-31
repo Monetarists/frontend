@@ -10,6 +10,6 @@ export interface Item {
 	canBeHq: boolean;
 	isMarketable: boolean;
 
-	itemUiCategory: Category | null;
+	itemUICategory: Category | null;
 	itemSearchCategory: Category | null;
 }
