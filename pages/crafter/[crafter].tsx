@@ -56,13 +56,14 @@ import useSettings from "../../hooks/useSettings";
 import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps } from "next";
 import SEO from "../../components/SEO";
+import { Category } from "../../@types/game/Category";
 
 const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
-	const [recipeNameKey, setRecipeNameKey] = useState("name_en");
+	const [localisedNameKey, setLocalisedNameKey] = useState("name_en");
 	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
 	const [data, setData] = useState<Recipe[]>(() => []);
@@ -91,9 +92,9 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 				break;
 		}
 
-		setRecipeNameKey("name_" + settings.monetarist_language);
+		setLocalisedNameKey("name_" + settings.monetarist_language);
 		setRealm(settings.monetarist_server ?? "Ragnarok");
-	}, [settings, setNewJobName, setRecipeNameKey, setRealm, crafter]);
+	}, [settings, setNewJobName, setLocalisedNameKey, setRealm, crafter]);
 
 	useEffect(() => {
 		if (crafter && realm) {
@@ -120,7 +121,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	const columnHelper = createColumnHelper<Recipe>();
 
 	const columns = [
-		columnHelper.accessor((row) => row[recipeNameKey as keyof Recipe], {
+		columnHelper.accessor((row) => row[localisedNameKey as keyof Recipe], {
 			id: "name",
 			header: () => (
 				// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
@@ -131,11 +132,18 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			),
 			cell: (info) => {
 				let recipe = info.row.original;
+
 				let recipeName = (
 					recipe as unknown as {
 						[key: string]: string | number | boolean;
 					}
-				)[recipeNameKey as keyof Recipe];
+				)[localisedNameKey as keyof Recipe];
+
+				let searchCategoryName = (
+					recipe.item.itemSearchCategory as unknown as {
+						[key: string]: string | number | boolean;
+					}
+				)[localisedNameKey as keyof Category];
 
 				return (
 					<Link
@@ -158,8 +166,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						>
 							<GameItemIcon
 								id={recipe.item.id}
-								width="34px"
-								height="34px"
+								width="38px"
+								height="38px"
 								className="recipeIcon"
 							/>
 							&nbsp;
@@ -167,9 +175,15 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 								label={t`Recipe ID: ${recipe.id}`}
 								aria-label={t`Recipe ID helper`}
 							>
-								<Text textTransform={"capitalize"}>
-									{recipeName}
-								</Text>
+								<>
+									<Text textTransform={"capitalize"}>
+										{recipeName}
+										<br />
+										<Text fontSize='xs' color={useColorModeValue("white", "gray.300")}>
+											{searchCategoryName}
+										</Text>
+									</Text>
+								</>
 							</Tooltip>
 						</Flex>
 					</Link>
