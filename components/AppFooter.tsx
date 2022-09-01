@@ -4,7 +4,7 @@ import { Trans } from "@lingui/macro";
 import { Logo } from "./Logo";
 import Link from "./Link";
 
-export default function AppFooter() {
+const AppFooter = () => {
 	return (
 		<Box
 			bg={useColorModeValue("gray.50", "gray.900")}
@@ -54,3 +54,7 @@ export default function AppFooter() {
 		</Box>
 	);
 }
+
+AppFooter.whyDidYouRender = true;
+
+export default AppFooter;

@@ -18,11 +18,11 @@ import Link from "../components/Link";
 import { Trans } from "@lingui/macro";
 import { ErrorProps } from "../@types/layout/Error";
 
-export default function Error({
+const Error = ({
 	statusCode,
 	heading,
 	description,
-}: ErrorProps) {
+}: ErrorProps) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const title = `${statusCode} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
@@ -102,4 +102,8 @@ export default function Error({
 			</Box>
 		</>
 	);
-}
+};
+
+Error.whyDidYouRender = true;
+
+export default Error;

@@ -43,7 +43,7 @@ import {
 	useReactTable,
 	getFacetedRowModel,
 	getFacetedUniqueValues,
-	getFacetedMinMaxValues,
+	getFacetedMinMaxValues, PaginationState,
 } from "@tanstack/react-table";
 import NumberFormat from "react-number-format";
 import axios from "axios";
@@ -71,7 +71,16 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
 	const [iscGrouped, setIscGrouped] = useState<Record<number, Array<ItemSearchCategory>>>({});
 	const [data, setData] = useState<Recipe[]>(() => []);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+		{
+			id: "craftingProfit",
+			value: [1, ''],
+		},
+		{
+			id: "sold",
+			value: [1, ''],
+		}
+	]);
 	const [sorting, setSorting] = useState<SortingState>([
 		{
 			id: "sold",
@@ -82,6 +91,10 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			desc: true,
 		},
 	]);
+	const [pagination, setPagination] = useState<PaginationState>({
+		pageSize: 10,
+		pageIndex: 1
+	});
 
 	useEffect(() => {
 		switch (settings.monetarist_language) {
@@ -426,14 +439,10 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		state: {
 			columnFilters,
 			sorting,
+			pagination
 		},
 		initialState: {
-			columnFilters: [
-				{
-					id: "craftingProfit",
-					value: [0, 500],
-				},
-			],
+			columnFilters: columnFilters,
 			columnVisibility: {"recipeCategory": false}
 		},
 		enableSortingRemoval: false,
@@ -649,7 +658,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	);
 };
 
-function FilterNumber({
+const FilterNumber = ({
 	label,
 	column,
 	initialMinFilterValue,
@@ -659,44 +668,49 @@ function FilterNumber({
 	column: Column<any>;
 	initialMinFilterValue?: string | number;
 	initialMaxFilterValue?: string | number;
-}) {
-	const columnFilterValue = column.getFilterValue();
+}) => {
+	const columnFilterValue = (column.getFilterValue() as [number, number]);
 
 	return (
 		<HStack>
 			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedNumberInput
 				value={
-					(columnFilterValue as [number, number])?.[0] ??
+					columnFilterValue?.[0] ??
 					initialMinFilterValue ??
 					""
 				}
-				onValueChange={(value) =>
-					column.setFilterValue((old: [number, number]) => [
-						value,
-						old?.[1],
-					])
-				}
+				onValueChange={(value) => {
+					if (value !== columnFilterValue?.[0]) {
+						column.setFilterValue((old: [number, number]) => [
+							value,
+							old?.[1],
+						]);
+					}
+				}}
 			/>
 			<Box> - </Box>
 			<DebouncedNumberInput
 				value={
-					(columnFilterValue as [number, number])?.[1] ??
+					columnFilterValue?.[1] ??
 					initialMaxFilterValue ??
 					""
 				}
-				onValueChange={(value) =>
-					column.setFilterValue((old: [number, number]) => [
-						old?.[0],
-						value,
-					])
-				}
+				onValueChange={(value) => {
+					if (value !== columnFilterValue?.[1]) {
+						column.setFilterValue((old: [number, number]) => [
+							old?.[0],
+							value,
+						]);
+					}
+				}}
 			/>
 		</HStack>
 	);
-}
+};
+FilterNumber.whyDidYouRender = true;
 
-function FilterText({
+const FilterText = ({
 	label,
 	column,
 	table,
@@ -706,27 +720,30 @@ function FilterText({
 	column: Column<any>;
 	table: ReactTable<any>;
 	initialFilterValue?: string;
-}) {
-	const columnFilterValue = column.getFilterValue();
+}) => {
+	const columnFilterValue = (column.getFilterValue() ?? initialFilterValue ?? "") as string;
 
 	return (
 		<HStack>
 			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedInput
 				type="text"
-				value={
-					(columnFilterValue ?? initialFilterValue ?? "") as string
-				}
-				onChange={(value) => column.setFilterValue(value)}
+				value={columnFilterValue}
+				onChange={(value) => {
+					if (columnFilterValue !== value) {
+						column.setFilterValue(value);
+					}
+				}}
 				placeholder={`Search...`}
 				list={column.id + "list"}
 			/>
 			<Box width={"100%"}>&nbsp;</Box>
 		</HStack>
 	);
-}
+};
+FilterText.whyDidYouRender = true;
 
-function FilterDropdown({
+const FilterDropdown = ({
 	label,
 	column,
 	table,
@@ -738,26 +755,29 @@ function FilterDropdown({
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 	children: ReactNode[];
-}) {
-	const columnFilterValue = column.getFilterValue();
+}) => {
+	const columnFilterValue = (column.getFilterValue() ?? initialFilterValue ?? "") as string;
 
 	return (
 		<HStack>
 			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedSelect
-				value={
-					(columnFilterValue ?? initialFilterValue ?? "") as string
-				}
-				onChange={(value) => column.setFilterValue(value)}>
+				value={columnFilterValue}
+				onChange={(value) => {
+					if (columnFilterValue !== value) {
+						column.setFilterValue(value);
+					}
+				}}>
 				{children}
 			</DebouncedSelect>
 			<Box width={"100%"}>&nbsp;</Box>
 		</HStack>
 	);
-}
+};
+FilterDropdown.whyDidYouRender = true;
 
 // A debounced number input react component
-function DebouncedNumberInput({
+const DebouncedNumberInput = ({
 	value: initialValue,
 	onValueChange,
 	debounce = 500,
@@ -766,12 +786,8 @@ function DebouncedNumberInput({
 	value: string | number;
 	onValueChange: (value: string | number) => void;
 	debounce?: number;
-} & Omit<NumberInputProps, "onChange">) {
+} & Omit<NumberInputProps, "onChange">) => {
 	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		setValue(initialValue);
-	}, [initialValue]);
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -799,10 +815,11 @@ function DebouncedNumberInput({
 			</NumberInputStepper>
 		</NumberInput>
 	);
-}
+};
+DebouncedNumberInput.whyDidYouRender = true;
 
 // A debounced input react component
-function DebouncedInput({
+const DebouncedInput = ({
 	value: initialValue,
 	onChange,
 	debounce = 500,
@@ -811,12 +828,8 @@ function DebouncedInput({
 	value: string | number;
 	onChange: (value: string | number) => void;
 	debounce?: number;
-} & Omit<InputProps, "onChange">) {
+} & Omit<InputProps, "onChange">) => {
 	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		setValue(initialValue);
-	}, [initialValue]);
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -834,10 +847,11 @@ function DebouncedInput({
 			onChange={(e) => setValue(e.target.value)}
 		/>
 	);
-}
+};
+DebouncedInput.whyDidYouRender = true;
 
 // A debounced select react component
-function DebouncedSelect({
+const DebouncedSelect = ({
 	value: initialValue,
 	onChange,
 	debounce = 500,
@@ -848,12 +862,8 @@ function DebouncedSelect({
 	onChange: (value: string | number) => void;
 	debounce?: number;
 	children: ReactNode[];
-} & Omit<SelectProps, "onChange">) {
+} & Omit<SelectProps, "onChange">) => {
 	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		setValue(initialValue);
-	}, [initialValue]);
 
 	React.useEffect(() => {
 		const timeout = setTimeout(() => {
@@ -879,7 +889,9 @@ function DebouncedSelect({
 			{children}
 		</Select>
 	);
-}
+};
+
+DebouncedSelect.whyDidYouRender = true;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	let crafterParam = context.params?.crafter ?? "";
@@ -901,5 +913,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 		},
 	};
 };
+
+Crafter.whyDidYouRender = true;
 
 export default Crafter;

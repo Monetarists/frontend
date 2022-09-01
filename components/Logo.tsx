@@ -28,3 +28,7 @@ export const Logo = ({ ...props }: React.SVGProps<SVGSVGElement>) => {
 		</>
 	);
 };
+
+Logo.whyDidYouRender = true;
+
+export default Logo;
