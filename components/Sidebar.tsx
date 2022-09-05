@@ -66,6 +66,8 @@ const SidebarCrafter = ({
 	);
 };
 
+SidebarCrafter.whyDidYouRender = true;
+
 const Sidebar = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 	return (
 		<Box
@@ -98,5 +100,7 @@ const Sidebar = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 		</Box>
 	);
 };
+
+Sidebar.whyDidYouRender = true;
 
 export default Sidebar;

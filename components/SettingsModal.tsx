@@ -29,12 +29,12 @@ import { getDataCenters } from "../data";
 import timezones from "timezones-list";
 import { t, Trans } from "@lingui/macro";
 
-export default function SettingsModal({
+const SettingsModal = ({
 	closeOnOverlayClick,
 	isOpen,
 	onClose,
 	onSave,
-}: SettingsModalProps) {
+}: SettingsModalProps) => {
 	const [settings, setSetting] = useSettings();
 	const dataCenters = getDataCenters();
 
@@ -210,4 +210,8 @@ export default function SettingsModal({
 			</Modal>
 		</>
 	);
-}
+};
+
+SettingsModal.whyDidYouRender = true;
+
+export default SettingsModal;

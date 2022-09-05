@@ -1,3 +1,5 @@
+import "../tools/whyDidYouRender";
+
 import "../styles/global.scss";
 
 import type { AppContext, AppProps } from "next/app";
@@ -71,5 +73,7 @@ Monetarist.getInitialProps = async (appCtx: AppContext) => {
 	const appProps = await App.getInitialProps(appCtx);
 	return { ...appProps, cookies: appCtx.ctx.req?.headers?.cookie };
 };
+
+Monetarist.whyDidYouRender = true;
 
 export default Monetarist;

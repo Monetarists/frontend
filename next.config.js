@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
@@ -17,6 +19,26 @@ const nextConfig = {
 		images: {
 			unoptimized: true,
 		},
+	},
+	/**
+	 * @param {{[key: string]: unknown}} config
+	 * @param {{dev: boolean; isServer: boolean;}} options
+	 */
+	webpack: (config, options) => {
+		// why did you render
+		if (options.dev && !options.isServer) {
+			const originalEntry = config.entry;
+			config.entry = async () => {
+				const wdrPath = path.resolve(__dirname, './tools/whyDidYouRender.ts')
+				const entries = await originalEntry();
+				if (entries['main.js'] && !entries['main.js'].includes(wdrPath)) {
+					entries['main.js'].unshift(wdrPath);
+				}
+				return entries;
+			};
+		}
+
+		return config;
 	},
 	/*
 	webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
