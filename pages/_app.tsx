@@ -1,4 +1,4 @@
-import '../tools/whyDidYouRender';
+import "../tools/whyDidYouRender";
 
 import "../styles/global.scss";
 

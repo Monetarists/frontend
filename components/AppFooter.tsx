@@ -53,7 +53,7 @@ const AppFooter = () => {
 			</Box>
 		</Box>
 	);
-}
+};
 
 AppFooter.whyDidYouRender = true;
 

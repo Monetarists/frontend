@@ -27,7 +27,9 @@ import {
 	Tr,
 	InputProps,
 	useColorModeValue,
-	useToast, Select, SelectProps,
+	useToast,
+	Select,
+	SelectProps,
 } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -43,7 +45,8 @@ import {
 	useReactTable,
 	getFacetedRowModel,
 	getFacetedUniqueValues,
-	getFacetedMinMaxValues, PaginationState,
+	getFacetedMinMaxValues,
+	PaginationState,
 } from "@tanstack/react-table";
 import NumberFormat from "react-number-format";
 import axios from "axios";
@@ -64,22 +67,27 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
+	const textColor = useColorModeValue("white", "gray.300");
+
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [localisedNameKey, setLocalisedNameKey] = useState("name_en");
-	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] = useState("Name_en");
+	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
+		useState("Name_en");
 	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
-	const [iscGrouped, setIscGrouped] = useState<Record<number, Array<ItemSearchCategory>>>({});
+	const [iscGrouped, setIscGrouped] = useState<
+		Record<number, Array<ItemSearchCategory>>
+	>({});
 	const [data, setData] = useState<Recipe[]>(() => []);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
 		{
 			id: "craftingProfit",
-			value: [1, ''],
+			value: [1, ""],
 		},
 		{
 			id: "sold",
-			value: [1, ''],
-		}
+			value: [1, ""],
+		},
 	]);
 	const [sorting, setSorting] = useState<SortingState>([
 		{
@@ -93,7 +101,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	]);
 	const [pagination, setPagination] = useState<PaginationState>({
 		pageSize: 10,
-		pageIndex: 1
+		pageIndex: 1,
 	});
 
 	useEffect(() => {
@@ -112,7 +120,14 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		setLocalisedNameKey("name_" + settings.monetarist_language);
 		setLocalisedNameKeyUpper("Name_" + settings.monetarist_language);
 		setRealm(settings.monetarist_server ?? "Ragnarok");
-	}, [settings, setNewJobName, setLocalisedNameKey, setLocalisedNameKeyUpper, setRealm, crafter]);
+	}, [
+		settings,
+		setNewJobName,
+		setLocalisedNameKey,
+		setLocalisedNameKeyUpper,
+		setRealm,
+		crafter,
+	]);
 
 	useEffect(() => {
 		const isc = getItemSearchCategories();
@@ -209,7 +224,11 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 									<Text textTransform={"capitalize"}>
 										{recipeName}
 										<br />
-										<Text as='span' fontSize='xs' color={useColorModeValue("white", "gray.300")}>
+										<Text
+											as="span"
+											fontSize="xs"
+											color={textColor}
+										>
 											{searchCategoryName}
 										</Text>
 									</Text>
@@ -226,7 +245,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			(row) => (row.item.itemSearchCategory?.id || 0) + "",
 			{
 				id: "recipeCategory",
-				header: () => '',
+				header: () => "",
 				cell: (info) => {
 					let recipe = info.row.original;
 
@@ -236,11 +255,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						}
 					)[localisedNameKey as keyof Category];
 
-					return (
-						<Text>
-							{searchCategoryName}
-						</Text>
-					);
+					return <Text>{searchCategoryName}</Text>;
 				},
 				footer: (info) => info.column.id,
 			}
@@ -439,11 +454,11 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		state: {
 			columnFilters,
 			sorting,
-			pagination
+			pagination,
 		},
 		initialState: {
 			columnFilters: columnFilters,
-			columnVisibility: {"recipeCategory": false}
+			columnVisibility: { recipeCategory: false },
 		},
 		enableSortingRemoval: false,
 		onSortingChange: setSorting,
@@ -505,63 +520,64 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 							<FilterDropdown
 								label={t`Category`}
 								column={table.getColumn("recipeCategory")}
-								table={table}>
+								table={table}
+							>
 								<option></option>
 								<optgroup label={t`Weapons`}>
-									{(iscGrouped[1] || []).map(
-										(
-											category
-										) => (
-											<option
-												value={category.ID}
-												key={`filter-category-${category.ID}`}
-											>
-												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
-											</option>
-										)
-									)}
+									{(iscGrouped[1] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
 								</optgroup>
 								<optgroup label={t`Armour`}>
-									{(iscGrouped[2] || []).map(
-										(
-											category
-										) => (
-											<option
-												value={category.ID}
-												key={`filter-category-${category.ID}`}
-											>
-												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
-											</option>
-										)
-									)}
+									{(iscGrouped[2] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
 								</optgroup>
 								<optgroup label={t`Items`}>
-									{(iscGrouped[3] || []).map(
-										(
-											category
-										) => (
-											<option
-												value={category.ID}
-												key={`filter-category-${category.ID}`}
-											>
-												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
-											</option>
-										)
-									)}
+									{(iscGrouped[3] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
 								</optgroup>
 								<optgroup label={t`Housing`}>
-									{(iscGrouped[4] || []).map(
-										(
-											category
-										) => (
-											<option
-												value={category.ID}
-												key={`filter-category-${category.ID}`}
-											>
-												{category[localisedNameKeyUpper as keyof ItemSearchCategory]}
-											</option>
-										)
-									)}
+									{(iscGrouped[4] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
 								</optgroup>
 							</FilterDropdown>
 						</Box>
@@ -669,17 +685,13 @@ const FilterNumber = ({
 	initialMinFilterValue?: string | number;
 	initialMaxFilterValue?: string | number;
 }) => {
-	const columnFilterValue = (column.getFilterValue() as [number, number]);
+	const columnFilterValue = column.getFilterValue() as [number, number];
 
 	return (
 		<HStack>
 			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedNumberInput
-				value={
-					columnFilterValue?.[0] ??
-					initialMinFilterValue ??
-					""
-				}
+				value={columnFilterValue?.[0] ?? initialMinFilterValue ?? ""}
 				onValueChange={(value) => {
 					if (value !== columnFilterValue?.[0]) {
 						column.setFilterValue((old: [number, number]) => [
@@ -691,11 +703,7 @@ const FilterNumber = ({
 			/>
 			<Box> - </Box>
 			<DebouncedNumberInput
-				value={
-					columnFilterValue?.[1] ??
-					initialMaxFilterValue ??
-					""
-				}
+				value={columnFilterValue?.[1] ?? initialMaxFilterValue ?? ""}
 				onValueChange={(value) => {
 					if (value !== columnFilterValue?.[1]) {
 						column.setFilterValue((old: [number, number]) => [
@@ -721,7 +729,9 @@ const FilterText = ({
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) => {
-	const columnFilterValue = (column.getFilterValue() ?? initialFilterValue ?? "") as string;
+	const columnFilterValue = (column.getFilterValue() ??
+		initialFilterValue ??
+		"") as string;
 
 	return (
 		<HStack>
@@ -748,7 +758,7 @@ const FilterDropdown = ({
 	column,
 	table,
 	initialFilterValue,
-	children
+	children,
 }: {
 	label: string;
 	column: Column<any>;
@@ -756,7 +766,9 @@ const FilterDropdown = ({
 	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
-	const columnFilterValue = (column.getFilterValue() ?? initialFilterValue ?? "") as string;
+	const columnFilterValue = (column.getFilterValue() ??
+		initialFilterValue ??
+		"") as string;
 
 	return (
 		<HStack>
@@ -767,7 +779,8 @@ const FilterDropdown = ({
 					if (columnFilterValue !== value) {
 						column.setFilterValue(value);
 					}
-				}}>
+				}}
+			>
 				{children}
 			</DebouncedSelect>
 			<Box width={"100%"}>&nbsp;</Box>
@@ -885,7 +898,8 @@ const DebouncedSelect = ({
 				},
 			}}
 			value={value}
-			onChange={(e) => setValue(e.target.value)}>
+			onChange={(e) => setValue(e.target.value)}
+		>
 			{children}
 		</Select>
 	);
