@@ -44,9 +44,13 @@ i18n.loadLocaleData({
 	fr: { plurals: fr },
 });
 
-function Monetarist({ Component, pageProps }: AppProps) {
+interface MonetaristAppProps extends AppProps {
+	cookies?: string;
+}
+
+function Monetarist({ Component, pageProps, cookies }: MonetaristAppProps) {
 	const router = useRouter();
-	const cookiesObj = new Cookies(pageProps.cookies);
+	const cookiesObj = new Cookies(cookies);
 	const lang = parseLang(cookiesObj.get("monetarist_language"));
 
 	useEffect(() => {
