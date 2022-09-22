@@ -8,17 +8,13 @@ const nextConfig = {
 	compress: false,
 	output: "standalone",
 	images: {
+		unoptimized: true,
 		domains: [
 			"xivapi.com",
 			"monetarists.github.io",
 			"img2.finalfantasyxiv.com",
 			"cdn.discordapp.com",
 		],
-	},
-	experimental: {
-		images: {
-			unoptimized: true,
-		},
 	},
 	/**
 	 * @param {{[key: string]: unknown}} config
