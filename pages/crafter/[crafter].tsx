@@ -57,11 +57,12 @@ import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
 import Link from "../../components/Link";
 import useSettings from "../../hooks/useSettings";
 import { getClassJob, getClassJobs } from "../../data";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
 import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
+import { setup } from "../../lib/csrf";
 
 const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
@@ -148,8 +149,10 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 					`${process.env.NEXT_PUBLIC_API_URL}/recipes/${crafter.Abbreviation}/${realm}`
 				)
 				.then((res) => {
-					setRecipes(res.data.recipes);
-					setData(res.data.recipes);
+					if (res.data.recipes) {
+						setRecipes(res.data.recipes);
+						setData(res.data.recipes);
+					}
 				})
 				.catch((err) => {
 					toast({
@@ -919,26 +922,28 @@ const DebouncedSelect = ({
 
 DebouncedSelect.whyDidYouRender = true;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	let crafterParam = context.params?.crafter ?? "";
-	const crafter = getClassJob(
-		typeof crafterParam === "string" ? crafterParam : ""
-	);
+export const getServerSideProps: GetServerSideProps = setup(
+	async (context: GetServerSidePropsContext) => {
+		let crafterParam = context.params?.crafter ?? "";
+		const crafter = getClassJob(
+			typeof crafterParam === "string" ? crafterParam : ""
+		);
 
-	if (crafter === null) {
+		if (crafter === null) {
+			return {
+				notFound: true,
+			};
+		}
+
 		return {
-			notFound: true,
+			props: {
+				url: context?.req?.headers?.host,
+				classJobs: getClassJobs(),
+				crafter: crafter,
+			},
 		};
 	}
-
-	return {
-		props: {
-			url: context?.req?.headers?.host,
-			classJobs: getClassJobs(),
-			crafter: crafter,
-		},
-	};
-};
+);
 
 Crafter.whyDidYouRender = true;
 
