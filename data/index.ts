@@ -1,16 +1,16 @@
-import classJobs from './ClassJob.json';
-import itemSearchCategories from './ItemSearchCategory.json';
-import dataCenters from './DataCenter.json';
-import {ClassJob} from "../@types/game/ClassJob";
-import {ItemSearchCategory} from "../@types/game/ItemSearchCategory";
-import {DataCenter} from "../@types/game/DataCenter";
+import classJobs from "./ClassJob.json";
+import itemSearchCategories from "./ItemSearchCategory.json";
+import dataCenters from "./DataCenter.json";
+import { ClassJob } from "../@types/game/ClassJob";
+import { ItemSearchCategory } from "../@types/game/ItemSearchCategory";
+import { DataCenter } from "../@types/game/DataCenter";
 
 export function getClassJobs(): ClassJob[] {
 	return Object.values(classJobs);
 }
 
-export function getClassJob(crafter: string): ClassJob|null {
-	let jobData: ClassJob|undefined = undefined;
+export function getClassJob(crafter: string): ClassJob | null {
+	let jobData: ClassJob | undefined = undefined;
 
 	classJobs.forEach((classJob) => {
 		if (classJob.Abbreviation === crafter) {

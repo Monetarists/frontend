@@ -18,11 +18,7 @@ import Link from "../components/Link";
 import { Trans } from "@lingui/macro";
 import { ErrorProps } from "../@types/layout/Error";
 
-const Error = ({
-	statusCode,
-	heading,
-	description,
-}: ErrorProps) => {
+const Error = ({ statusCode, heading, description }: ErrorProps) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const title = `${statusCode} - ${process.env.NEXT_PUBLIC_APP_NAME}`;

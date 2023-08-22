@@ -6,7 +6,9 @@ import { updateDataCenters } from "./tools/updateDataCenters";
 const yargs = require("yargs/yargs");
 let { hideBin } = require("yargs/helpers");
 const argv = yargs(hideBin(process.argv))
-	.usage("Usage: npm run update-game-data [-- -d ClassJob|ItemSearchCategory|DataCenter|all]")
+	.usage(
+		"Usage: npm run update-game-data [-- -d ClassJob|ItemSearchCategory|DataCenter|all]"
+	)
 	.default("d", "all")
 	.alias("d", "data").argv;
 

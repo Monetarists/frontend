@@ -1,6 +1,7 @@
 import { ClassJob } from "../@types/game/ClassJob";
 import { ucwords } from "../lib/ucwords";
 
+// @ts-ignore
 interface ClassJobResponse extends Response {
 	Pagination: Pagination;
 	Results: Array<ClassJob>;

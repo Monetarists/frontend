@@ -27,6 +27,7 @@
     "@lingui/macro": "^3.14.0",
     "@lingui/react": "^3.14.0",
     "@next/bundle-analyzer": "^12.2.2",
+    "@supabase/supabase-js": "^2.33.0",
     "@tanstack/react-table": "^8.3.0",
     "@thewakingsands/axis-font-icons": "^0.3.0",
     "@xivapi/js": "^0.4.1",

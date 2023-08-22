@@ -71,7 +71,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	const textColor = useColorModeValue("white", "gray.300");
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
-	const [localisedNameKey, setLocalisedNameKey] = useState("name_en");
+	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
 	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
@@ -118,7 +118,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 				break;
 		}
 
-		setLocalisedNameKey("name_" + settings.monetarist_language);
+		setLocalisedNameKey("Name_" + settings.monetarist_language);
 		setLocalisedNameKeyUpper("Name_" + settings.monetarist_language);
 		setRealm(settings.monetarist_server ?? "Ragnarok");
 	}, [
@@ -188,21 +188,21 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 				)[localisedNameKey as keyof Recipe];
 
 				let searchCategoryName = (
-					recipe.item.itemSearchCategory as unknown as {
+					recipe.Item.ItemSearchCategory as unknown as {
 						[key: string]: string | number | boolean;
 					}
 				)[localisedNameKey as keyof Category];
 
 				return (
 					<Link
-						href={`https://www.garlandtools.org/db/#item/${recipe.item.id}`}
+						href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
 						isExternal={true}
 						_hover={{
 							textDecoration: "none",
 						}}
 					>
 						<Flex
-							key={recipe.id}
+							key={recipe.Id}
 							align="center"
 							role="group"
 							cursor="pointer"
@@ -213,14 +213,14 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 							}}
 						>
 							<GameItemIcon
-								id={recipe.item.id}
+								id={recipe.Item.Id}
 								width="38px"
 								height="38px"
 								className="recipeIcon"
 							/>
 							&nbsp;
 							<Tooltip
-								label={t`Recipe ID: ${recipe.id}`}
+								label={t`Recipe ID: ${recipe.Id}`}
 								aria-label={t`Recipe ID helper`}
 							>
 								<>
@@ -245,7 +245,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		}),
 
 		columnHelper.accessor(
-			(row) => (row.item.itemSearchCategory?.id || 0) + "",
+			(row) => (row.Item.ItemSearchCategory?.Id || 0) + "",
 			{
 				id: "recipeCategory",
 				header: () => "",
@@ -253,7 +253,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 					let recipe = info.row.original;
 
 					let searchCategoryName = (
-						recipe.item.itemSearchCategory as unknown as {
+						recipe.Item.ItemSearchCategory as unknown as {
 							[key: string]: string | number | boolean;
 						}
 					)[localisedNameKey as keyof Category];
@@ -265,7 +265,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 		),
 
 		columnHelper.accessor(
-			(row) => row.universalisEntry?.craftingCost || 0,
+			(row) => row.UniversalisEntry?.CraftingCost || 0,
 			{
 				id: "craftingCost",
 				header: () => (
@@ -301,8 +301,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) => ({
-				nq: row.universalisEntry?.nqListingsCount,
-				hq: row.universalisEntry?.hqListingsCount,
+				nq: row.UniversalisEntry?.NqListingsCount,
+				hq: row.UniversalisEntry?.HqListingsCount,
 			}),
 			{
 				id: "listings",
@@ -337,8 +337,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) =>
-				(row.universalisEntry?.nqSaleCount || 0) +
-				(row.universalisEntry?.hqSaleCount || 0),
+				(row.UniversalisEntry?.NqSaleCount || 0) +
+				(row.UniversalisEntry?.HqSaleCount || 0),
 			{
 				id: "sold",
 				header: () => (
@@ -366,7 +366,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) =>
-				getLowestMarketPrice(row.universalisEntry, row.amountResult),
+				getLowestMarketPrice(row.UniversalisEntry, row.AmountResult),
 			{
 				id: "minListingPrice",
 				header: () => (
@@ -428,7 +428,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						thousandSeparator={true}
 						renderText={(formattedValue) => (
 							<Link
-								href={`https://universalis.app/market/${info.row.original.item.id}/`}
+								href={`https://universalis.app/market/${info.row.original.Item.Id}/`}
 								isExternal={true}
 								_hover={{
 									textDecoration: "none",

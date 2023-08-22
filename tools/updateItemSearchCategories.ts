@@ -1,5 +1,6 @@
 import { ItemSearchCategory } from "../@types/game/ItemSearchCategory";
 
+// @ts-ignore
 interface ItemSearchCategoryResponse extends Response {
 	Pagination: Pagination;
 	Results: Array<ItemSearchCategory>;
@@ -22,8 +23,7 @@ export async function updateItemSearchCategories(xiv: any) {
 		console.log("Fetching ItemSearchCategory data");
 
 		let response: ItemSearchCategoryResponse;
-		let columns =
-			"ID,Name_en,Name_de,Name_fr,Name_ja,Category";
+		let columns = "ID,Name_en,Name_de,Name_fr,Name_ja,Category";
 
 		try {
 			let page = 1;
@@ -43,9 +43,7 @@ export async function updateItemSearchCategories(xiv: any) {
 			fs.writeFileSync(
 				"data/ItemSearchCategory.json",
 				JSON.stringify(
-					data.filter(
-						(category) => category.Category !== 0
-					)
+					data.filter((category) => category.Category !== 0)
 				)
 			);
 		} catch (error) {
