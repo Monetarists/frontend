@@ -6,8 +6,6 @@ import React from "react";
 // noinspection HtmlRequiredTitleElement
 export default class Document extends NextDocument {
 	render() {
-		const title = `Welcome to ${process.env.NEXT_PUBLIC_APP_NAME}`;
-
 		return (
 			<Html lang="en">
 				<Head>

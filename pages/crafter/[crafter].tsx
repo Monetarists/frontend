@@ -99,7 +99,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			desc: true,
 		},
 	]);
-	const [pagination, setPagination] = useState<PaginationState>({
+	const [pagination] = useState<PaginationState>({
 		pageSize: 10,
 		pageIndex: 1,
 	});
@@ -680,11 +680,16 @@ const FilterNumber = ({
 	initialMinFilterValue,
 	initialMaxFilterValue,
 }: {
-	label: string | JSX.Element;
-	column: Column<any>;
+	label: string | React.ReactElement;
+	column: Column<any> | undefined;
 	initialMinFilterValue?: string | number;
 	initialMaxFilterValue?: string | number;
 }) => {
+	if (column === undefined)
+	{
+		return <></>;
+	}
+
 	const columnFilterValue = column.getFilterValue() as [number, number];
 
 	return (
@@ -725,10 +730,15 @@ const FilterText = ({
 	initialFilterValue,
 }: {
 	label: string;
-	column: Column<any>;
+	column: Column<any> | undefined;
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) => {
+	if (column === undefined)
+	{
+		return <></>;
+	}
+
 	const columnFilterValue = (column.getFilterValue() ??
 		initialFilterValue ??
 		"") as string;
@@ -761,11 +771,16 @@ const FilterDropdown = ({
 	children,
 }: {
 	label: string;
-	column: Column<any>;
+	column: Column<any> | undefined;
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
+	if (column === undefined)
+	{
+		return <></>;
+	}
+
 	const columnFilterValue = (column.getFilterValue() ??
 		initialFilterValue ??
 		"") as string;
