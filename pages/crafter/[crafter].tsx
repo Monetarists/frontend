@@ -685,8 +685,7 @@ const FilterNumber = ({
 	initialMinFilterValue?: string | number;
 	initialMaxFilterValue?: string | number;
 }) => {
-	if (column === undefined)
-	{
+	if (column === undefined) {
 		return <></>;
 	}
 
@@ -734,8 +733,7 @@ const FilterText = ({
 	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) => {
-	if (column === undefined)
-	{
+	if (column === undefined) {
 		return <></>;
 	}
 
@@ -776,8 +774,7 @@ const FilterDropdown = ({
 	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
-	if (column === undefined)
-	{
+	if (column === undefined) {
 		return <></>;
 	}
 
