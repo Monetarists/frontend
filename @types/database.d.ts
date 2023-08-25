@@ -385,7 +385,7 @@ export interface Database {
 				};
 				Relationships: [
 					{
-						foreignKeyName: "FK_SaleHistory_UniversalisEntries_UniversalisEntryId";
+						foreignKeyName: "SaleHistory_UniversalisEntryId_fkey";
 						columns: ["UniversalisEntryId"];
 						referencedRelation: "UniversalisEntry";
 						referencedColumns: ["Id"];
@@ -551,16 +551,14 @@ export interface Database {
 					jobid: number;
 				};
 				Returns: {
-					Amount: number;
-					Id: number;
-					ItemId: number;
-					RecipeId: number | null;
+					itemid: number;
+					recipeid: number;
+					amount: number;
+					canbecrafted: boolean;
+					canbehq: boolean;
+					ismarketable: boolean;
 					UniversalisEntry: UniversalisEntry | null;
 				}[];
-			};
-			update_item_craftability: {
-				Args: Record<PropertyKey, never>;
-				Returns: undefined;
 			};
 			purge_universalis: {
 				Args: {
@@ -568,12 +566,23 @@ export interface Database {
 				};
 				Returns: undefined;
 			};
+			update_item_craftability: {
+				Args: Record<PropertyKey, never>;
+				Returns: undefined;
+			};
 		};
 		Enums: {
 			[_ in never]: never;
 		};
 		CompositeTypes: {
-			[_ in never]: never;
+			ingredient_item: {
+				itemid: number;
+				recipeid: number;
+				amount: number;
+				canbecrafted: boolean;
+				canbehq: boolean;
+				ismarketable: boolean;
+			};
 		};
 	};
 }

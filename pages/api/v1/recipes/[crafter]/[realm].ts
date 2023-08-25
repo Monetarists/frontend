@@ -3,11 +3,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { csrf } from "../../../../../lib/csrf";
-import { RecipeApiResponse } from "../../../../../@types/RecipeApiResponse";
-import { Database } from "../../../../../@types/database";
 import { getClassJob } from "../../../../../data";
-import { UniversalisEntry } from "../../../../../@types/game/UniversalisEntry";
 import { getLowestMarketPrice } from "../../../../../util/Recipe";
+import { Database } from "../../../../../@types/database";
+import { RecipeApiResponse } from "../../../../../@types/RecipeApiResponse";
+import {
+	UniversalisEntry,
+	UniversalisEntryInsert,
+} from "../../../../../@types/game/UniversalisEntry";
 
 export const config = {
 	api: {
@@ -84,7 +87,6 @@ const handler = async (
 			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null
 	);
 
-	// @ts-ignore
 	const ingredientsResult = await supabase.rpc("fetch_ingredients", {
 		jobid: crafter.Id,
 	});
@@ -103,11 +105,15 @@ const handler = async (
 
 	let itemIds: number[] = [];
 	recipes.map((recipe) => {
-		itemIds.push(recipe.ItemId);
+		if (recipe?.Item?.IsMarketable) {
+			itemIds.push(recipe.ItemId);
+		}
 		recipe.UniversalisEntry = null;
 	});
 	ingredients.map((ingredient) => {
-		itemIds.push(ingredient.ItemId);
+		if (ingredient.ismarketable) {
+			itemIds.push(ingredient.itemid);
+		}
 		ingredient.UniversalisEntry = null;
 	});
 
@@ -115,7 +121,18 @@ const handler = async (
 		.filter((val, index, arr) => arr.indexOf(val) === index)
 		.sort((a, b) => a - b);
 
-	// TODO: Purge expired UniversalisEntry records for our world
+	const purgeUniversalisResult = await supabase.rpc("purge_universalis", {
+		worldid: worldResult.data.Id,
+	});
+	if (purgeUniversalisResult.error !== null) {
+		console.log(purgeUniversalisResult.error);
+		res.status(500).json({
+			message:
+				purgeUniversalisResult.error.message ||
+				"Invalid data returned by the database.",
+		});
+		return;
+	}
 
 	let universalisEntries: { [key: number]: UniversalisEntry } = {};
 
@@ -170,22 +187,225 @@ const handler = async (
 		});
 	}
 
+	let universalisRefetch: number[] = [];
+	itemIds.map((itemId) => {
+		if (!universalisEntries[itemId]) {
+			universalisRefetch.push(itemId);
+		}
+	});
+
+	console.log(universalisRefetch);
+
+	let universalisInsert: UniversalisEntryInsert[] = [];
+	if (universalisRefetch.length) {
+		// At least one item needed a refresh from Universalis
+
+		for (let i = 0; i < universalisRefetch.length / 100; i++) {
+			console.log(
+				"Querying Universalis entries... " +
+					i * 100 +
+					" / " +
+					universalisRefetch.length
+			);
+			const result: CurrentlyShownMultiViewV2 = await fetch(
+				"https://universalis.app/api/v2/" +
+					worldResult.data.Id +
+					"/" +
+					universalisRefetch.slice(i * 100, i * 100 + 100).join(",")
+			).then((res) => {
+				return res.json();
+			});
+
+			result?.unresolvedItems?.map((itemId) => {
+				universalisInsert.push({
+					AveragePrice: 0,
+					AveragePriceHQ: 0,
+					AveragePriceNQ: 0,
+					CurrentAveragePrice: 0,
+					CurrentAveragePriceHQ: 0,
+					CurrentAveragePrinceNQ: 0,
+					HqListingsCount: 0,
+					HqSaleVelocity: 0,
+					ItemId: 0,
+					LastUploadDate: new Date().toISOString(),
+					MaxPrice: 0,
+					MaxPriceHQ: 0,
+					MaxPriceNQ: 0,
+					MinPrice: 0,
+					MinPriceHQ: 0,
+					MinPriceNQ: 0,
+					NqListingsCount: 0,
+					NqSaleVelocity: 0,
+					QueryDate: new Date().toISOString(),
+					RegularSaleVelocity: 0,
+					WorldId: worldResult.data.Id,
+
+					HqSaleCount: 0,
+					NqSaleCount: 0,
+				});
+
+				universalisEntries[itemId] = {
+					Id: 0,
+					AveragePrice: 0,
+					AveragePriceHQ: 0,
+					AveragePriceNQ: 0,
+					CurrentAveragePrice: 0,
+					CurrentAveragePriceHQ: 0,
+					CurrentAveragePrinceNQ: 0,
+					HqListingsCount: 0,
+					HqSaleVelocity: 0,
+					LastUploadDate: new Date(),
+					MaxPrice: 0,
+					MaxPriceHQ: 0,
+					MaxPriceNQ: 0,
+					MinPrice: 0,
+					MinPriceHQ: 0,
+					MinPriceNQ: 0,
+					NqListingsCount: 0,
+					NqSaleVelocity: 0,
+					QueryDate: new Date(),
+					RegularSaleVelocity: 0,
+
+					HqSaleCount: 0,
+					NqSaleCount: 0,
+
+					Message: null,
+					Posts: null,
+					SaleHistory: null,
+					World: null,
+				};
+			});
+
+			for (let k in result.items) {
+				let item: CurrentlyShownView = result.items[k];
+
+				let sold = 0,
+					soldHistoryNQ: number[] = [],
+					soldHistoryHQ: number[] = [];
+				item?.recentHistory?.map((entry) => {
+					if (
+						entry.timestamp >=
+						Math.floor(Date.now() / 1000) - 86400
+					) {
+						sold = sold + entry.quantity;
+						if (entry.hq) {
+							soldHistoryHQ.push(entry.pricePerUnit);
+						} else {
+							soldHistoryNQ.push(entry.pricePerUnit);
+						}
+					}
+				});
+
+				let listings = {
+					nq: 0,
+					hq: 0,
+				};
+				item?.listings?.map((entry) => {
+					listings[entry.hq ? "hq" : "nq"] =
+						listings[entry.hq ? "hq" : "nq"] + entry.quantity;
+				});
+
+				universalisInsert.push({
+					AveragePrice: item.averagePrice,
+					AveragePriceHQ: item.averagePriceHQ,
+					AveragePriceNQ: item.averagePriceNQ,
+					CurrentAveragePrice: item.currentAveragePrice,
+					CurrentAveragePriceHQ: item.currentAveragePriceHQ,
+					CurrentAveragePrinceNQ: item.currentAveragePriceNQ,
+					HqListingsCount: listings.hq,
+					HqSaleVelocity: item.hqSaleVelocity,
+					ItemId: item.itemID,
+					LastUploadDate: new Date(item.lastUploadTime).toISOString(),
+					MaxPrice: item.maxPrice,
+					MaxPriceHQ: item.maxPriceHQ,
+					MaxPriceNQ: item.maxPriceNQ,
+					MinPrice: item.minPrice,
+					MinPriceHQ: item.minPriceHQ,
+					MinPriceNQ: item.minPriceNQ,
+					NqListingsCount: listings.nq,
+					NqSaleVelocity: item.nqSaleVelocity,
+					QueryDate: new Date().toISOString(),
+					RegularSaleVelocity: item.regularSaleVelocity,
+					WorldId: worldResult.data.Id,
+
+					HqSaleCount: soldHistoryHQ.length,
+					NqSaleCount: soldHistoryNQ.length,
+				});
+
+				universalisEntries[item.itemID] = {
+					Id: 0,
+					AveragePrice: item.averagePrice,
+					AveragePriceHQ: item.averagePriceHQ,
+					AveragePriceNQ: item.averagePriceNQ,
+					CurrentAveragePrice: item.currentAveragePrice,
+					CurrentAveragePriceHQ: item.currentAveragePriceHQ,
+					CurrentAveragePrinceNQ: item.currentAveragePriceNQ,
+					HqListingsCount: listings.hq,
+					HqSaleVelocity: item.hqSaleVelocity,
+					LastUploadDate: new Date(item.lastUploadTime),
+					MaxPrice: item.maxPrice,
+					MaxPriceHQ: item.maxPriceHQ,
+					MaxPriceNQ: item.maxPriceNQ,
+					MinPrice: item.minPrice,
+					MinPriceHQ: item.minPriceHQ,
+					MinPriceNQ: item.minPriceNQ,
+					NqListingsCount: listings.nq,
+					NqSaleVelocity: item.nqSaleVelocity,
+					QueryDate: new Date(),
+					RegularSaleVelocity: item.regularSaleVelocity,
+
+					HqSaleCount: soldHistoryHQ.length,
+					NqSaleCount: soldHistoryNQ.length,
+
+					Message: null,
+					Posts: null,
+					SaleHistory: null,
+					World: null,
+				};
+			}
+		}
+	}
+
+	if (universalisInsert.length) {
+		for (let i = 0; i < universalisInsert.length / 200; i++) {
+			console.log(
+				"Updating Universalis entries... " +
+					i * 100 +
+					" / " +
+					universalisInsert.length
+			);
+			const universalisInsertResult = await supabase
+				.from("UniversalisEntry")
+				.insert(universalisInsert.slice(i * 200, i * 200 + 200))
+				.select();
+			if (universalisInsertResult.error !== null) {
+				console.log(universalisInsertResult.error);
+				res.status(500).json({
+					message:
+						universalisInsertResult.error.message ||
+						"Invalid data returned by the database.",
+				});
+				return;
+			}
+		}
+	}
+
 	recipes.map((recipe) => {
 		recipe.UniversalisEntry = universalisEntries[recipe.ItemId] || null;
 		recipe.CraftingCost = 0;
 
 		const recipeIngredients = ingredients.filter(
-			(ingredient) => ingredient.RecipeId === recipe.Id
+			(ingredient) => ingredient.recipeid === recipe.Id
 		);
 
 		recipeIngredients.map((ingredient) => {
 			const universalisEntry =
-				universalisEntries[ingredient.ItemId] || null;
+				universalisEntries[ingredient.itemid] || null;
 
 			if (universalisEntry !== null) {
 				recipe.CraftingCost =
 					(recipe?.CraftingCost || 0) +
-					getLowestMarketPrice(universalisEntry, ingredient.Amount);
+					getLowestMarketPrice(universalisEntry, ingredient.amount);
 			}
 		});
 	});

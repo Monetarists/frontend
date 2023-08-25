@@ -45,3 +45,30 @@ export interface UniversalisEntry {
 
 	World: World | null;
 }
+
+interface UniversalisEntryInsert {
+	AveragePrice: number;
+	AveragePriceHQ: number;
+	AveragePriceNQ: number;
+	CurrentAveragePrice: number;
+	CurrentAveragePriceHQ: number;
+	CurrentAveragePrinceNQ: number;
+	HqListingsCount?: number | null;
+	HqSaleCount?: number | null;
+	HqSaleVelocity: number;
+	Id?: number;
+	ItemId: number;
+	LastUploadDate: string;
+	MaxPrice: number;
+	MaxPriceHQ: number;
+	MaxPriceNQ: number;
+	MinPrice: number;
+	MinPriceHQ: number;
+	MinPriceNQ: number;
+	NqListingsCount?: number | null;
+	NqSaleCount?: number | null;
+	NqSaleVelocity: number;
+	QueryDate: string;
+	RegularSaleVelocity: number;
+	WorldId: number;
+}
