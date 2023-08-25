@@ -264,40 +264,37 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 			}
 		),
 
-		columnHelper.accessor(
-			(row) => row.UniversalisEntry?.CraftingCost || 0,
-			{
-				id: "craftingCost",
-				header: () => (
-					<Tooltip
-						label={t`The cost to buy NQ materials off the Market Board.`}
-						aria-label={t`Crafting cost column explanation`}
-					>
-						<span>
-							<Trans>Crafting Cost</Trans>
-						</span>
-					</Tooltip>
-				),
-				cell: (info) => {
-					return (
-						<NumberFormat
-							value={info.getValue()}
-							displayType={"text"}
-							thousandSeparator={true}
-							renderText={(formattedValue) => (
-								<>
-									<i className="xiv gil"></i>
-									&nbsp;
-									{formattedValue}
-								</>
-							)}
-						/>
-					);
-				},
-				footer: (info) => info.column.id,
-				sortDescFirst: true,
-			}
-		),
+		columnHelper.accessor((row) => row.CraftingCost || 0, {
+			id: "craftingCost",
+			header: () => (
+				<Tooltip
+					label={t`The cost to buy NQ materials off the Market Board.`}
+					aria-label={t`Crafting cost column explanation`}
+				>
+					<span>
+						<Trans>Crafting Cost</Trans>
+					</span>
+				</Tooltip>
+			),
+			cell: (info) => {
+				return (
+					<NumberFormat
+						value={info.getValue()}
+						displayType={"text"}
+						thousandSeparator={true}
+						renderText={(formattedValue) => (
+							<>
+								<i className="xiv gil"></i>
+								&nbsp;
+								{formattedValue}
+							</>
+						)}
+					/>
+				);
+			},
+			footer: (info) => info.column.id,
+			sortDescFirst: true,
+		}),
 
 		columnHelper.accessor(
 			(row) => ({

@@ -31,7 +31,7 @@ export function getLowestMarketPrice(
  * @param recipe
  */
 export function calculateProfitLoss(recipe: Recipe) {
-	const craftingCost = recipe.UniversalisEntry?.CraftingCost || 0;
+	const craftingCost = recipe.CraftingCost || 0;
 	if (craftingCost === 0) {
 		return 0;
 	}

@@ -18,7 +18,6 @@ interface UniversalisHistory {
 
 export interface UniversalisEntry {
 	Id: number;
-	CraftingCost: number;
 	Message: string | null;
 	LastUploadDate: Date;
 	QueryDate: Date;

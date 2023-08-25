@@ -17,7 +17,6 @@ export interface Recipe {
 
 	Job: ClassJob;
 
-	Ingredients: Item[] | null;
-
 	UniversalisEntry: UniversalisEntry | null;
+	CraftingCost: number;
 }

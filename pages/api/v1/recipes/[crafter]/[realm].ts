@@ -6,6 +6,8 @@ import { csrf } from "../../../../../lib/csrf";
 import { RecipeApiResponse } from "../../../../../@types/RecipeApiResponse";
 import { Database } from "../../../../../@types/database";
 import { getClassJob } from "../../../../../data";
+import { UniversalisEntry } from "../../../../../@types/game/UniversalisEntry";
+import { getLowestMarketPrice } from "../../../../../util/Recipe";
 
 export const config = {
 	api: {
@@ -45,20 +47,6 @@ const handler = async (
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 	);
 
-	const recipeResult = await supabase
-		.from("Recipe")
-		.select("*, Item(*, ItemSearchCategory(*))")
-		.eq("JobId", crafter.Id);
-
-	if (recipeResult.data === null) {
-		res.status(500).json({
-			message:
-				recipeResult.error?.message ||
-				"Invalid data returned by the database.",
-		});
-		return;
-	}
-
 	const worldResult = await supabase
 		.from("World")
 		.select()
@@ -74,38 +62,125 @@ const handler = async (
 		return;
 	}
 
-	const recipes = recipeResult.data.filter(
-		(recipe) =>
-			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null
-	);
+	const recipeResult = await supabase
+		.from("Recipe")
+		.select("*, Item(*, ItemSearchCategory(*))")
+		.eq("JobId", crafter.Id);
 
-	/*
-	const itemIds: Array<Number> = [];
-	recipes.map((recipe) => {
-		itemIds.push(recipe.ItemId);
-	});
-	 */
-
-	const universalisResult = await supabase
-		.from("UniversalisEntry")
-		.select()
-		// .in("ItemId", itemIds)
-		.eq("WorldId", worldResult.data.Id);
-
-	if (universalisResult.data === null) {
+	if (recipeResult.data === null) {
 		res.status(500).json({
 			message:
-				universalisResult.error?.message ||
+				recipeResult.error?.message ||
 				"Invalid data returned by the database.",
 		});
 		return;
 	}
 
+	const recipes = recipeResult.data.filter(
+		(recipe) =>
+			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null
+	);
+
+	// @ts-ignore
+	const ingredientsResult = await supabase.rpc("fetch_ingredients", {
+		jobid: crafter.Id,
+	});
+
+	if (ingredientsResult.data === null) {
+		res.status(500).json({
+			message:
+				ingredientsResult.error?.message ||
+				"Invalid data returned by the database.",
+		});
+		return;
+	}
+
+	let ingredients = ingredientsResult.data;
+
+	let itemIds: Array<number> = [];
 	recipes.map((recipe) => {
-		universalisResult.data.map((universalisEntry) => {
-			if (recipe.ItemId === universalisEntry.ItemId) {
-				// @ts-ignore
-				recipe.UniversalisEntry = universalisEntry;
+		itemIds.push(recipe.ItemId);
+		recipe.UniversalisEntry = null;
+	});
+	ingredients.map((ingredient) => {
+		itemIds.push(ingredient.ItemId);
+		ingredient.UniversalisEntry = null;
+	});
+
+	itemIds = itemIds
+		.filter((val, index, arr) => arr.indexOf(val) === index)
+		.sort((a, b) => a - b);
+
+	// TODO: Purge expired UniversalisEntry records for our world
+
+	let universalisEntries: { [key: number]: UniversalisEntry } = {};
+
+	for (let i = 0; i < itemIds.length / 200; i++) {
+		const universalisResult = await supabase
+			.from("UniversalisEntry")
+			.select()
+			.in("ItemId", itemIds.slice(i * 200, i * 200 + 200))
+			.eq("WorldId", worldResult.data.Id);
+
+		if (universalisResult.data === null) {
+			res.status(500).json({
+				message:
+					universalisResult.error?.message ||
+					"Invalid data returned by the database.",
+			});
+			return;
+		}
+
+		universalisResult.data.map((entry) => {
+			// entry.LastUploadDate = new Date(entry.LastUploadDate);
+			universalisEntries[entry.ItemId] = {
+				Id: entry.Id,
+				LastUploadDate: new Date(entry.LastUploadDate),
+				QueryDate: new Date(entry.QueryDate),
+				NqListingsCount: entry?.NqListingsCount || 0,
+				HqListingsCount: entry?.HqListingsCount || 0,
+				NqSaleCount: entry?.NqSaleCount || 0,
+				HqSaleCount: entry?.HqSaleCount || 0,
+				CurrentAveragePrice: entry?.CurrentAveragePrice || 0,
+				CurrentAveragePrinceNQ: entry?.CurrentAveragePrinceNQ || 0,
+				CurrentAveragePriceHQ: entry?.CurrentAveragePriceHQ || 0,
+				RegularSaleVelocity: entry?.RegularSaleVelocity || 0,
+				NqSaleVelocity: entry?.NqSaleVelocity || 0,
+				HqSaleVelocity: entry?.HqSaleVelocity || 0,
+				AveragePrice: entry?.AveragePrice || 0,
+				AveragePriceNQ: entry?.AveragePriceNQ || 0,
+				AveragePriceHQ: entry?.AveragePriceHQ || 0,
+				MinPrice: entry?.MinPrice || 0,
+				MinPriceNQ: entry?.MinPriceNQ || 0,
+				MinPriceHQ: entry?.MinPriceHQ || 0,
+				MaxPrice: entry?.MaxPrice || 0,
+				MaxPriceNQ: entry?.MaxPriceNQ || 0,
+				MaxPriceHQ: entry?.MaxPriceHQ || 0,
+
+				Message: null,
+				Posts: null,
+				SaleHistory: null,
+				World: worldResult.data,
+			};
+		});
+	}
+
+	recipes.map((recipe) => {
+		recipe.UniversalisEntry = universalisEntries[recipe.ItemId] || null;
+		recipe.CraftingCost = 0;
+
+		const recipeIngredients = ingredients.filter(
+			(ingredient) => ingredient.RecipeId === recipe.Id
+		);
+
+		recipeIngredients.map((ingredient) => {
+			const universalisEntry =
+				universalisEntries[ingredient.ItemId] || null;
+
+			if (universalisEntry !== null) {
+				recipe.CraftingCost =
+					(recipe?.CraftingCost || 0) +
+					getLowestMarketPrice(universalisEntry, ingredient.Amount);
 			}
 		});
 	});

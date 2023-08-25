@@ -1,3 +1,5 @@
+import { UniversalisEntry } from "./game/UniversalisEntry";
+
 export type Json =
 	| string
 	| number
@@ -48,6 +50,7 @@ export interface Database {
 					Id: number;
 					ItemId: number;
 					RecipeId: number | null;
+					UniversalisEntry: UniversalisEntry | null;
 				};
 				Insert: {
 					Amount: number;
@@ -78,10 +81,10 @@ export interface Database {
 			};
 			Item: {
 				Row: {
-					CanBeCrafted: boolean | null;
+					CanBeCrafted: boolean;
 					CanBeHq: boolean;
 					Id: number;
-					IsMarketable: boolean | null;
+					IsMarketable: boolean;
 					ItemSearchCategoryId: number | null;
 					ItemUICategoryId: number;
 					Name_de: string;
@@ -292,6 +295,8 @@ export interface Database {
 					Name_en: string;
 					Name_fr: string;
 					Name_ja: string;
+					UniversalisEntry: UniversalisEntry | null;
+					CraftingCost: number | null;
 				};
 				Insert: {
 					AmountResult: number;
@@ -560,7 +565,18 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
-			[_ in never]: never;
+			fetch_ingredients: {
+				Args: {
+					jobid: number;
+				};
+				Returns: {
+					Amount: number;
+					Id: number;
+					ItemId: number;
+					RecipeId: number | null;
+					UniversalisEntry: UniversalisEntry | null;
+				}[];
+			};
 		};
 		Enums: {
 			[_ in never]: never;
