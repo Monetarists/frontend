@@ -562,6 +562,12 @@ export interface Database {
 				Args: Record<PropertyKey, never>;
 				Returns: undefined;
 			};
+			purge_universalis: {
+				Args: {
+					worldid: number;
+				};
+				Returns: undefined;
+			};
 		};
 		Enums: {
 			[_ in never]: never;
