@@ -298,8 +298,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) => ({
-				nq: row.UniversalisEntry?.NqListingsCount,
-				hq: row.UniversalisEntry?.HqListingsCount,
+				nq: row.UniversalisEntry?.NqListingsCount || 0,
+				hq: row.UniversalisEntry?.HqListingsCount || 0,
 			}),
 			{
 				id: "listings",
