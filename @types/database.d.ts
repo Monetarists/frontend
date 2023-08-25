@@ -58,20 +58,7 @@ export interface Database {
 					ItemId?: number;
 					RecipeId?: number;
 				};
-				Relationships: [
-					{
-						foreignKeyName: "Ingredient_ItemId_fkey";
-						columns: ["ItemId"];
-						referencedRelation: "Item";
-						referencedColumns: ["Id"];
-					},
-					{
-						foreignKeyName: "Ingredient_RecipeId_fkey";
-						columns: ["RecipeId"];
-						referencedRelation: "Recipe";
-						referencedColumns: ["Id"];
-					}
-				];
+				Relationships: [];
 			};
 			Item: {
 				Row: {
