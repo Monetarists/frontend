@@ -558,6 +558,10 @@ export interface Database {
 					UniversalisEntry: UniversalisEntry | null;
 				}[];
 			};
+			update_item_craftability: {
+				Args: Record<PropertyKey, never>;
+				Returns: undefined;
+			};
 		};
 		Enums: {
 			[_ in never]: never;

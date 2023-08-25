@@ -440,6 +440,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 
 	for (let i = 0; i < itemUpserts.length / 200; i++) {
+		console.log(
+			"Updating items... " + i * 100 + " / " + itemUpserts.length
+		);
 		await supabase
 			.from("Item")
 			.upsert(itemUpserts.slice(i * 200, i * 200 + 200))
@@ -447,6 +450,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 
 	for (let i = 0; i < recipeUpserts.length / 200; i++) {
+		console.log(
+			"Updating recipes... " + i * 100 + " / " + recipeUpserts.length
+		);
 		await supabase
 			.from("Recipe")
 			.upsert(recipeUpserts.slice(i * 200, i * 200 + 200))
@@ -454,11 +460,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 
 	for (let i = 0; i < ingredientsUpserts.length / 200; i++) {
+		console.log(
+			"Updating ingredients... " +
+				i * 100 +
+				" / " +
+				ingredientsUpserts.length
+		);
 		await supabase
 			.from("Ingredient")
 			.upsert(ingredientsUpserts.slice(i * 200, i * 200 + 200))
 			.select();
 	}
+
+	console.log("Updating craftability flag...");
+	await supabase.rpc("update_item_craftability");
 
 	res.status(200).json({
 		message: "Success.",
