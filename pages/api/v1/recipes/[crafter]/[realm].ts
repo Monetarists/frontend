@@ -44,7 +44,8 @@ const handler = async (
 
 	const supabase = createClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+		{ auth: { persistSession: false } }
 	);
 
 	const worldResult = await supabase
@@ -54,6 +55,7 @@ const handler = async (
 		.limit(1)
 		.single();
 	if (worldResult.data === null) {
+		console.log(worldResult.error);
 		res.status(500).json({
 			message:
 				worldResult.error?.message ||
@@ -68,6 +70,7 @@ const handler = async (
 		.eq("JobId", crafter.Id);
 
 	if (recipeResult.data === null) {
+		console.log(recipeResult.error);
 		res.status(500).json({
 			message:
 				recipeResult.error?.message ||
@@ -87,6 +90,7 @@ const handler = async (
 	});
 
 	if (ingredientsResult.data === null) {
+		console.log(ingredientsResult.error);
 		res.status(500).json({
 			message:
 				ingredientsResult.error?.message ||
@@ -97,7 +101,7 @@ const handler = async (
 
 	let ingredients = ingredientsResult.data;
 
-	let itemIds: Array<number> = [];
+	let itemIds: number[] = [];
 	recipes.map((recipe) => {
 		itemIds.push(recipe.ItemId);
 		recipe.UniversalisEntry = null;
@@ -123,6 +127,7 @@ const handler = async (
 			.eq("WorldId", worldResult.data.Id);
 
 		if (universalisResult.data === null) {
+			console.log(universalisResult.error);
 			res.status(500).json({
 				message:
 					universalisResult.error?.message ||
@@ -160,7 +165,7 @@ const handler = async (
 				Message: null,
 				Posts: null,
 				SaleHistory: null,
-				World: worldResult.data,
+				World: null,
 			};
 		});
 	}
