@@ -9,6 +9,8 @@ declare global {
 			APP_ENV: string;
 			APP_DEBUG: boolean;
 
+			API_KEY: string;
+
 			COOKIE_NAME: string;
 			COOKIE_SALT: string;
 
