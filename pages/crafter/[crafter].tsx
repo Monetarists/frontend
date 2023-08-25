@@ -516,71 +516,71 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 							/>
 						</Box>
 
-						<Box>
-							<FilterDropdown
-								label={t`Category`}
-								column={table.getColumn("recipeCategory")}
-								table={table}
-							>
-								<option></option>
-								<optgroup label={t`Weapons`}>
-									{(iscGrouped[1] || []).map((category) => (
-										<option
-											value={category.ID}
-											key={`filter-category-${category.ID}`}
-										>
-											{
-												category[
-													localisedNameKeyUpper as keyof ItemSearchCategory
-												]
-											}
-										</option>
-									))}
-								</optgroup>
-								<optgroup label={t`Armour`}>
-									{(iscGrouped[2] || []).map((category) => (
-										<option
-											value={category.ID}
-											key={`filter-category-${category.ID}`}
-										>
-											{
-												category[
-													localisedNameKeyUpper as keyof ItemSearchCategory
-												]
-											}
-										</option>
-									))}
-								</optgroup>
-								<optgroup label={t`Items`}>
-									{(iscGrouped[3] || []).map((category) => (
-										<option
-											value={category.ID}
-											key={`filter-category-${category.ID}`}
-										>
-											{
-												category[
-													localisedNameKeyUpper as keyof ItemSearchCategory
-												]
-											}
-										</option>
-									))}
-								</optgroup>
-								<optgroup label={t`Housing`}>
-									{(iscGrouped[4] || []).map((category) => (
-										<option
-											value={category.ID}
-											key={`filter-category-${category.ID}`}
-										>
-											{
-												category[
-													localisedNameKeyUpper as keyof ItemSearchCategory
-												]
-											}
-										</option>
-									))}
-								</optgroup>
-							</FilterDropdown>
-						</Box>
+						{/*<Box>*/}
+						{/*	<FilterDropdown*/}
+						{/*		label={t`Category`}*/}
+						{/*		column={table.getColumn("recipeCategory")}*/}
+						{/*		table={table}*/}
+						{/*	>*/}
+						{/*		<option></option>*/}
+						{/*		<optgroup label={t`Weapons`}>*/}
+						{/*			{(iscGrouped[1] || []).map((category) => (*/}
+						{/*				<option*/}
+						{/*					value={category.ID}*/}
+						{/*					key={`filter-category-${category.ID}`}*/}
+						{/*				>*/}
+						{/*					{*/}
+						{/*						category[*/}
+						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
+						{/*						]*/}
+						{/*					}*/}
+						{/*				</option>*/}
+						{/*			))}*/}
+						{/*		</optgroup>*/}
+						{/*		<optgroup label={t`Armour`}>*/}
+						{/*			{(iscGrouped[2] || []).map((category) => (*/}
+						{/*				<option*/}
+						{/*					value={category.ID}*/}
+						{/*					key={`filter-category-${category.ID}`}*/}
+						{/*				>*/}
+						{/*					{*/}
+						{/*						category[*/}
+						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
+						{/*						]*/}
+						{/*					}*/}
+						{/*				</option>*/}
+						{/*			))}*/}
+						{/*		</optgroup>*/}
+						{/*		<optgroup label={t`Items`}>*/}
+						{/*			{(iscGrouped[3] || []).map((category) => (*/}
+						{/*				<option*/}
+						{/*					value={category.ID}*/}
+						{/*					key={`filter-category-${category.ID}`}*/}
+						{/*				>*/}
+						{/*					{*/}
+						{/*						category[*/}
+						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
+						{/*						]*/}
+						{/*					}*/}
+						{/*				</option>*/}
+						{/*			))}*/}
+						{/*		</optgroup>*/}
+						{/*		<optgroup label={t`Housing`}>*/}
+						{/*			{(iscGrouped[4] || []).map((category) => (*/}
+						{/*				<option*/}
+						{/*					value={category.ID}*/}
+						{/*					key={`filter-category-${category.ID}`}*/}
+						{/*				>*/}
+						{/*					{*/}
+						{/*						category[*/}
+						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
+						{/*						]*/}
+						{/*					}*/}
+						{/*				</option>*/}
+						{/*			))}*/}
+						{/*		</optgroup>*/}
+						{/*	</FilterDropdown>*/}
+						{/*</Box>*/}
 
 						<Box>
 							<FilterText
