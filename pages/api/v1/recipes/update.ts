@@ -473,11 +473,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	}
 
 	console.log("Updating craftability flag...");
-	const { error } = await supabase.rpc("update_item_craftability");
-	if (error !== null) {
-		console.log(error);
+	const updateCraftabilityResult = await supabase.rpc(
+		"update_item_craftability"
+	);
+	if (updateCraftabilityResult.error !== null) {
+		console.log(updateCraftabilityResult.error);
 		res.status(500).json({
-			message: error.message || "Invalid data returned by the database.",
+			message:
+				updateCraftabilityResult.error.message ||
+				"Invalid data returned by the database.",
 		});
 		return;
 	}
