@@ -1,5 +1,3 @@
-import { UniversalisEntry } from "./game/UniversalisEntry";
-
 export type Json =
 	| string
 	| number
@@ -44,35 +42,31 @@ export interface Database {
 				};
 				Relationships: [];
 			};
-			Ingredients: {
+			Ingredient: {
 				Row: {
 					Amount: number;
-					Id: number;
 					ItemId: number;
-					RecipeId: number | null;
-					UniversalisEntry: UniversalisEntry | null;
+					RecipeId: number;
 				};
 				Insert: {
-					Amount: number;
-					Id?: number;
+					Amount?: number;
 					ItemId: number;
-					RecipeId?: number | null;
+					RecipeId: number;
 				};
 				Update: {
 					Amount?: number;
-					Id?: number;
 					ItemId?: number;
-					RecipeId?: number | null;
+					RecipeId?: number;
 				};
 				Relationships: [
 					{
-						foreignKeyName: "FK_Ingredients_Items_ItemId";
+						foreignKeyName: "Ingredient_ItemId_fkey";
 						columns: ["ItemId"];
 						referencedRelation: "Item";
 						referencedColumns: ["Id"];
 					},
 					{
-						foreignKeyName: "FK_Ingredients_Recipes_RecipeId";
+						foreignKeyName: "Ingredient_RecipeId_fkey";
 						columns: ["RecipeId"];
 						referencedRelation: "Recipe";
 						referencedColumns: ["Id"];
@@ -86,7 +80,7 @@ export interface Database {
 					Id: number;
 					IsMarketable: boolean;
 					ItemSearchCategoryId: number | null;
-					ItemUICategoryId: number;
+					ItemUICategoryId: number | null;
 					Name_de: string;
 					Name_en: string;
 					Name_fr: string;
@@ -98,7 +92,7 @@ export interface Database {
 					Id?: number;
 					IsMarketable?: boolean | null;
 					ItemSearchCategoryId?: number | null;
-					ItemUICategoryId: number;
+					ItemUICategoryId: number | null;
 					Name_de: string;
 					Name_en: string;
 					Name_fr: string;
@@ -110,7 +104,7 @@ export interface Database {
 					Id?: number;
 					IsMarketable?: boolean | null;
 					ItemSearchCategoryId?: number | null;
-					ItemUICategoryId?: number;
+					ItemUICategoryId?: number | null;
 					Name_de?: string;
 					Name_en?: string;
 					Name_fr?: string;
