@@ -194,11 +194,14 @@ const handler = async (
 		}
 	});
 
-	console.log(universalisRefetch);
-
 	let universalisInsert: UniversalisEntryInsert[] = [];
 	if (universalisRefetch.length) {
 		// At least one item needed a refresh from Universalis
+
+		if (universalisRefetch.length === 1) {
+			// Avoid single-item results
+			universalisRefetch.push(0);
+		}
 
 		for (let i = 0; i < universalisRefetch.length / 100; i++) {
 			console.log(
@@ -217,63 +220,65 @@ const handler = async (
 			});
 
 			result?.unresolvedItems?.map((itemId) => {
-				universalisInsert.push({
-					AveragePrice: 0,
-					AveragePriceHQ: 0,
-					AveragePriceNQ: 0,
-					CurrentAveragePrice: 0,
-					CurrentAveragePriceHQ: 0,
-					CurrentAveragePrinceNQ: 0,
-					HqListingsCount: 0,
-					HqSaleVelocity: 0,
-					ItemId: 0,
-					LastUploadDate: new Date().toISOString(),
-					MaxPrice: 0,
-					MaxPriceHQ: 0,
-					MaxPriceNQ: 0,
-					MinPrice: 0,
-					MinPriceHQ: 0,
-					MinPriceNQ: 0,
-					NqListingsCount: 0,
-					NqSaleVelocity: 0,
-					QueryDate: new Date().toISOString(),
-					RegularSaleVelocity: 0,
-					WorldId: worldResult.data.Id,
+				if (itemId > 0) {
+					universalisInsert.push({
+						AveragePrice: 0,
+						AveragePriceHQ: 0,
+						AveragePriceNQ: 0,
+						CurrentAveragePrice: 0,
+						CurrentAveragePriceHQ: 0,
+						CurrentAveragePrinceNQ: 0,
+						HqListingsCount: 0,
+						HqSaleVelocity: 0,
+						ItemId: itemId,
+						LastUploadDate: new Date().toISOString(),
+						MaxPrice: 0,
+						MaxPriceHQ: 0,
+						MaxPriceNQ: 0,
+						MinPrice: 0,
+						MinPriceHQ: 0,
+						MinPriceNQ: 0,
+						NqListingsCount: 0,
+						NqSaleVelocity: 0,
+						QueryDate: new Date().toISOString(),
+						RegularSaleVelocity: 0,
+						WorldId: worldResult.data.Id,
 
-					HqSaleCount: 0,
-					NqSaleCount: 0,
-				});
+						HqSaleCount: 0,
+						NqSaleCount: 0,
+					});
 
-				universalisEntries[itemId] = {
-					Id: 0,
-					AveragePrice: 0,
-					AveragePriceHQ: 0,
-					AveragePriceNQ: 0,
-					CurrentAveragePrice: 0,
-					CurrentAveragePriceHQ: 0,
-					CurrentAveragePrinceNQ: 0,
-					HqListingsCount: 0,
-					HqSaleVelocity: 0,
-					LastUploadDate: new Date(),
-					MaxPrice: 0,
-					MaxPriceHQ: 0,
-					MaxPriceNQ: 0,
-					MinPrice: 0,
-					MinPriceHQ: 0,
-					MinPriceNQ: 0,
-					NqListingsCount: 0,
-					NqSaleVelocity: 0,
-					QueryDate: new Date(),
-					RegularSaleVelocity: 0,
+					universalisEntries[itemId] = {
+						Id: 0,
+						AveragePrice: 0,
+						AveragePriceHQ: 0,
+						AveragePriceNQ: 0,
+						CurrentAveragePrice: 0,
+						CurrentAveragePriceHQ: 0,
+						CurrentAveragePrinceNQ: 0,
+						HqListingsCount: 0,
+						HqSaleVelocity: 0,
+						LastUploadDate: new Date(),
+						MaxPrice: 0,
+						MaxPriceHQ: 0,
+						MaxPriceNQ: 0,
+						MinPrice: 0,
+						MinPriceHQ: 0,
+						MinPriceNQ: 0,
+						NqListingsCount: 0,
+						NqSaleVelocity: 0,
+						QueryDate: new Date(),
+						RegularSaleVelocity: 0,
 
-					HqSaleCount: 0,
-					NqSaleCount: 0,
+						HqSaleCount: 0,
+						NqSaleCount: 0,
 
-					Message: null,
-					Posts: null,
-					SaleHistory: null,
-					World: null,
-				};
+						Message: null,
+						Posts: null,
+						SaleHistory: null,
+						World: null,
+					};
+				}
 			});
 
 			for (let k in result.items) {
