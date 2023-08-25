@@ -443,20 +443,38 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		console.log(
 			"Updating items... " + i * 100 + " / " + itemUpserts.length
 		);
-		await supabase
+		const itemUpsertResult = await supabase
 			.from("Item")
 			.upsert(itemUpserts.slice(i * 200, i * 200 + 200))
 			.select();
+		if (itemUpsertResult.error !== null) {
+			console.log(itemUpsertResult.error);
+			res.status(500).json({
+				message:
+					itemUpsertResult.error.message ||
+					"Invalid data returned by the database.",
+			});
+			return;
+		}
 	}
 
 	for (let i = 0; i < recipeUpserts.length / 200; i++) {
 		console.log(
 			"Updating recipes... " + i * 100 + " / " + recipeUpserts.length
 		);
-		await supabase
+		const recipeUpsertResult = await supabase
 			.from("Recipe")
 			.upsert(recipeUpserts.slice(i * 200, i * 200 + 200))
 			.select();
+		if (recipeUpsertResult.error !== null) {
+			console.log(recipeUpsertResult.error);
+			res.status(500).json({
+				message:
+					recipeUpsertResult.error.message ||
+					"Invalid data returned by the database.",
+			});
+			return;
+		}
 	}
 
 	for (let i = 0; i < ingredientsUpserts.length / 200; i++) {
@@ -466,10 +484,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				" / " +
 				ingredientsUpserts.length
 		);
-		await supabase
+		const ingredientsUpsertResult = await supabase
 			.from("Ingredient")
 			.upsert(ingredientsUpserts.slice(i * 200, i * 200 + 200))
 			.select();
+		if (ingredientsUpsertResult.error !== null) {
+			console.log(ingredientsUpsertResult.error);
+			res.status(500).json({
+				message:
+					ingredientsUpsertResult.error.message ||
+					"Invalid data returned by the database.",
+			});
+			return;
+		}
 	}
 
 	console.log("Updating craftability flag...");
