@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
@@ -31,11 +31,11 @@ import {
 	Select,
 	SelectProps,
 	Link,
+	IconButton,
 } from "@chakra-ui/react";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { RepeatIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
 	Column,
-	Table as ReactTable,
 	ColumnFiltersState,
 	createColumnHelper,
 	flexRender,
@@ -50,7 +50,7 @@ import {
 	PaginationState,
 } from "@tanstack/react-table";
 import { NumericFormat } from "react-number-format";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import GameItemIcon from "../../components/GameItemIcon";
 import { Recipe } from "../../@types/game/Recipe";
 import { CrafterProps } from "../../@types/layout/Crafter";
@@ -62,12 +62,15 @@ import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
+import { MarketboardApiResponse } from "../../@types/MarketboardApiResponse";
+import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
 
 type Name = string | number | boolean;
 
 const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
+	const [isUpdatingData, setIsUpdatingData] = useState(false);
 
 	const textColor = useColorModeValue("white", "gray.300");
 
@@ -153,7 +156,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						headers: { "x-csrf-token": csrfToken },
 					},
 				)
-				.then((res) => {
+				.then((res: AxiosResponse<RecipeApiResponse>) => {
 					if (res.data.recipes) {
 						setRecipes(res.data.recipes);
 						setData(res.data.recipes);
@@ -478,6 +481,37 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		getFacetedMinMaxValues: getFacetedMinMaxValues(),
 	});
 
+	const handleUpdateButtonClick = useCallback(async () => {
+		if (crafter && realm) {
+			setIsUpdatingData(true);
+
+			axios
+				.post(
+					`/api/v1/marketboard/${crafter.Abbreviation}/${realm}`,
+					null,
+					{
+						headers: { "x-csrf-token": csrfToken },
+					},
+				)
+				.then((res: AxiosResponse<MarketboardApiResponse>) => {
+					if ((res.data?.updated ?? 0) > 0) {
+						location.reload();
+					} else {
+						setIsUpdatingData(false);
+					}
+				})
+				.catch((err) => {
+					toast({
+						title: "Market board data fetching failed.",
+						description: err?.message,
+						status: "error",
+						duration: 5000,
+						isClosable: true,
+					});
+				});
+		}
+	}, [toast, crafter, realm, csrfToken]);
+
 	return (
 		<>
 			<SEO
@@ -501,7 +535,18 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						fontWeight={300}
 						fontSize={"2xl"}
 					>
-						<Trans>Realm:</Trans> {realm}
+						<Trans>Realm:</Trans> {realm}{" "}
+						<IconButton
+							aria-label={t`Update marketboard`}
+							variant="link"
+							isLoading={isUpdatingData}
+							isRound={true}
+							size={"lg"}
+							ml={-3}
+							verticalAlign={"middle"}
+							icon={<RepeatIcon />}
+							onClick={handleUpdateButtonClick}
+						/>
 					</Text>
 				</Box>
 
@@ -593,7 +638,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 							<FilterText
 								label={t`Recipe`}
 								column={table.getColumn("name")}
-								table={table}
 							/>
 						</Box>
 					</VStack>
@@ -732,12 +776,10 @@ FilterNumber.whyDidYouRender = true;
 const FilterText = ({
 	label,
 	column,
-	table,
 	initialFilterValue,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) => {
 	if (column === undefined) {
@@ -771,13 +813,11 @@ FilterText.whyDidYouRender = true;
 const FilterDropdown = ({
 	label,
 	column,
-	table,
 	initialFilterValue,
 	children,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	table: ReactTable<any>;
 	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
