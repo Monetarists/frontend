@@ -196,7 +196,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				page: page,
 			});
 
-			response.Results.map((recipe) => {
+			response.Results.forEach((recipe) => {
 				if (!upsertedItems[recipe.ItemResult.ID]) {
 					upsertedItems[recipe.ItemResult.ID] = true;
 

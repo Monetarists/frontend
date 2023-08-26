@@ -101,13 +101,13 @@ const handler = async (
 	let ingredients = ingredientsResult.data;
 
 	let itemIds: number[] = [];
-	recipes.map((recipe) => {
+	recipes.forEach((recipe) => {
 		if (recipe?.Item?.IsMarketable) {
 			itemIds.push(recipe.ItemId);
 		}
 		recipe.UniversalisEntry = null;
 	});
-	ingredients.map((ingredient) => {
+	ingredients.forEach((ingredient) => {
 		if (ingredient.ismarketable) {
 			itemIds.push(ingredient.itemid);
 		}
@@ -150,31 +150,31 @@ const handler = async (
 			return;
 		}
 
-		universalisResult.data.map((entry) => {
+		universalisResult.data.forEach((entry) => {
 			// entry.LastUploadDate = new Date(entry.LastUploadDate);
 			universalisEntries[entry.ItemId] = {
 				Id: entry.Id,
 				LastUploadDate: new Date(entry.LastUploadDate),
 				QueryDate: new Date(entry.QueryDate),
-				NqListingsCount: entry?.NqListingsCount || 0,
-				HqListingsCount: entry?.HqListingsCount || 0,
-				NqSaleCount: entry?.NqSaleCount || 0,
-				HqSaleCount: entry?.HqSaleCount || 0,
-				CurrentAveragePrice: entry?.CurrentAveragePrice || 0,
-				CurrentAveragePrinceNQ: entry?.CurrentAveragePrinceNQ || 0,
-				CurrentAveragePriceHQ: entry?.CurrentAveragePriceHQ || 0,
-				RegularSaleVelocity: entry?.RegularSaleVelocity || 0,
-				NqSaleVelocity: entry?.NqSaleVelocity || 0,
-				HqSaleVelocity: entry?.HqSaleVelocity || 0,
-				AveragePrice: entry?.AveragePrice || 0,
-				AveragePriceNQ: entry?.AveragePriceNQ || 0,
-				AveragePriceHQ: entry?.AveragePriceHQ || 0,
-				MinPrice: entry?.MinPrice || 0,
-				MinPriceNQ: entry?.MinPriceNQ || 0,
-				MinPriceHQ: entry?.MinPriceHQ || 0,
-				MaxPrice: entry?.MaxPrice || 0,
-				MaxPriceNQ: entry?.MaxPriceNQ || 0,
-				MaxPriceHQ: entry?.MaxPriceHQ || 0,
+				NqListingsCount: entry.NqListingsCount ?? 0,
+				HqListingsCount: entry.HqListingsCount ?? 0,
+				NqSaleCount: entry.NqSaleCount ?? 0,
+				HqSaleCount: entry.HqSaleCount ?? 0,
+				CurrentAveragePrice: entry.CurrentAveragePrice,
+				CurrentAveragePrinceNQ: entry.CurrentAveragePrinceNQ,
+				CurrentAveragePriceHQ: entry.CurrentAveragePriceHQ,
+				RegularSaleVelocity: entry.RegularSaleVelocity,
+				NqSaleVelocity: entry.NqSaleVelocity,
+				HqSaleVelocity: entry.HqSaleVelocity,
+				AveragePrice: entry.AveragePrice,
+				AveragePriceNQ: entry.AveragePriceNQ,
+				AveragePriceHQ: entry.AveragePriceHQ,
+				MinPrice: entry.MinPrice,
+				MinPriceNQ: entry.MinPriceNQ,
+				MinPriceHQ: entry.MinPriceHQ,
+				MaxPrice: entry.MaxPrice,
+				MaxPriceNQ: entry.MaxPriceNQ,
+				MaxPriceHQ: entry.MaxPriceHQ,
 
 				Message: null,
 				Posts: null,
@@ -185,7 +185,7 @@ const handler = async (
 	}
 
 	let universalisRefetch: number[] = [];
-	itemIds.map((itemId) => {
+	itemIds.forEach((itemId) => {
 		if (!universalisEntries[itemId]) {
 			universalisRefetch.push(itemId);
 		}
@@ -216,7 +216,7 @@ const handler = async (
 				return res.json();
 			});
 
-			result?.unresolvedItems?.map((itemId) => {
+			result?.unresolvedItems?.forEach((itemId) => {
 				if (itemId > 0) {
 					universalisInsert.push({
 						AveragePrice: 0,
@@ -284,7 +284,7 @@ const handler = async (
 				let sold = 0,
 					soldHistoryNQ: number[] = [],
 					soldHistoryHQ: number[] = [];
-				item?.recentHistory?.map((entry) => {
+				item?.recentHistory?.forEach((entry) => {
 					if (
 						entry.timestamp >=
 						Math.floor(Date.now() / 1000) - 86400
@@ -302,7 +302,7 @@ const handler = async (
 					nq: 0,
 					hq: 0,
 				};
-				item?.listings?.map((entry) => {
+				item?.listings?.forEach((entry) => {
 					listings[entry.hq ? "hq" : "nq"] =
 						listings[entry.hq ? "hq" : "nq"] + entry.quantity;
 				});
@@ -392,7 +392,7 @@ const handler = async (
 		}
 	}
 
-	recipes.map((recipe) => {
+	recipes.forEach((recipe) => {
 		recipe.UniversalisEntry = universalisEntries[recipe.ItemId] || null;
 		recipe.CraftingCost = 0;
 
@@ -400,7 +400,7 @@ const handler = async (
 			(ingredient) => ingredient.recipeid === recipe.Id,
 		);
 
-		recipeIngredients.map((ingredient) => {
+		recipeIngredients.forEach((ingredient) => {
 			const universalisEntry =
 				universalisEntries[ingredient.itemid] || null;
 
