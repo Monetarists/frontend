@@ -433,7 +433,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				});
 			});
 			page = page + 1;
-			// } while (false);
 		} while (response.Pagination.PageNext !== null);
 	} catch (error) {
 		console.log("Error: ", error);

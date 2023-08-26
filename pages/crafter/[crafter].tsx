@@ -56,11 +56,10 @@ import { Recipe } from "../../@types/game/Recipe";
 import { CrafterProps } from "../../@types/layout/Crafter";
 import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
 import useSettings from "../../hooks/useSettings";
-import { getClassJob, getClassJobs } from "../../data";
+import { getClassJob, getClassJobs, getItemSearchCategories } from "../../data";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
-import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
 
@@ -72,11 +71,11 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
-	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
+	const [_localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
-	const [iscGrouped, setIscGrouped] = useState<
+	const [_iscGrouped, setIscGrouped] = useState<
 		Record<number, Array<ItemSearchCategory>>
 	>({});
 	const [data, setData] = useState<Recipe[]>(() => []);
