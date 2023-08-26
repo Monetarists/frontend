@@ -2,7 +2,6 @@
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { csrf } from "../../../../../lib/csrf";
 import { getClassJob } from "../../../../../data";
 import { getLowestMarketPrice } from "../../../../../util/Recipe";
 import { Database } from "../../../../../@types/database";
@@ -29,9 +28,9 @@ const handler = async (
 	req: RecipeDataRequest,
 	res: NextApiResponse<RecipeApiResponse>
 ) => {
-	if (req.method !== "GET") {
-		res.setHeader("Allow", "GET").status(405).json({
-			message: "This API route is available via GET only.",
+	if (req.method !== "POST") {
+		res.setHeader("Allow", "POST").status(405).json({
+			message: "This API route is available via POST only.",
 		});
 		return;
 	}
@@ -421,4 +420,4 @@ const handler = async (
 	});
 };
 
-export default csrf(handler);
+export default handler;

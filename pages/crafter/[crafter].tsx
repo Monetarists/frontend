@@ -62,10 +62,9 @@ import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
 import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
-import { setup } from "../../lib/csrf";
 import NextLink from "next/link";
 
-const Crafter = ({ crafter, url }: CrafterProps) => {
+const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
@@ -146,7 +145,13 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	useEffect(() => {
 		if (crafter && realm) {
 			axios
-				.get(`/api/v1/recipes/${crafter.Abbreviation}/${realm}`)
+				.post(
+					`/api/v1/recipes/${crafter.Abbreviation}/${realm}`,
+					null,
+					{
+						headers: { "x-csrf-token": csrfToken },
+					}
+				)
 				.then((res) => {
 					if (res.data.recipes) {
 						setRecipes(res.data.recipes);
@@ -163,7 +168,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 					});
 				});
 		}
-	}, [realm, crafter, setRecipes, setData, toast]);
+	}, [realm, crafter, setRecipes, setData, toast, csrfToken]);
 
 	const columnHelper = createColumnHelper<Recipe>();
 
@@ -920,28 +925,31 @@ const DebouncedSelect = ({
 
 DebouncedSelect.whyDidYouRender = true;
 
-export const getServerSideProps: GetServerSideProps = setup(
-	async (context: GetServerSidePropsContext) => {
-		let crafterParam = context.params?.crafter ?? "";
-		const crafter = getClassJob(
-			typeof crafterParam === "string" ? crafterParam : ""
-		);
+export const getServerSideProps: GetServerSideProps = async (
+	context: GetServerSidePropsContext
+) => {
+	let crafterParam = context.params?.crafter ?? "";
+	const crafter = getClassJob(
+		typeof crafterParam === "string" ? crafterParam : ""
+	);
 
-		if (crafter === null) {
-			return {
-				notFound: true,
-			};
-		}
-
+	if (crafter === null) {
 		return {
-			props: {
-				url: context?.req?.headers?.host,
-				classJobs: getClassJobs(),
-				crafter: crafter,
-			},
+			notFound: true,
 		};
 	}
-);
+
+	const csrfToken = context.res.req.headers["x-csrf-token"] as string;
+
+	return {
+		props: {
+			url: context?.req?.headers?.host,
+			classJobs: getClassJobs(),
+			crafter: crafter,
+			csrfToken,
+		},
+	};
+};
 
 Crafter.whyDidYouRender = true;
 
