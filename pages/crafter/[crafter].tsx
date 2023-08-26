@@ -64,7 +64,7 @@ import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
 import { MarketboardApiResponse } from "../../@types/MarketboardApiResponse";
 import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
-import axiosRetry from "axios-retry";
+import { customAxiosApi, globalConfig } from "../../lib/axios";
 
 type Name = string | number | boolean;
 
@@ -486,13 +486,14 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		if (crafter && realm) {
 			setIsUpdatingData(true);
 
-			axios
+			let config = globalConfig;
+			config.headers = { "x-csrf-token": csrfToken };
+
+			customAxiosApi
 				.post(
 					`/api/v1/marketboard/${crafter.Abbreviation}/${realm}`,
-					null,
-					{
-						headers: { "x-csrf-token": csrfToken },
-					},
+					{},
+					config,
 				)
 				.then((res: AxiosResponse<MarketboardApiResponse>) => {
 					if ((res.data?.updated ?? 0) > 0) {
@@ -502,6 +503,8 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					}
 				})
 				.catch((err) => {
+					setIsUpdatingData(false);
+
 					toast({
 						title: "Market board data fetching failed.",
 						description: err?.message,
@@ -510,12 +513,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						isClosable: true,
 					});
 				});
-
-			axiosRetry(axios, {
-				retryCondition: (error) => {
-					return error.response?.status === 504;
-				},
-			});
 		}
 	}, [toast, crafter, realm, csrfToken]);
 
