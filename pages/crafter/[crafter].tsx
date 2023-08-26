@@ -30,6 +30,7 @@ import {
 	useToast,
 	Select,
 	SelectProps,
+	Link,
 } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -54,7 +55,6 @@ import GameItemIcon from "../../components/GameItemIcon";
 import { Recipe } from "../../@types/game/Recipe";
 import { CrafterProps } from "../../@types/layout/Crafter";
 import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
-import Link from "../../components/Link";
 import useSettings from "../../hooks/useSettings";
 import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
@@ -63,6 +63,7 @@ import { Category } from "../../@types/game/Category";
 import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import { setup } from "../../lib/csrf";
+import NextLink from "next/link";
 
 const Crafter = ({ crafter, url }: CrafterProps) => {
 	const toast = useToast();
@@ -193,6 +194,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 				return (
 					<Link
+						as={NextLink}
 						href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
 						isExternal={true}
 						_hover={{
@@ -212,8 +214,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						>
 							<GameItemIcon
 								id={recipe.Item.Id}
-								width="38px"
-								height="38px"
+								width="38"
+								height="38"
 								className="recipeIcon"
 							/>
 							&nbsp;
@@ -423,6 +425,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						thousandSeparator={true}
 						renderText={(formattedValue) => (
 							<Link
+								as={NextLink}
 								href={`https://universalis.app/market/${info.row.original.Item.Id}/`}
 								isExternal={true}
 								_hover={{

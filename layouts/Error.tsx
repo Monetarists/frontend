@@ -8,13 +8,14 @@ import {
 	Stack,
 	useColorMode,
 	useColorModeValue,
+	Link,
 } from "@chakra-ui/react";
-import Head from "next/head";
 import React from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import AppFooter from "../components/AppFooter";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Logo } from "../components/Logo";
-import Link from "../components/Link";
 import { Trans } from "@lingui/macro";
 import { ErrorProps } from "../@types/layout/Error";
 
@@ -41,7 +42,7 @@ const Error = ({ statusCode, heading, description }: ErrorProps) => {
 						justifyContent={"space-between"}
 					>
 						<Box>
-							<Link href={"/"}>
+							<Link as={NextLink} href={"/"}>
 								<Logo
 									color={useColorModeValue(
 										"gray.700",
