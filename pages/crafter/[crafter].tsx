@@ -62,73 +62,6 @@ import { Category } from "../../@types/game/Category";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
 
-function RecipeNameHeader() {
-	return (
-		// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
-		<span>
-			<Trans>Recipe</Trans>
-		</span>
-		// </Tooltip>
-	);
-}
-
-function RecipeNameCell(props: {
-	itemId: number;
-	recipeId: number;
-	recipeName: string;
-	textColor: string;
-	searchCategoryName: string;
-}) {
-	return (
-		<Link
-			as={NextLink}
-			href={`https://www.garlandtools.org/db/#item/${props.itemId}`}
-			isExternal={true}
-			_hover={{
-				textDecoration: "none",
-			}}
-		>
-			<Flex
-				key={props.recipeId}
-				align="center"
-				role="group"
-				cursor="pointer"
-				position="relative"
-				_hover={{
-					bg: "gray.700",
-					color: "white",
-				}}
-			>
-				<GameItemIcon
-					id={props.itemId}
-					width={38}
-					height={38}
-					className="recipeIcon"
-				/>
-				&nbsp;
-				<Tooltip
-					label={t`Recipe ID: ${props.recipeId}`}
-					aria-label={t`Recipe ID helper`}
-				>
-					<>
-						<Text textTransform={"capitalize"}>
-							{props.recipeName}
-							<br />
-							<Text
-								as="span"
-								fontSize="xs"
-								color={props.textColor}
-							>
-								{props.searchCategoryName}
-							</Text>
-						</Text>
-					</>
-				</Tooltip>
-			</Flex>
-		</Link>
-	);
-}
-
 function RecipeCategoryHeader(props: { searchCategoryName: string }) {
 	return <Text>{props.searchCategoryName}</Text>;
 }
@@ -244,7 +177,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const columns = [
 		columnHelper.accessor((row) => row[localisedNameKey as keyof Recipe], {
 			id: "name",
-			header: () => <RecipeNameHeader />,
+			header: () => (
+				// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
+				<span>
+					<Trans>Recipe</Trans>
+				</span>
+				// </Tooltip>
+			),
 			cell: (info) => {
 				let recipe = info.row.original;
 
@@ -252,22 +191,61 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					recipe as unknown as {
 						[key: string]: string | number | boolean;
 					}
-				)[localisedNameKey as keyof Recipe] as string;
+				)[localisedNameKey as keyof Recipe];
 
 				let searchCategoryName = (
 					recipe.Item.ItemSearchCategory as unknown as {
 						[key: string]: string | number | boolean;
 					}
-				)[localisedNameKey as keyof Category] as string;
+				)[localisedNameKey as keyof Category];
 
 				return (
-					<RecipeNameCell
-						itemId={recipe.Item.Id}
-						recipeId={recipe.Id}
-						recipeName={recipeName}
-						textColor={textColor}
-						searchCategoryName={searchCategoryName}
-					/>
+					<Link
+						as={NextLink}
+						href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
+						isExternal={true}
+						_hover={{
+							textDecoration: "none",
+						}}
+					>
+						<Flex
+							key={recipe.Id}
+							align="center"
+							role="group"
+							cursor="pointer"
+							position="relative"
+							_hover={{
+								bg: "gray.700",
+								color: "white",
+							}}
+						>
+							<GameItemIcon
+								id={recipe.Item.Id}
+								width={38}
+								height={38}
+								className="recipeIcon"
+							/>
+							&nbsp;
+							<Tooltip
+								label={t`Recipe ID: ${recipe.Id}`}
+								aria-label={t`Recipe ID helper`}
+							>
+								<>
+									<Text textTransform={"capitalize"}>
+										{recipeName}
+										<br />
+										<Text
+											as="span"
+											fontSize="xs"
+											color={textColor}
+										>
+											{searchCategoryName}
+										</Text>
+									</Text>
+								</>
+							</Tooltip>
+						</Flex>
+					</Link>
 				);
 			},
 			footer: (info) => info.column.id,
