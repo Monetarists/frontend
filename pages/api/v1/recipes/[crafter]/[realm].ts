@@ -35,7 +35,7 @@ const handler = async (
 	const crafter = getClassJob(req.query.crafter);
 
 	if (crafter === null) {
-		res.status(404);
+		res.status(404).end();
 		return;
 	}
 
