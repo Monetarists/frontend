@@ -4,4 +4,5 @@ export interface CrafterProps {
 	url: string;
 	classJobs: ClassJob[];
 	crafter: ClassJob;
+	csrfToken: string;
 }

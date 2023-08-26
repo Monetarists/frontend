@@ -30,6 +30,7 @@ import {
 	useToast,
 	Select,
 	SelectProps,
+	Link,
 } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -54,7 +55,6 @@ import GameItemIcon from "../../components/GameItemIcon";
 import { Recipe } from "../../@types/game/Recipe";
 import { CrafterProps } from "../../@types/layout/Crafter";
 import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
-import Link from "../../components/Link";
 import useSettings from "../../hooks/useSettings";
 import { getClassJob, getClassJobs } from "../../data";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
@@ -62,9 +62,9 @@ import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
 import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
-import { setup } from "../../lib/csrf";
+import NextLink from "next/link";
 
-const Crafter = ({ crafter, url }: CrafterProps) => {
+const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
@@ -145,7 +145,13 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	useEffect(() => {
 		if (crafter && realm) {
 			axios
-				.get(`/api/v1/recipes/${crafter.Abbreviation}/${realm}`)
+				.post(
+					`/api/v1/recipes/${crafter.Abbreviation}/${realm}`,
+					null,
+					{
+						headers: { "x-csrf-token": csrfToken },
+					}
+				)
 				.then((res) => {
 					if (res.data.recipes) {
 						setRecipes(res.data.recipes);
@@ -162,7 +168,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 					});
 				});
 		}
-	}, [realm, crafter, setRecipes, setData, toast]);
+	}, [realm, crafter, setRecipes, setData, toast, csrfToken]);
 
 	const columnHelper = createColumnHelper<Recipe>();
 
@@ -193,6 +199,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 
 				return (
 					<Link
+						as={NextLink}
 						href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
 						isExternal={true}
 						_hover={{
@@ -212,8 +219,8 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						>
 							<GameItemIcon
 								id={recipe.Item.Id}
-								width="38px"
-								height="38px"
+								width={38}
+								height={38}
 								className="recipeIcon"
 							/>
 							&nbsp;
@@ -423,6 +430,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 						thousandSeparator={true}
 						renderText={(formattedValue) => (
 							<Link
+								as={NextLink}
 								href={`https://universalis.app/market/${info.row.original.Item.Id}/`}
 								isExternal={true}
 								_hover={{
@@ -917,28 +925,31 @@ const DebouncedSelect = ({
 
 DebouncedSelect.whyDidYouRender = true;
 
-export const getServerSideProps: GetServerSideProps = setup(
-	async (context: GetServerSidePropsContext) => {
-		let crafterParam = context.params?.crafter ?? "";
-		const crafter = getClassJob(
-			typeof crafterParam === "string" ? crafterParam : ""
-		);
+export const getServerSideProps: GetServerSideProps = async (
+	context: GetServerSidePropsContext
+) => {
+	let crafterParam = context.params?.crafter ?? "";
+	const crafter = getClassJob(
+		typeof crafterParam === "string" ? crafterParam : ""
+	);
 
-		if (crafter === null) {
-			return {
-				notFound: true,
-			};
-		}
-
+	if (crafter === null) {
 		return {
-			props: {
-				url: context?.req?.headers?.host,
-				classJobs: getClassJobs(),
-				crafter: crafter,
-			},
+			notFound: true,
 		};
 	}
-);
+
+	const csrfToken = context.res.req.headers["x-csrf-token"] as string;
+
+	return {
+		props: {
+			url: context?.req?.headers?.host,
+			classJobs: getClassJobs(),
+			crafter: crafter,
+			csrfToken,
+		},
+	};
+};
 
 Crafter.whyDidYouRender = true;
 
