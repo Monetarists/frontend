@@ -145,9 +145,7 @@ const Crafter = ({ crafter, url }: CrafterProps) => {
 	useEffect(() => {
 		if (crafter && realm) {
 			axios
-				.get(
-					`${process.env.NEXT_PUBLIC_API_URL}/recipes/${crafter.Abbreviation}/${realm}`
-				)
+				.get(`/api/v1/recipes/${crafter.Abbreviation}/${realm}`)
 				.then((res) => {
 					if (res.data.recipes) {
 						setRecipes(res.data.recipes);
