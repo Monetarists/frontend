@@ -11,14 +11,14 @@ const GameItemIcon = ({
 	priority,
 }: GameItemIconProps) => {
 	const [url, setUrl] = useState(
-		`https://monetarists.github.io/icon-assets/icon2x/${id}.png`
+		`https://monetarists.github.io/icon-assets/icon2x/${id}.png`,
 	);
 	useEffect(
 		() =>
 			setUrl(
-				`https://monetarists.github.io/icon-assets/icon2x/${id}.png`
+				`https://monetarists.github.io/icon-assets/icon2x/${id}.png`,
 			),
-		[id]
+		[id],
 	);
 	return (
 		<Box className={className} width={width} height={height}>

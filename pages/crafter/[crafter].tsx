@@ -49,7 +49,7 @@ import {
 	getFacetedMinMaxValues,
 	PaginationState,
 } from "@tanstack/react-table";
-import NumberFormat from "react-number-format";
+import { NumericFormat } from "react-number-format";
 import axios from "axios";
 import GameItemIcon from "../../components/GameItemIcon";
 import { Recipe } from "../../@types/game/Recipe";
@@ -150,7 +150,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					null,
 					{
 						headers: { "x-csrf-token": csrfToken },
-					}
+					},
 				)
 				.then((res) => {
 					if (res.data.recipes) {
@@ -266,7 +266,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					return <Text>{searchCategoryName}</Text>;
 				},
 				footer: (info) => info.column.id,
-			}
+			},
 		),
 
 		columnHelper.accessor((row) => row.CraftingCost || 0, {
@@ -283,7 +283,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 			),
 			cell: (info) => {
 				return (
-					<NumberFormat
+					<NumericFormat
 						value={info.getValue()}
 						displayType={"text"}
 						thousandSeparator={true}
@@ -316,25 +316,25 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				cell: (info) => {
 					let value = info.getValue();
 					return (
-						<>
+						<div>
 							NQ:{" "}
-							<NumberFormat
+							<NumericFormat
 								value={value.nq}
 								displayType={"text"}
 								thousandSeparator={true}
 							/>{" "}
 							&bull; HQ:{" "}
-							<NumberFormat
+							<NumericFormat
 								value={value.hq}
 								displayType={"text"}
 								thousandSeparator={true}
 							/>
-						</>
+						</div>
 					);
 				},
 				footer: (info) => info.column.id,
 				enableSorting: false,
-			}
+			},
 		),
 
 		columnHelper.accessor(
@@ -354,7 +354,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					</Tooltip>
 				),
 				cell: (info) => (
-					<NumberFormat
+					<NumericFormat
 						value={info.getValue()}
 						displayType={"text"}
 						thousandSeparator={true}
@@ -363,7 +363,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				footer: (info) => info.column.id,
 				sortDescFirst: true,
 				enableMultiSort: true,
-			}
+			},
 		),
 
 		columnHelper.accessor(
@@ -383,7 +383,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				),
 				cell: (info) => {
 					return (
-						<NumberFormat
+						<NumericFormat
 							value={info.getValue()}
 							displayType={"text"}
 							thousandSeparator={true}
@@ -399,7 +399,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				},
 				footer: (info) => info.column.id,
 				sortDescFirst: true,
-			}
+			},
 		),
 
 		columnHelper.accessor((row) => calculateProfitLoss(row), {
@@ -424,7 +424,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				}
 
 				return (
-					<NumberFormat
+					<NumericFormat
 						value={info.getValue()}
 						displayType={"text"}
 						thousandSeparator={true}
@@ -623,7 +623,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 																header.column
 																	.columnDef
 																	.header,
-																header.getContext()
+																header.getContext(),
 															)}
 															{{
 																asc: (
@@ -665,7 +665,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 											<Td key={cell.id} pb="0" pt="0">
 												{flexRender(
 													cell.column.columnDef.cell,
-													cell.getContext()
+													cell.getContext(),
 												)}
 											</Td>
 										))}
@@ -926,11 +926,11 @@ const DebouncedSelect = ({
 DebouncedSelect.whyDidYouRender = true;
 
 export const getServerSideProps: GetServerSideProps = async (
-	context: GetServerSidePropsContext
+	context: GetServerSidePropsContext,
 ) => {
 	let crafterParam = context.params?.crafter ?? "";
 	const crafter = getClassJob(
-		typeof crafterParam === "string" ? crafterParam : ""
+		typeof crafterParam === "string" ? crafterParam : "",
 	);
 
 	if (crafter === null) {

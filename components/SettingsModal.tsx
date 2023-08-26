@@ -114,17 +114,17 @@ const SettingsModal = ({
 														>
 															{dataCenter.Servers.map(
 																(
-																	server: string
+																	server: string,
 																) => (
 																	<option
 																		key={`server-${server}`}
 																	>
 																		{server}
 																	</option>
-																)
+																),
 															)}
 														</optgroup>
-													)
+													),
 												)}
 											</Select>
 										</FormControl>

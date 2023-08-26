@@ -186,14 +186,14 @@ const TestimonialAvatar = ({
 	title: string;
 }) => {
 	const [url, setUrl] = useState(
-		`https://monetarists.github.io/icon-assets/avatars/${id}.png`
+		`https://monetarists.github.io/icon-assets/avatars/${id}.png`,
 	);
 	useEffect(
 		() =>
 			setUrl(
-				`https://monetarists.github.io/icon-assets/avatars/${id}.png`
+				`https://monetarists.github.io/icon-assets/avatars/${id}.png`,
 			),
-		[id]
+		[id],
 	);
 
 	return (

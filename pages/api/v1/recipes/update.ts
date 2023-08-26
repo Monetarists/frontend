@@ -47,7 +47,7 @@ interface RecipeObject {
 
 function getItemObjectFromIngredient(
 	ingredient: ItemIngredient,
-	marketableItems: number[]
+	marketableItems: number[],
 ): ItemObject | null {
 	if (
 		ingredient.ID === null ||
@@ -97,11 +97,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const supabase = createClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-		{ auth: { persistSession: false } }
+		{ auth: { persistSession: false } },
 	);
 
 	const marketableItems: number[] = await fetch(
-		"https://universalis.app/api/v2/marketable"
+		"https://universalis.app/api/v2/marketable",
 	).then((res) => {
 		return res.json();
 	});
@@ -219,43 +219,43 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 				// I don't want to do the for loop because it mangles the types
 				let ingredient0 = getItemObjectFromIngredient(
 					recipe.ItemIngredient0,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient1 = getItemObjectFromIngredient(
 					recipe.ItemIngredient1,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient2 = getItemObjectFromIngredient(
 					recipe.ItemIngredient2,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient3 = getItemObjectFromIngredient(
 					recipe.ItemIngredient3,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient4 = getItemObjectFromIngredient(
 					recipe.ItemIngredient4,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient5 = getItemObjectFromIngredient(
 					recipe.ItemIngredient5,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient6 = getItemObjectFromIngredient(
 					recipe.ItemIngredient6,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient7 = getItemObjectFromIngredient(
 					recipe.ItemIngredient7,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient8 = getItemObjectFromIngredient(
 					recipe.ItemIngredient8,
-					marketableItems
+					marketableItems,
 				);
 				let ingredient9 = getItemObjectFromIngredient(
 					recipe.ItemIngredient9,
-					marketableItems
+					marketableItems,
 				);
 
 				if (ingredient0 !== null && !upsertedItems[ingredient0.Id]) {
@@ -441,7 +441,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	for (let i = 0; i < itemUpserts.length / 200; i++) {
 		console.log(
-			"Updating items... " + i * 100 + " / " + itemUpserts.length
+			"Updating items... " + i * 100 + " / " + itemUpserts.length,
 		);
 		const itemUpsertResult = await supabase
 			.from("Item")
@@ -460,7 +460,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	for (let i = 0; i < recipeUpserts.length / 200; i++) {
 		console.log(
-			"Updating recipes... " + i * 100 + " / " + recipeUpserts.length
+			"Updating recipes... " + i * 100 + " / " + recipeUpserts.length,
 		);
 		const recipeUpsertResult = await supabase
 			.from("Recipe")
@@ -482,7 +482,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 			"Updating ingredients... " +
 				i * 100 +
 				" / " +
-				ingredientsUpserts.length
+				ingredientsUpserts.length,
 		);
 		const ingredientsUpsertResult = await supabase
 			.from("Ingredient")
@@ -501,7 +501,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
 	console.log("Updating craftability flag...");
 	const updateCraftabilityResult = await supabase.rpc(
-		"update_item_craftability"
+		"update_item_craftability",
 	);
 	if (updateCraftabilityResult.error !== null) {
 		console.log(updateCraftabilityResult.error);

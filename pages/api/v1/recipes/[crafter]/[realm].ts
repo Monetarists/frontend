@@ -26,7 +26,7 @@ interface RecipeDataRequest extends NextApiRequest {
 
 const handler = async (
 	req: RecipeDataRequest,
-	res: NextApiResponse<RecipeApiResponse>
+	res: NextApiResponse<RecipeApiResponse>,
 ) => {
 	if (req.method !== "POST") {
 		res.setHeader("Allow", "POST").status(405).json({
@@ -45,7 +45,7 @@ const handler = async (
 	const supabase = createClient<Database>(
 		process.env.NEXT_PUBLIC_SUPABASE_URL,
 		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-		{ auth: { persistSession: false } }
+		{ auth: { persistSession: false } },
 	);
 
 	const worldResult = await supabase
@@ -81,7 +81,7 @@ const handler = async (
 
 	const recipes = recipeResult.data.filter(
 		(recipe) =>
-			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null
+			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null,
 	);
 
 	const ingredientsResult = await supabase.rpc("fetch_ingredients", {
@@ -205,13 +205,13 @@ const handler = async (
 				"Querying Universalis entries... " +
 					i * 100 +
 					" / " +
-					universalisRefetch.length
+					universalisRefetch.length,
 			);
 			const result: CurrentlyShownMultiViewV2 = await fetch(
 				"https://universalis.app/api/v2/" +
 					worldResult.data.Id +
 					"/" +
-					universalisRefetch.slice(i * 100, i * 100 + 100).join(",")
+					universalisRefetch.slice(i * 100, i * 100 + 100).join(","),
 			).then((res) => {
 				return res.json();
 			});
@@ -374,7 +374,7 @@ const handler = async (
 				"Updating Universalis entries... " +
 					i * 100 +
 					" / " +
-					universalisInsert.length
+					universalisInsert.length,
 			);
 			const universalisInsertResult = await supabase
 				.from("UniversalisEntry")
@@ -397,7 +397,7 @@ const handler = async (
 		recipe.CraftingCost = 0;
 
 		const recipeIngredients = ingredients.filter(
-			(ingredient) => ingredient.recipeid === recipe.Id
+			(ingredient) => ingredient.recipeid === recipe.Id,
 		);
 
 		recipeIngredients.map((ingredient) => {
