@@ -219,8 +219,8 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						>
 							<GameItemIcon
 								id={recipe.Item.Id}
-								width="38"
-								height="38"
+								width={38}
+								height={38}
 								className="recipeIcon"
 							/>
 							&nbsp;
