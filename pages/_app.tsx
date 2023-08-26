@@ -7,7 +7,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Cookies, CookiesProvider } from "react-cookie";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
-import { en, ja, de, fr } from "make-plural/plurals";
 import { messages as messagesEn } from "../locales/en/messages";
 import { messages as messagesJa } from "../locales/ja/messages";
 import { messages as messagesDe } from "../locales/de/messages";
@@ -15,7 +14,6 @@ import { messages as messagesFr } from "../locales/fr/messages";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import App from "next/app";
-import { useEffect } from "react";
 import { Language } from "../@types/Language";
 
 function parseLang(lang: Language): Language {
@@ -37,13 +35,6 @@ i18n.load({
 	fr: messagesFr,
 });
 
-i18n.loadLocaleData({
-	en: { plurals: en },
-	ja: { plurals: ja },
-	de: { plurals: de },
-	fr: { plurals: fr },
-});
-
 interface MonetaristAppProps extends AppProps {
 	cookies?: string;
 }
@@ -53,9 +44,7 @@ function Monetarist({ Component, pageProps, cookies }: MonetaristAppProps) {
 	const cookiesObj = new Cookies(cookies);
 	const lang = parseLang(cookiesObj.get("monetarist_language"));
 
-	useEffect(() => {
-		i18n.activate(lang);
-	}, [lang]);
+	i18n.activate(lang);
 
 	return (
 		<>
@@ -64,7 +53,7 @@ function Monetarist({ Component, pageProps, cookies }: MonetaristAppProps) {
 			</Head>
 			<ChakraProvider>
 				<CookiesProvider cookies={cookiesObj}>
-					<I18nProvider i18n={i18n} forceRenderOnLocaleChange={false}>
+					<I18nProvider i18n={i18n}>
 						<Component {...pageProps} key={router.asPath} />
 					</I18nProvider>
 				</CookiesProvider>

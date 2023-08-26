@@ -16,6 +16,16 @@ const nextConfig = {
 			"cdn.discordapp.com",
 		],
 	},
+	experimental: {
+		swcPlugins: [
+			[
+				"@lingui/swc-plugin",
+				{
+					// the same options as in .swcrc
+				},
+			],
+		],
+	},
 	/**
 	 * @param {{[key: string]: unknown}} config
 	 * @param {{dev: boolean; isServer: boolean;}} options
@@ -42,23 +52,6 @@ const nextConfig = {
 
 		return config;
 	},
-	/*
-	webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-		// Note: we provide webpack above so you should not `require` it
-		// Perform customizations to webpack config
-		config.plugins.push(new webpack.IgnorePlugin({
-			checkResource(resource) {
-				return !!(resource.startsWith("./de/")
-					|| resource.startsWith("./en/")
-					|| resource.startsWith("./fr/")
-					|| resource.startsWith("./ja/"));
-			}
-		}));
-
-		// Important: return the modified config
-		return config
-	}
-	 */
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
