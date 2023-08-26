@@ -129,8 +129,7 @@ const SettingsModal = ({
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.server &&
-												errors.server.message}
+											{errors?.server?.message}
 										</FormErrorMessage>
 									</Box>
 									<Box w="50%">
@@ -163,8 +162,7 @@ const SettingsModal = ({
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.language &&
-												errors.language.message}
+											{errors?.language?.message}
 										</FormErrorMessage>
 									</Box>
 								</HStack>
@@ -189,7 +187,7 @@ const SettingsModal = ({
 									</Select>
 								</FormControl>
 								<FormErrorMessage>
-									{errors.server && errors.server.message}
+									{errors?.timezone?.message}
 								</FormErrorMessage>
 							</Stack>
 						</ModalBody>

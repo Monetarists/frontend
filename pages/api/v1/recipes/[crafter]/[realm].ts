@@ -80,8 +80,7 @@ const handler = async (
 	}
 
 	const recipes = recipeResult.data.filter(
-		(recipe) =>
-			recipe?.Item !== null && recipe?.Item?.ItemSearchCategory !== null,
+		(recipe) => recipe?.Item?.ItemSearchCategory !== null,
 	);
 
 	const ingredientsResult = await supabase.rpc("fetch_ingredients", {
@@ -151,7 +150,6 @@ const handler = async (
 		}
 
 		universalisResult.data.forEach((entry) => {
-			// entry.LastUploadDate = new Date(entry.LastUploadDate);
 			universalisEntries[entry.ItemId] = {
 				Id: entry.Id,
 				LastUploadDate: new Date(entry.LastUploadDate),
