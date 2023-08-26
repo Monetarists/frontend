@@ -29,12 +29,12 @@ import { getDataCenters } from "../data";
 import timezones from "timezones-list";
 import { t, Trans } from "@lingui/macro";
 
-export default function SettingsModal({
+const SettingsModal = ({
 	closeOnOverlayClick,
 	isOpen,
 	onClose,
 	onSave,
-}: SettingsModalProps) {
+}: SettingsModalProps) => {
 	const [settings, setSetting] = useSettings();
 	const dataCenters = getDataCenters();
 
@@ -114,23 +114,22 @@ export default function SettingsModal({
 														>
 															{dataCenter.Servers.map(
 																(
-																	server: string
+																	server: string,
 																) => (
 																	<option
 																		key={`server-${server}`}
 																	>
 																		{server}
 																	</option>
-																)
+																),
 															)}
 														</optgroup>
-													)
+													),
 												)}
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.server &&
-												errors.server.message}
+											{errors?.server?.message}
 										</FormErrorMessage>
 									</Box>
 									<Box w="50%">
@@ -163,8 +162,7 @@ export default function SettingsModal({
 											</Select>
 										</FormControl>
 										<FormErrorMessage>
-											{errors.language &&
-												errors.language.message}
+											{errors?.language?.message}
 										</FormErrorMessage>
 									</Box>
 								</HStack>
@@ -189,7 +187,7 @@ export default function SettingsModal({
 									</Select>
 								</FormControl>
 								<FormErrorMessage>
-									{errors.server && errors.server.message}
+									{errors?.timezone?.message}
 								</FormErrorMessage>
 							</Stack>
 						</ModalBody>
@@ -210,4 +208,8 @@ export default function SettingsModal({
 			</Modal>
 		</>
 	);
-}
+};
+
+SettingsModal.whyDidYouRender = true;
+
+export default SettingsModal;

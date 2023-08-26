@@ -1,5 +1,6 @@
-export interface Category {
-	Id: number;
+export interface ItemSearchCategory {
+	Category: number;
+	ID: number;
 	Name_de: string;
 	Name_en: string;
 	Name_fr: string;

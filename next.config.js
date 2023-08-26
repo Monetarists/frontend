@@ -1,3 +1,5 @@
+const path = require("path");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
@@ -6,6 +8,7 @@ const nextConfig = {
 	compress: false,
 	output: "standalone",
 	images: {
+		unoptimized: true,
 		domains: [
 			"xivapi.com",
 			"monetarists.github.io",
@@ -14,27 +17,41 @@ const nextConfig = {
 		],
 	},
 	experimental: {
-		images: {
-			unoptimized: true,
-		},
+		swcPlugins: [
+			[
+				"@lingui/swc-plugin",
+				{
+					// the same options as in .swcrc
+				},
+			],
+		],
 	},
-	/*
-	webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-		// Note: we provide webpack above so you should not `require` it
-		// Perform customizations to webpack config
-		config.plugins.push(new webpack.IgnorePlugin({
-			checkResource(resource) {
-				return !!(resource.startsWith("./de/")
-					|| resource.startsWith("./en/")
-					|| resource.startsWith("./fr/")
-					|| resource.startsWith("./ja/"));
-			}
-		}));
-
-		// Important: return the modified config
-		return config
-	}
+	/**
+	 * @param {{[key: string]: unknown}} config
+	 * @param {{dev: boolean; isServer: boolean;}} options
 	 */
+	webpack: (config, options) => {
+		// why did you render
+		if (options.dev && !options.isServer) {
+			const originalEntry = config.entry;
+			config.entry = async () => {
+				const wdrPath = path.resolve(
+					__dirname,
+					"./tools/whyDidYouRender.ts"
+				);
+				const entries = await originalEntry();
+				if (
+					entries["main.js"] &&
+					!entries["main.js"].includes(wdrPath)
+				) {
+					entries["main.js"].unshift(wdrPath);
+				}
+				return entries;
+			};
+		}
+
+		return config;
+	},
 };
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({

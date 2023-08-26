@@ -1,10 +1,10 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import Error from "../layouts/Error";
+import ErrorComponent from "../layouts/ErrorComponent";
 
 export default function NotFound() {
 	return (
-		<Error
+		<ErrorComponent
 			statusCode={404}
 			heading={<Trans>Page Not Found</Trans>}
 			description={

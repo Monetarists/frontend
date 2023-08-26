@@ -10,10 +10,10 @@ import { UniversalisEntry } from "../@types/game/UniversalisEntry";
  */
 export function getLowestMarketPrice(
 	marketData: UniversalisEntry | null,
-	quantity: number
+	quantity: number,
 ): number {
-	let lowestMarketNQ = marketData?.minPriceNQ || 0;
-	let lowestMarketHQ = marketData?.minPriceHQ || 0;
+	let lowestMarketNQ = marketData?.MinPriceNQ ?? 0;
+	let lowestMarketHQ = marketData?.MinPriceHQ ?? 0;
 
 	let lowestMarketPrice = lowestMarketNQ;
 
@@ -31,18 +31,18 @@ export function getLowestMarketPrice(
  * @param recipe
  */
 export function calculateProfitLoss(recipe: Recipe) {
-	const craftingCost = recipe.universalisEntry?.craftingCost || 0;
+	const craftingCost = recipe.CraftingCost ?? 0;
 	if (craftingCost === 0) {
 		return 0;
 	}
 
-	const avgPrice = recipe.universalisEntry?.averagePrice || 0;
+	const avgPrice = recipe.UniversalisEntry?.AveragePrice ?? 0;
 	if (avgPrice === 0) {
 		return 0;
 	}
 
 	return (
-		getLowestMarketPrice(recipe.universalisEntry, recipe.amountResult) -
+		getLowestMarketPrice(recipe.UniversalisEntry, recipe.AmountResult) -
 		craftingCost
 	);
 }

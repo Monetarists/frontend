@@ -3,22 +3,22 @@ import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
 import { GameItemIconProps } from "../@types/layout/GameItemIcon";
 
-export default function GameItemIcon({
+const GameItemIcon = ({
 	id,
 	width,
 	height,
 	className,
 	priority,
-}: GameItemIconProps) {
+}: GameItemIconProps) => {
 	const [url, setUrl] = useState(
-		`https://monetarists.github.io/icon-assets/icon2x/${id}.png`
+		`https://monetarists.github.io/icon-assets/icon2x/${id}.png`,
 	);
 	useEffect(
 		() =>
 			setUrl(
-				`https://monetarists.github.io/icon-assets/icon2x/${id}.png`
+				`https://monetarists.github.io/icon-assets/icon2x/${id}.png`,
 			),
-		[id]
+		[id],
 	);
 	return (
 		<Box className={className} width={width} height={height}>
@@ -34,4 +34,8 @@ export default function GameItemIcon({
 			/>
 		</Box>
 	);
-}
+};
+
+GameItemIcon.whyDidYouRender = true;
+
+export default GameItemIcon;

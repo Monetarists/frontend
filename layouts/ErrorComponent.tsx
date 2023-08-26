@@ -8,21 +8,18 @@ import {
 	Stack,
 	useColorMode,
 	useColorModeValue,
+	Link,
 } from "@chakra-ui/react";
-import Head from "next/head";
 import React from "react";
+import Head from "next/head";
+import NextLink from "next/link";
 import AppFooter from "../components/AppFooter";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Logo } from "../components/Logo";
-import Link from "../components/Link";
 import { Trans } from "@lingui/macro";
 import { ErrorProps } from "../@types/layout/Error";
 
-export default function Error({
-	statusCode,
-	heading,
-	description,
-}: ErrorProps) {
+const ErrorComponent = ({ statusCode, heading, description }: ErrorProps) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const title = `${statusCode} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
@@ -45,11 +42,11 @@ export default function Error({
 						justifyContent={"space-between"}
 					>
 						<Box>
-							<Link href={"/"}>
+							<Link as={NextLink} href={"/"}>
 								<Logo
 									color={useColorModeValue(
 										"gray.700",
-										"white"
+										"white",
 									)}
 								/>
 							</Link>
@@ -102,4 +99,8 @@ export default function Error({
 			</Box>
 		</>
 	);
-}
+};
+
+ErrorComponent.whyDidYouRender = true;
+
+export default ErrorComponent;

@@ -1,44 +1,74 @@
+import { World } from "./World";
+
 interface UniversalisPost {
-	retainerName: string;
-	price: number;
-	amount: number;
-	totalAmount: number;
-	highQuality: boolean;
-	lastReviewDate: Date;
+	RetainerName: string;
+	Price: number;
+	Amount: number;
+	TotalAmount: number;
+	HighQuality: boolean;
+	LastReviewDate: Date;
 }
 
 interface UniversalisHistory {
-	highQuality: boolean;
-	saleDate: Date;
-	buyerName: string;
-	total: number;
+	HighQuality: boolean;
+	SaleDate: Date;
+	BuyerName: string;
+	Total: number;
 }
 
 export interface UniversalisEntry {
-	id: number;
-	craftingCost: number;
-	message: string | null;
-	lastUploadDate: Date;
-	queryDate: Date;
-	nqListingsCount: number;
-	hqListingsCount: number;
-	nqSaleCount: number;
-	hqSaleCount: number;
-	posts: UniversalisPost[] | null;
-	saleHistory: UniversalisHistory[] | null;
-	currentAveragePrice: number;
-	currentAveragePrinceNQ: number;
-	currentAveragePriceHQ: number;
-	regularSaleVelocity: number;
-	nqSaleVelocity: number;
-	hqSaleVelocity: number;
-	averagePrice: number;
-	averagePriceNQ: number;
-	averagePriceHQ: number;
-	minPrice: number;
-	minPriceNQ: number;
-	minPriceHQ: number;
-	maxPrice: number;
-	maxPriceNQ: number;
-	maxPriceHQ: number;
+	Id: number;
+	Message: string | null;
+	LastUploadDate: Date;
+	QueryDate: Date;
+	NqListingsCount: number;
+	HqListingsCount: number;
+	NqSaleCount: number;
+	HqSaleCount: number;
+	Posts: UniversalisPost[] | null;
+	SaleHistory: UniversalisHistory[] | null;
+	CurrentAveragePrice: number;
+	CurrentAveragePrinceNQ: number;
+	CurrentAveragePriceHQ: number;
+	RegularSaleVelocity: number;
+	NqSaleVelocity: number;
+	HqSaleVelocity: number;
+	AveragePrice: number;
+	AveragePriceNQ: number;
+	AveragePriceHQ: number;
+	MinPrice: number;
+	MinPriceNQ: number;
+	MinPriceHQ: number;
+	MaxPrice: number;
+	MaxPriceNQ: number;
+	MaxPriceHQ: number;
+
+	World: World | null;
+}
+
+interface UniversalisEntryInsert {
+	AveragePrice: number;
+	AveragePriceHQ: number;
+	AveragePriceNQ: number;
+	CurrentAveragePrice: number;
+	CurrentAveragePriceHQ: number;
+	CurrentAveragePrinceNQ: number;
+	HqListingsCount?: number | null;
+	HqSaleCount?: number | null;
+	HqSaleVelocity: number;
+	Id?: number;
+	ItemId: number;
+	LastUploadDate: string;
+	MaxPrice: number;
+	MaxPriceHQ: number;
+	MaxPriceNQ: number;
+	MinPrice: number;
+	MinPriceHQ: number;
+	MinPriceNQ: number;
+	NqListingsCount?: number | null;
+	NqSaleCount?: number | null;
+	NqSaleVelocity: number;
+	QueryDate: string;
+	RegularSaleVelocity: number;
+	WorldId: number;
 }

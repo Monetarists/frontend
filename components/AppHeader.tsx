@@ -15,10 +15,7 @@ import {
 } from "@chakra-ui/icons";
 import { AppHeaderProps } from "../@types/layout/AppHeader";
 
-export default function AppHeader({
-	onOpenSidebar,
-	onSettingsClicked,
-}: AppHeaderProps) {
+const AppHeader = ({ onOpenSidebar, onSettingsClicked }: AppHeaderProps) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	return (
@@ -51,4 +48,8 @@ export default function AppHeader({
 			</Stack>
 		</Flex>
 	);
-}
+};
+
+AppHeader.whyDidYouRender = true;
+
+export default AppHeader;

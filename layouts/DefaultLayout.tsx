@@ -14,7 +14,7 @@ import useSettings from "../hooks/useSettings";
 import { getClassJobs } from "../data";
 import { DefaultLayoutProps } from "../@types/layout/DefaultLayout";
 
-export default function DefaultLayout({ children }: DefaultLayoutProps) {
+const DefaultLayout = ({ children }: DefaultLayoutProps) => {
 	const [settings] = useSettings();
 
 	const {
@@ -87,4 +87,8 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
 			)}
 		</Box>
 	);
-}
+};
+
+DefaultLayout.whyDidYouRender = true;
+
+export default DefaultLayout;

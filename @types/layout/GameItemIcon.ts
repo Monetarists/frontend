@@ -1,7 +1,7 @@
 export interface GameItemIconProps {
 	id: number;
-	width: number | string;
-	height: number | string;
+	width: number;
+	height: number;
 	className?: string;
 	priority?: boolean;
 }

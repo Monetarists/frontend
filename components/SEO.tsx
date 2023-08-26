@@ -69,4 +69,6 @@ SEO.defaultProps = {
 		"Final Fantasy XIV Online: Crafting helper. Decide the most profitable craft.",
 };
 
+SEO.whyDidYouRender = true;
+
 export default SEO;

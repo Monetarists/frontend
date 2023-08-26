@@ -66,6 +66,8 @@ const SidebarCrafter = ({
 	);
 };
 
+SidebarCrafter.whyDidYouRender = true;
+
 const Sidebar = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 	return (
 		<Box
@@ -91,12 +93,14 @@ const Sidebar = ({ classJobs, onClose, ...rest }: SidebarProps) => {
 			<Skeleton isLoaded={classJobs.length > 0} height={"100%"}>
 				<div>
 					{classJobs.map((classJob) => (
-						<SidebarCrafter key={classJob.ID} classJob={classJob} />
+						<SidebarCrafter key={classJob.Id} classJob={classJob} />
 					))}
 				</div>
 			</Skeleton>
 		</Box>
 	);
 };
+
+Sidebar.whyDidYouRender = true;
 
 export default Sidebar;

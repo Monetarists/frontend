@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Link, Text, useColorModeValue } from "@chakra-ui/react";
 import { Trans } from "@lingui/macro";
 import { Logo } from "./Logo";
-import Link from "./Link";
+import NextLink from "next/link";
 
-export default function AppFooter() {
+const AppFooter = () => {
 	return (
 		<Box
 			bg={useColorModeValue("gray.50", "gray.900")}
@@ -32,15 +32,18 @@ export default function AppFooter() {
 				</Flex>
 				<Text align={"center"}>
 					<Link
-						href={
-							"https://github.com/Monetarists/monetarist-frontend"
-						}
+						as={NextLink}
+						href={"https://github.com/Monetarists/frontend"}
 						isExternal={true}
 					>
 						<Trans>GitHub</Trans>
 					</Link>{" "}
 					&nbsp; | &nbsp;
-					<Link href={"https://discord.com"} isExternal={true}>
+					<Link
+						as={NextLink}
+						href={"https://discord.com"}
+						isExternal={true}
+					>
 						<Trans>Discord</Trans>
 					</Link>
 				</Text>
@@ -53,4 +56,8 @@ export default function AppFooter() {
 			</Box>
 		</Box>
 	);
-}
+};
+
+AppFooter.whyDidYouRender = true;
+
+export default AppFooter;

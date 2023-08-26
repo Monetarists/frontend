@@ -4,11 +4,11 @@ import { Settings } from "../@types/Settings";
 
 function validateLanguage(
 	settings: Partial<Settings>,
-	setSettings: (name: keyof Settings, value: any) => void
+	setSettings: (name: keyof Settings, value: any) => void,
 ) {
 	if (
 		!["ja", "en", "fr", "de"].includes(
-			settings["monetarist_language"] ?? "en"
+			settings["monetarist_language"] ?? "en",
 		)
 	) {
 		setSettings("monetarist_language", "");
@@ -22,7 +22,7 @@ function validateLanguage(
  */
 export default function useSettings(): [
 	Partial<Settings>,
-	(name: keyof Settings, value: any) => void
+	(name: keyof Settings, value: any) => void,
 ] {
 	const keys: (keyof Settings)[] = [
 		"monetarist_server",
@@ -31,7 +31,7 @@ export default function useSettings(): [
 	];
 
 	const [cookies, setCookie] = useCookies<keyof Settings, Partial<Settings>>(
-		keys
+		keys,
 	);
 	const setSetting = (name: keyof Settings, value: any) => {
 		const date = new Date();
@@ -44,8 +44,8 @@ export default function useSettings(): [
 		setCookie(name, value, {
 			expires: date,
 			path: "/",
-			sameSite: "none",
-			secure: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
 		});
 	};
 

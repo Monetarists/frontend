@@ -1,5 +1,6 @@
 import { Recipe } from "./game/Recipe";
 
 export interface RecipeApiResponse {
-	recipes: Recipe[];
+	message?: string;
+	recipes?: Recipe[] | null;
 }

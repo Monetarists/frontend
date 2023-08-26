@@ -3,21 +3,20 @@ import { Item } from "./Item";
 import { UniversalisEntry } from "./UniversalisEntry";
 
 export interface Recipe {
-	id: number;
-	name_de: string;
-	name_en: string;
-	name_fr: string;
-	name_ja: string;
+	Id: number;
+	Name_de: string;
+	Name_en: string;
+	Name_fr: string;
+	Name_ja: string;
 
-	amountResult: number;
-	isExpert: boolean;
-	isSpecializationRequired: boolean;
+	AmountResult: number;
+	IsExpert: boolean;
+	IsSpecializationRequired: boolean;
 
-	item: Item;
+	Item: Item;
 
-	job: ClassJob | null;
+	Job: ClassJob;
 
-	ingredients: Item[] | null;
-
-	universalisEntry: UniversalisEntry | null;
+	UniversalisEntry: UniversalisEntry | null;
+	CraftingCost: number;
 }
