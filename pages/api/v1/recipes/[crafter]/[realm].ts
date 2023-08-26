@@ -372,7 +372,7 @@ const handler = async (
 		for (let i = 0; i < universalisInsert.length / 200; i++) {
 			console.log(
 				"Updating Universalis entries... " +
-					i * 100 +
+					i * 200 +
 					" / " +
 					universalisInsert.length,
 			);
