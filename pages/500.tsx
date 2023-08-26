@@ -1,10 +1,10 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import Error from "../layouts/Error";
+import ErrorComponent from "../layouts/ErrorComponent";
 
 export default function ServerError() {
 	return (
-		<Error
+		<ErrorComponent
 			statusCode={500}
 			heading={<Trans>Internal Server Error</Trans>}
 			description={

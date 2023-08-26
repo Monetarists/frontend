@@ -19,7 +19,7 @@ import { Logo } from "../components/Logo";
 import { Trans } from "@lingui/macro";
 import { ErrorProps } from "../@types/layout/Error";
 
-const Error = ({ statusCode, heading, description }: ErrorProps) => {
+const ErrorComponent = ({ statusCode, heading, description }: ErrorProps) => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
 	const title = `${statusCode} - ${process.env.NEXT_PUBLIC_APP_NAME}`;
@@ -101,6 +101,6 @@ const Error = ({ statusCode, heading, description }: ErrorProps) => {
 	);
 };
 
-Error.whyDidYouRender = true;
+ErrorComponent.whyDidYouRender = true;
 
-export default Error;
+export default ErrorComponent;
