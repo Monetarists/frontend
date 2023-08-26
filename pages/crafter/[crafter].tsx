@@ -35,7 +35,6 @@ import {
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
 	Column,
-	Table as ReactTable,
 	ColumnFiltersState,
 	createColumnHelper,
 	flexRender,
@@ -56,13 +55,16 @@ import { Recipe } from "../../@types/game/Recipe";
 import { CrafterProps } from "../../@types/layout/Crafter";
 import { getLowestMarketPrice, calculateProfitLoss } from "../../util/Recipe";
 import useSettings from "../../hooks/useSettings";
-import { getClassJob, getClassJobs } from "../../data";
+import { getClassJob, getClassJobs, getItemSearchCategories } from "../../data";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
-import { getItemSearchCategories } from "../../data";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
+
+function RecipeCategoryHeader(props: { searchCategoryName: string }) {
+	return <Text>{props.searchCategoryName}</Text>;
+}
 
 const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
@@ -72,11 +74,11 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
-	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
+	const [_localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
 	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
-	const [iscGrouped, setIscGrouped] = useState<
+	const [_iscGrouped, setIscGrouped] = useState<
 		Record<number, Array<ItemSearchCategory>>
 	>({});
 	const [data, setData] = useState<Recipe[]>(() => []);
@@ -261,9 +263,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						recipe.Item.ItemSearchCategory as unknown as {
 							[key: string]: string | number | boolean;
 						}
-					)[localisedNameKey as keyof Category];
+					)[localisedNameKey as keyof Category] as string;
 
-					return <Text>{searchCategoryName}</Text>;
+					return (
+						<RecipeCategoryHeader
+							searchCategoryName={searchCategoryName}
+						/>
+					);
 				},
 				footer: (info) => info.column.id,
 			},
@@ -592,7 +598,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 							<FilterText
 								label={t`Recipe`}
 								column={table.getColumn("name")}
-								table={table}
 							/>
 						</Box>
 					</VStack>
@@ -731,12 +736,10 @@ FilterNumber.whyDidYouRender = true;
 const FilterText = ({
 	label,
 	column,
-	table,
 	initialFilterValue,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	table: ReactTable<any>;
 	initialFilterValue?: string;
 }) => {
 	if (column === undefined) {
@@ -770,13 +773,11 @@ FilterText.whyDidYouRender = true;
 const FilterDropdown = ({
 	label,
 	column,
-	table,
 	initialFilterValue,
 	children,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	table: ReactTable<any>;
 	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
