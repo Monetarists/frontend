@@ -406,7 +406,7 @@ const handler = async (
 
 			if (universalisEntry !== null) {
 				recipe.CraftingCost =
-					(recipe?.CraftingCost || 0) +
+					(recipe?.CraftingCost ?? 0) +
 					getLowestMarketPrice(universalisEntry, ingredient.amount);
 			}
 		});

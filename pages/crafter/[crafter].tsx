@@ -250,7 +250,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		}),
 
 		columnHelper.accessor(
-			(row) => (row.Item.ItemSearchCategory?.Id || 0) + "",
+			(row) => (row.Item.ItemSearchCategory?.Id ?? 0) + "",
 			{
 				id: "recipeCategory",
 				header: () => "",
@@ -269,7 +269,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 			},
 		),
 
-		columnHelper.accessor((row) => row.CraftingCost || 0, {
+		columnHelper.accessor((row) => row.CraftingCost ?? 0, {
 			id: "craftingCost",
 			header: () => (
 				<Tooltip
@@ -303,8 +303,8 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) => ({
-				nq: row.UniversalisEntry?.NqListingsCount || 0,
-				hq: row.UniversalisEntry?.HqListingsCount || 0,
+				nq: row.UniversalisEntry?.NqListingsCount ?? 0,
+				hq: row.UniversalisEntry?.HqListingsCount ?? 0,
 			}),
 			{
 				id: "listings",
@@ -339,8 +339,8 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) =>
-				(row.UniversalisEntry?.NqSaleCount || 0) +
-				(row.UniversalisEntry?.HqSaleCount || 0),
+				(row.UniversalisEntry?.NqSaleCount ?? 0) +
+				(row.UniversalisEntry?.HqSaleCount ?? 0),
 			{
 				id: "sold",
 				header: () => (
