@@ -44,8 +44,8 @@ export default function useSettings(): [
 		setCookie(name, value, {
 			expires: date,
 			path: "/",
-			sameSite: "none",
-			secure: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
 		});
 	};
 
