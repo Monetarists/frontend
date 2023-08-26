@@ -46,7 +46,7 @@ const Error = ({ statusCode, heading, description }: ErrorProps) => {
 								<Logo
 									color={useColorModeValue(
 										"gray.700",
-										"white"
+										"white",
 									)}
 								/>
 							</Link>
