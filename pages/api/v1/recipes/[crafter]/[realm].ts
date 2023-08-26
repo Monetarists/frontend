@@ -19,8 +19,8 @@ export const config = {
 
 interface RecipeDataRequest extends NextApiRequest {
 	query: {
-		crafter?: string;
-		realm?: string;
+		crafter: string;
+		realm: string;
 	};
 }
 
@@ -35,9 +35,7 @@ const handler = async (
 		return;
 	}
 
-	const crafter = getClassJob(
-		typeof req.query.crafter === "string" ? req.query.crafter : ""
-	);
+	const crafter = getClassJob(req.query.crafter);
 
 	if (crafter === null) {
 		res.status(404);
