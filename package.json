@@ -33,6 +33,7 @@
     "@thewakingsands/axis-font-icons": "^0.3.0",
     "@xivapi/js": "^0.4.3",
     "axios": "^1.4.0",
+    "axios-retry": "^3.6.1",
     "cookies-next": "^3.0.0",
     "cross-env": "^7.0.3",
     "edge-csrf": "^1.0.4",

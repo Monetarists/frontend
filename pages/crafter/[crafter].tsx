@@ -64,6 +64,7 @@ import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
 import { MarketboardApiResponse } from "../../@types/MarketboardApiResponse";
 import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
+import axiosRetry from "axios-retry";
 
 type Name = string | number | boolean;
 
@@ -509,6 +510,12 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						isClosable: true,
 					});
 				});
+
+			axiosRetry(axios, {
+				retryCondition: (error) => {
+					return error.response?.status === 504;
+				},
+			});
 		}
 	}, [toast, crafter, realm, csrfToken]);
 
