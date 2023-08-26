@@ -63,6 +63,8 @@ import { Category } from "../../@types/game/Category";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
 
+type Name = string | number | boolean;
+
 const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
@@ -186,13 +188,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 				let recipeName = (
 					recipe as unknown as {
-						[key: string]: string | number | boolean;
+						[key: string]: Name;
 					}
 				)[localisedNameKey as keyof Recipe];
 
 				let searchCategoryName = (
 					recipe.Item.ItemSearchCategory as unknown as {
-						[key: string]: string | number | boolean;
+						[key: string]: Name;
 					}
 				)[localisedNameKey as keyof Category];
 
@@ -258,7 +260,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 					let searchCategoryName = (
 						recipe.Item.ItemSearchCategory as unknown as {
-							[key: string]: string | number | boolean;
+							[key: string]: Name;
 						}
 					)[localisedNameKey as keyof Category];
 

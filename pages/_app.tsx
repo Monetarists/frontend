@@ -36,7 +36,7 @@ i18n.load({
 
 function Monetarist({ Component, pageProps }: AppProps) {
 	const router = useRouter();
-	const lang = parseLang(getCookie("monetarist_language") || "en");
+	const lang = parseLang(getCookie("monetarist_language") ?? "en");
 
 	i18n.activate(lang);
 
