@@ -37,7 +37,7 @@ const nextConfig = {
 			config.entry = async () => {
 				const wdrPath = path.resolve(
 					__dirname,
-					"./tools/whyDidYouRender.ts"
+					"./src/tools/whyDidYouRender.ts",
 				);
 				const entries = await originalEntry();
 				if (

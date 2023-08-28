@@ -109,7 +109,7 @@ export interface Database {
 						columns: ["ItemUICategoryId"];
 						referencedRelation: "ItemUICategory";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			ItemSearchCategory: {
@@ -200,7 +200,7 @@ export interface Database {
 						columns: ["UserId"];
 						referencedRelation: "User";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			Post: {
@@ -261,7 +261,7 @@ export interface Database {
 						columns: ["UserId"];
 						referencedRelation: "User";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			Recipe: {
@@ -315,7 +315,7 @@ export interface Database {
 						columns: ["JobId"];
 						referencedRelation: "Job";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			Retainers: {
@@ -352,7 +352,7 @@ export interface Database {
 						columns: ["WorldId"];
 						referencedRelation: "World";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			SaleHistory: {
@@ -389,7 +389,7 @@ export interface Database {
 						columns: ["UniversalisEntryId"];
 						referencedRelation: "UniversalisEntry";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			UniversalisEntry: {
@@ -483,7 +483,7 @@ export interface Database {
 						columns: ["WorldId"];
 						referencedRelation: "World";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 			User: {
@@ -538,7 +538,7 @@ export interface Database {
 						columns: ["DataCenterId"];
 						referencedRelation: "DataCenter";
 						referencedColumns: ["Id"];
-					}
+					},
 				];
 			};
 		};

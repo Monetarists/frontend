@@ -51,9 +51,9 @@ export async function updateClassJobs(xiv: any) {
 				"data/ClassJob.json",
 				JSON.stringify(
 					data.filter(
-						(classJob) => classJob.ClassJobCategoryTargetID === 33
-					)
-				)
+						(classJob) => classJob.ClassJobCategoryTargetID === 33,
+					),
+				),
 			);
 		} catch (error) {
 			console.log("Error: ", error);

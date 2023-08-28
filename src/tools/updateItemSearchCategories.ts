@@ -43,8 +43,8 @@ export async function updateItemSearchCategories(xiv: any) {
 			fs.writeFileSync(
 				"data/ItemSearchCategory.json",
 				JSON.stringify(
-					data.filter((category) => category.Category !== 0)
-				)
+					data.filter((category) => category.Category !== 0),
+				),
 			);
 		} catch (error) {
 			console.log("Error: ", error);

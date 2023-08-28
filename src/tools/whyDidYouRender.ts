@@ -7,7 +7,7 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
 
 	// eslint-disable-next-line no-console
 	console.debug(
-		"Applying whyDidYouRender, to help you locate unnecessary re-renders during development. See https://github.com/welldone-software/why-did-you-render"
+		"Applying whyDidYouRender, to help you locate unnecessary re-renders during development. See https://github.com/welldone-software/why-did-you-render",
 	);
 
 	// See https://github.com/welldone-software/why-did-you-render#options
