@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2022-08-06 12:36+0100\n"
+"POT-Creation-Date: 2023-08-29 21:41+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,204 +13,196 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: pages/index.tsx:97
+#: src/pages/index.tsx:97
 msgid "A shrewd businessman makes use of all tools at their disposal."
-msgstr ""
+msgstr "A shrewd businessman makes use of all tools at their disposal."
 
-#: pages/crafter/[crafter].tsx:540
-msgid "Armour"
-msgstr ""
-
-#: pages/crafter/[crafter].tsx:521
-msgid "Category"
-msgstr ""
-
-#: pages/index.tsx:106
+#: src/pages/index.tsx:106
 msgid "Chairman of the East Aldenard Trading Company"
-msgstr ""
+msgstr "Chairman of the East Aldenard Trading Company"
 
-#: pages/index.tsx:64
+#: src/pages/index.tsx:64
 msgid "Choose your server, language and timezone, and break down recipes by crafter."
-msgstr ""
+msgstr "Choose your server, language and timezone, and break down recipes by crafter."
 
-#: pages/index.tsx:63
+#: src/pages/index.tsx:63
 msgid "Configurable"
-msgstr ""
+msgstr "Configurable"
 
-#: pages/crafter/[crafter].tsx:274
+#: src/pages/crafter/[crafter].tsx:297
 msgid "Crafting Cost"
-msgstr ""
+msgstr "Crafting Cost"
 
-#: pages/crafter/[crafter].tsx:271
+#: src/pages/crafter/[crafter].tsx:294
 msgid "Crafting cost column explanation"
-msgstr ""
+msgstr "Crafting cost column explanation"
 
-#: pages/crafter/[crafter].tsx:408
+#: src/pages/crafter/[crafter].tsx:427
 msgid "Crafting Profit"
-msgstr ""
+msgstr "Crafting Profit"
 
-#: pages/crafter/[crafter].tsx:405
+#: src/pages/crafter/[crafter].tsx:424
 msgid "Crafting profit column explanation"
-msgstr ""
+msgstr "Crafting profit column explanation"
 
-#: components/AppFooter.tsx:44
+#: src/components/AppFooter.tsx:47
 msgid "Discord"
-msgstr ""
+msgstr "Discord"
 
-#: components/AppFooter.tsx:48
+#: src/components/AppFooter.tsx:51
 msgid "FINAL FANTASY XIV © 2010 - 2020 SQUARE ENIX CO., LTD. All Rights Reserved."
-msgstr ""
+msgstr "FINAL FANTASY XIV © 2010 - 2020 SQUARE ENIX CO., LTD. All Rights Reserved."
 
-#: components/AppFooter.tsx:40
+#: src/components/AppFooter.tsx:39
 msgid "GitHub"
-msgstr ""
+msgstr "GitHub"
 
-#: pages/crafter/[crafter].tsx:568
-msgid "Housing"
-msgstr ""
-
-#: pages/index.tsx:71
+#: src/pages/index.tsx:71
 msgid "Integrated"
-msgstr ""
+msgstr "Integrated"
 
-#: pages/500.tsx:9
+#: src/pages/500.tsx:9
 msgid "Internal Server Error"
-msgstr ""
+msgstr "Internal Server Error"
 
-#: pages/crafter/[crafter].tsx:554
-msgid "Items"
-msgstr ""
-
-#: components/SettingsModal.tsx:142
+#: src/components/SettingsModal.tsx:141
 msgid "Language"
-msgstr ""
+msgstr "Language"
 
-#: pages/index.tsx:72
+#: src/pages/crafter/[crafter].tsx:549
+msgid "Last Updated:"
+msgstr "Last Updated:"
+
+#: src/pages/index.tsx:72
 msgid "Links to GarlandTools and Universalis to help you craft the perfect items once you've decided what to craft."
-msgstr ""
+msgstr "Links to GarlandTools and Universalis to help you craft the perfect items once you've decided what to craft."
 
-#: pages/crafter/[crafter].tsx:308
+#: src/pages/crafter/[crafter].tsx:330
 msgid "Listings"
-msgstr ""
+msgstr "Listings"
 
-#: pages/index.tsx:105
+#: src/pages/index.tsx:105
 msgid "Lord Lolorito Nanarito"
-msgstr ""
+msgstr "Lord Lolorito Nanarito"
 
-#: pages/crafter/[crafter].tsx:375
+#: src/pages/crafter/[crafter].tsx:394
 msgid "Min. Listing Price"
-msgstr ""
+msgstr "Min. Listing Price"
 
-#: pages/crafter/[crafter].tsx:372
+#: src/pages/crafter/[crafter].tsx:391
 msgid "Minimum listing price column explanation"
-msgstr ""
+msgstr "Minimum listing price column explanation"
 
-#: pages/crafter/[crafter].tsx:371
+#: src/pages/crafter/[crafter].tsx:390
 msgid "Minimum listing price, using HQ price if the item can be HQ."
-msgstr ""
+msgstr "Minimum listing price, using HQ price if the item can be HQ."
 
-#: pages/404.tsx:9
+#: src/pages/crafter/[crafter].tsx:553
+msgid "Never"
+msgstr "Never"
+
+#: src/pages/404.tsx:9
 msgid "Page Not Found"
-msgstr ""
+msgstr "Page Not Found"
 
-#: pages/crafter/[crafter].tsx:505
+#: src/pages/crafter/[crafter].tsx:574
 msgid "Profit"
-msgstr ""
+msgstr "Profit"
 
-#: pages/index.tsx:67
+#: src/pages/index.tsx:67
 msgid "Profit Driven"
-msgstr ""
+msgstr "Profit Driven"
 
-#: pages/crafter/[crafter].tsx:497
+#: src/pages/crafter/[crafter].tsx:548
 msgid "Realm:"
-msgstr ""
+msgstr "Realm:"
 
-#: pages/crafter/[crafter].tsx:174
-#: pages/crafter/[crafter].tsx:587
+#: src/pages/crafter/[crafter].tsx:195
+#: src/pages/crafter/[crafter].tsx:656
 msgid "Recipe"
-msgstr ""
+msgstr "Recipe"
 
-#: pages/crafter/[crafter].tsx:221
+#: src/pages/crafter/[crafter].tsx:244
 msgid "Recipe ID helper"
-msgstr ""
+msgstr "Recipe ID helper"
 
-#: pages/crafter/[crafter].tsx:220
+#: src/pages/crafter/[crafter].tsx:243
 msgid "Recipe ID: {0}"
-msgstr ""
+msgstr "Recipe ID: {0}"
 
-#: components/SettingsModal.tsx:205
+#: src/components/SettingsModal.tsx:203
 msgid "Save Settings"
-msgstr ""
+msgstr "Save Settings"
 
-#: components/SettingsModal.tsx:145
+#: src/components/SettingsModal.tsx:144
 msgid "Select language"
-msgstr ""
+msgstr "Select language"
 
-#: components/SettingsModal.tsx:96
+#: src/components/SettingsModal.tsx:96
 msgid "Select server"
-msgstr ""
+msgstr "Select server"
 
-#: components/SettingsModal.tsx:176
+#: src/components/SettingsModal.tsx:174
 msgid "Select timezone"
-msgstr ""
+msgstr "Select timezone"
 
-#: components/SettingsModal.tsx:93
+#: src/components/SettingsModal.tsx:93
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
-#: components/SettingsModal.tsx:81
+#: src/components/SettingsModal.tsx:81
 msgid "Settings"
-msgstr ""
+msgstr "Settings"
 
-#: pages/index.tsx:68
+#: src/pages/index.tsx:68
 msgid "Shows you only profitable recipes by default. Maximise profits by filtering the results by number of items sold recently and minimum profit."
-msgstr ""
+msgstr "Shows you only profitable recipes by default. Maximise profits by filtering the results by number of items sold recently and minimum profit."
 
-#: pages/crafter/[crafter].tsx:347
-#: pages/crafter/[crafter].tsx:513
+#: src/pages/crafter/[crafter].tsx:367
+#: src/pages/crafter/[crafter].tsx:582
 msgid "Sold"
-msgstr ""
+msgstr "Sold"
 
-#: pages/crafter/[crafter].tsx:344
+#: src/pages/crafter/[crafter].tsx:364
 msgid "Sold column explanation"
-msgstr ""
+msgstr "Sold column explanation"
 
-#: pages/500.tsx:11
+#: src/pages/500.tsx:11
 msgid "Sorry, something went wrong. Please try again later."
-msgstr ""
+msgstr "Sorry, something went wrong. Please try again later."
 
-#: pages/crafter/[crafter].tsx:626
+#: src/pages/crafter/[crafter].tsx:694
 msgid "sorted ascending"
-msgstr ""
+msgstr "sorted ascending"
 
-#: pages/crafter/[crafter].tsx:633
+#: src/pages/crafter/[crafter].tsx:701
 msgid "sorted descending"
-msgstr ""
+msgstr "sorted descending"
 
-#: pages/crafter/[crafter].tsx:270
+#: src/pages/crafter/[crafter].tsx:293
 msgid "The cost to buy NQ materials off the Market Board."
-msgstr ""
+msgstr "The cost to buy NQ materials off the Market Board."
 
-#: pages/crafter/[crafter].tsx:404
+#: src/pages/crafter/[crafter].tsx:423
 msgid "The expected profit, assuming you craft a HQ item and sell it at current market value."
-msgstr ""
+msgstr "The expected profit, assuming you craft a HQ item and sell it at current market value."
 
-#: pages/404.tsx:11
+#: src/pages/404.tsx:11
 msgid "The page you're looking for does not seem to exist"
-msgstr ""
+msgstr "The page you're looking for does not seem to exist"
 
-#: pages/crafter/[crafter].tsx:343
+#: src/pages/crafter/[crafter].tsx:363
 msgid "The total number of items recently sold, across both NQ and HQ."
-msgstr ""
+msgstr "The total number of items recently sold, across both NQ and HQ."
 
-#: components/SettingsModal.tsx:173
+#: src/components/SettingsModal.tsx:171
 msgid "Timezone"
-msgstr ""
+msgstr "Timezone"
 
-#: pages/crafter/[crafter].tsx:526
-msgid "Weapons"
-msgstr ""
+#: src/pages/crafter/[crafter].tsx:556
+msgid "Update marketboard"
+msgstr "Update marketboard"
 
-#: pages/index.tsx:44
-msgid "Welcome, <0>Monetarist</0>"
-msgstr ""
+#: src/pages/index.tsx:44
+msgid "Welcome, <0>Monetarist</0>"
+msgstr "Welcome, <0>Monetarist</0>"

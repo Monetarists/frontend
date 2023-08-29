@@ -6,7 +6,9 @@
 	"catalogs": [
 		{
 			"path": "src/locales/{locale}/messages",
-			"include": ["pages", "components"]
+			"include": ["src/pages/", "src/components/"]
 		}
-	]
+	],
+	"format": "po",
+    "sourceLocale": "en"
 }
