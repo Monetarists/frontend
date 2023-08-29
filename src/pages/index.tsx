@@ -42,7 +42,7 @@ const Home = ({ url }: { url: string }) => {
 							lineHeight={"110%"}
 						>
 							<Trans>
-								Welcome,&nbsp;
+								Welcome,{" "}
 								<Text as={"span"} color={"green.400"}>
 									Monetarist
 								</Text>
