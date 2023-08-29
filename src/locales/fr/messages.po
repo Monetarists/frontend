@@ -41,12 +41,12 @@ msgstr ""
 msgid "Crafting Cost"
 msgstr ""
 
-#: pages/crafter/[crafter].tsx:408
-msgid "Crafting Profit"
-msgstr ""
-
 #: pages/crafter/[crafter].tsx:271
 msgid "Crafting cost column explanation"
+msgstr ""
+
+#: pages/crafter/[crafter].tsx:408
+msgid "Crafting Profit"
 msgstr ""
 
 #: pages/crafter/[crafter].tsx:405
@@ -179,6 +179,14 @@ msgstr ""
 msgid "Sorry, something went wrong. Please try again later."
 msgstr ""
 
+#: pages/crafter/[crafter].tsx:626
+msgid "sorted ascending"
+msgstr ""
+
+#: pages/crafter/[crafter].tsx:633
+msgid "sorted descending"
+msgstr ""
+
 #: pages/crafter/[crafter].tsx:270
 msgid "The cost to buy NQ materials off the Market Board."
 msgstr ""
@@ -205,12 +213,4 @@ msgstr ""
 
 #: pages/index.tsx:44
 msgid "Welcome, <0>Monetarist</0>"
-msgstr ""
-
-#: pages/crafter/[crafter].tsx:626
-msgid "sorted ascending"
-msgstr ""
-
-#: pages/crafter/[crafter].tsx:633
-msgid "sorted descending"
 msgstr ""

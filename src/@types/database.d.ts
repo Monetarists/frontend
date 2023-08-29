@@ -36,6 +36,7 @@ export interface Database {
 					NqListingsCount: number;
 					NqSaleCount: number;
 					RecipeId: number;
+					UpdatedAt: string;
 					WorldId: number;
 				};
 				Insert: {
@@ -49,6 +50,7 @@ export interface Database {
 					NqListingsCount: number;
 					NqSaleCount: number;
 					RecipeId: number;
+					UpdatedAt?: string;
 					WorldId: number;
 				};
 				Update: {
@@ -62,6 +64,7 @@ export interface Database {
 					NqListingsCount?: number;
 					NqSaleCount?: number;
 					RecipeId?: number;
+					UpdatedAt?: string;
 					WorldId?: number;
 				};
 				Relationships: [

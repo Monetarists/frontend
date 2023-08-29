@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import ago from "s-ago";
 import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
@@ -538,24 +539,32 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					>
 						{jobName}
 					</Heading>
-					<Text
-						color={useColorModeValue("gray.900", "gray.400")}
-						fontWeight={300}
-						fontSize={"2xl"}
-					>
-						<Trans>Realm:</Trans> {realm}{" "}
-						<IconButton
-							aria-label={t`Update marketboard`}
-							variant="link"
-							isLoading={isUpdatingData}
-							isRound={true}
-							size={"lg"}
-							ml={-3}
-							verticalAlign={"middle"}
-							icon={<RepeatIcon />}
-							onClick={handleUpdateButtonClick}
-						/>
-					</Text>
+					<Skeleton isLoaded={!!craftingCosts}>
+						<Text
+							color={useColorModeValue("gray.900", "gray.400")}
+							fontWeight={300}
+							fontSize={"2xl"}
+						>
+							<Trans>Realm:</Trans> {realm} &bull;{" "}
+							<Trans>Last Updated:</Trans>{" "}
+							{craftingCosts && craftingCosts.length > 0 ? (
+								ago(new Date(craftingCosts[0].UpdatedAt))
+							) : (
+								<Trans>Never</Trans>
+							)}
+							<IconButton
+								aria-label={t`Update marketboard`}
+								variant="link"
+								isLoading={isUpdatingData}
+								isRound={true}
+								size={"lg"}
+								ml={-3}
+								verticalAlign={"middle"}
+								icon={<RepeatIcon />}
+								onClick={handleUpdateButtonClick}
+							/>
+						</Text>
+					</Skeleton>
 				</Box>
 
 				<Skeleton isLoaded={!!craftingCosts}>

@@ -317,6 +317,7 @@ const handler = async (
 			HqListingsCount: universalisEntry?.HqListingsCount ?? 0,
 			NqSaleCount: universalisEntry?.NqSaleCount ?? 0,
 			HqSaleCount: universalisEntry?.HqSaleCount ?? 0,
+			UpdatedAt: new Date().toISOString(),
 		};
 
 		// let craftingCost = 0;
