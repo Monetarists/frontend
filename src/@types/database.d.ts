@@ -24,6 +24,67 @@ export interface Database {
 				};
 				Relationships: [];
 			};
+			CraftingCost: {
+				Row: {
+					AveragePrice: number;
+					CraftingCost: number;
+					HqListingsCount: number;
+					HqSaleCount: number;
+					JobId: number;
+					MinPriceHQ: number;
+					MinPriceNQ: number;
+					NqListingsCount: number;
+					NqSaleCount: number;
+					RecipeId: number;
+					WorldId: number;
+				};
+				Insert: {
+					AveragePrice: number;
+					CraftingCost: number;
+					HqListingsCount: number;
+					HqSaleCount: number;
+					JobId: number;
+					MinPriceHQ: number;
+					MinPriceNQ: number;
+					NqListingsCount: number;
+					NqSaleCount: number;
+					RecipeId: number;
+					WorldId: number;
+				};
+				Update: {
+					AveragePrice?: number;
+					CraftingCost?: number;
+					HqListingsCount?: number;
+					HqSaleCount?: number;
+					JobId?: number;
+					MinPriceHQ?: number;
+					MinPriceNQ?: number;
+					NqListingsCount?: number;
+					NqSaleCount?: number;
+					RecipeId?: number;
+					WorldId?: number;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "CraftingCost_JobId_fkey";
+						columns: ["JobId"];
+						referencedRelation: "Job";
+						referencedColumns: ["Id"];
+					},
+					{
+						foreignKeyName: "CraftingCost_RecipeId_fkey";
+						columns: ["RecipeId"];
+						referencedRelation: "Recipe";
+						referencedColumns: ["Id"];
+					},
+					{
+						foreignKeyName: "CraftingCost_WorldId_fkey";
+						columns: ["WorldId"];
+						referencedRelation: "World";
+						referencedColumns: ["Id"];
+					},
+				];
+			};
 			DataCenter: {
 				Row: {
 					Id: number;
@@ -62,10 +123,10 @@ export interface Database {
 			};
 			Item: {
 				Row: {
-					CanBeCrafted: boolean;
-					CanBeHq: boolean;
+					CanBeCrafted: boolean | null;
+					CanBeHq: boolean | null;
 					Id: number;
-					IsMarketable: boolean;
+					IsMarketable: boolean | null;
 					ItemSearchCategoryId: number | null;
 					ItemUICategoryId: number | null;
 					Name_de: string;
@@ -75,11 +136,11 @@ export interface Database {
 				};
 				Insert: {
 					CanBeCrafted?: boolean | null;
-					CanBeHq: boolean;
+					CanBeHq?: boolean | null;
 					Id?: number;
 					IsMarketable?: boolean | null;
 					ItemSearchCategoryId?: number | null;
-					ItemUICategoryId: number | null;
+					ItemUICategoryId?: number | null;
 					Name_de: string;
 					Name_en: string;
 					Name_fr: string;
@@ -87,7 +148,7 @@ export interface Database {
 				};
 				Update: {
 					CanBeCrafted?: boolean | null;
-					CanBeHq?: boolean;
+					CanBeHq?: boolean | null;
 					Id?: number;
 					IsMarketable?: boolean | null;
 					ItemSearchCategoryId?: number | null;
@@ -276,8 +337,6 @@ export interface Database {
 					Name_en: string;
 					Name_fr: string;
 					Name_ja: string;
-					UniversalisEntry: UniversalisEntry | null;
-					CraftingCost: number | null;
 				};
 				Insert: {
 					AmountResult: number;
@@ -399,9 +458,9 @@ export interface Database {
 					AveragePriceNQ: number;
 					CurrentAveragePrice: number;
 					CurrentAveragePriceHQ: number;
-					CurrentAveragePrinceNQ: number;
-					HqListingsCount: number | null;
-					HqSaleCount: number | null;
+					CurrentAveragePriceNQ: number;
+					HqListingsCount: number;
+					HqSaleCount: number;
 					HqSaleVelocity: number;
 					Id: number;
 					ItemId: number;
@@ -412,8 +471,8 @@ export interface Database {
 					MinPrice: number;
 					MinPriceHQ: number;
 					MinPriceNQ: number;
-					NqListingsCount: number | null;
-					NqSaleCount: number | null;
+					NqListingsCount: number;
+					NqSaleCount: number;
 					NqSaleVelocity: number;
 					QueryDate: string;
 					RegularSaleVelocity: number;
@@ -425,9 +484,9 @@ export interface Database {
 					AveragePriceNQ: number;
 					CurrentAveragePrice: number;
 					CurrentAveragePriceHQ: number;
-					CurrentAveragePrinceNQ: number;
-					HqListingsCount?: number | null;
-					HqSaleCount?: number | null;
+					CurrentAveragePriceNQ: number;
+					HqListingsCount: number;
+					HqSaleCount: number;
 					HqSaleVelocity: number;
 					Id?: number;
 					ItemId: number;
@@ -438,8 +497,8 @@ export interface Database {
 					MinPrice: number;
 					MinPriceHQ: number;
 					MinPriceNQ: number;
-					NqListingsCount?: number | null;
-					NqSaleCount?: number | null;
+					NqListingsCount: number;
+					NqSaleCount: number;
 					NqSaleVelocity: number;
 					QueryDate: string;
 					RegularSaleVelocity: number;
@@ -451,9 +510,9 @@ export interface Database {
 					AveragePriceNQ?: number;
 					CurrentAveragePrice?: number;
 					CurrentAveragePriceHQ?: number;
-					CurrentAveragePrinceNQ?: number;
-					HqListingsCount?: number | null;
-					HqSaleCount?: number | null;
+					CurrentAveragePriceNQ?: number;
+					HqListingsCount?: number;
+					HqSaleCount?: number;
 					HqSaleVelocity?: number;
 					Id?: number;
 					ItemId?: number;
@@ -464,8 +523,8 @@ export interface Database {
 					MinPrice?: number;
 					MinPriceHQ?: number;
 					MinPriceNQ?: number;
-					NqListingsCount?: number | null;
-					NqSaleCount?: number | null;
+					NqListingsCount?: number;
+					NqSaleCount?: number;
 					NqSaleVelocity?: number;
 					QueryDate?: string;
 					RegularSaleVelocity?: number;
@@ -557,7 +616,6 @@ export interface Database {
 					canbecrafted: boolean;
 					canbehq: boolean;
 					ismarketable: boolean;
-					UniversalisEntry: UniversalisEntry | null;
 				}[];
 			};
 			purge_universalis: {

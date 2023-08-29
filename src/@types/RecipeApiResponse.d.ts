@@ -1,6 +1,6 @@
-import { Recipe } from "./game/Recipe";
+import { CraftingCost } from "./game/CraftingCost";
 
 export interface RecipeApiResponse {
 	message?: string;
-	recipes?: Recipe[] | null;
+	craftingCosts?: CraftingCost[] | null;
 }

@@ -1,5 +1,5 @@
-import { Recipe } from "../@types/game/Recipe";
 import { UniversalisEntry } from "../@types/game/UniversalisEntry";
+import { CraftingCost } from "../@types/game/CraftingCost";
 
 /**
  * Fetch the lowest price across both NQ and HQ.
@@ -9,11 +9,15 @@ import { UniversalisEntry } from "../@types/game/UniversalisEntry";
  * @param quantity
  */
 export function getLowestMarketPrice(
-	marketData: UniversalisEntry | null,
+	marketData: Pick<UniversalisEntry, "MinPriceNQ" | "MinPriceHQ"> | null,
 	quantity: number,
 ): number {
-	let lowestMarketNQ = marketData?.MinPriceNQ ?? 0;
-	let lowestMarketHQ = marketData?.MinPriceHQ ?? 0;
+	if (marketData === null) {
+		return 0;
+	}
+
+	let lowestMarketNQ = marketData.MinPriceNQ ?? 0;
+	let lowestMarketHQ = marketData.MinPriceHQ ?? 0;
 
 	let lowestMarketPrice = lowestMarketNQ;
 
@@ -28,21 +32,22 @@ export function getLowestMarketPrice(
 }
 /**
  * Calculate whether someone can be expected to make a profit or a loss by crafting any given recipe.
- * @param recipe
+ * @param craftingCostrecord
  */
-export function calculateProfitLoss(recipe: Recipe) {
-	const craftingCost = recipe.CraftingCost ?? 0;
-	if (craftingCost === 0) {
+export function calculateProfitLoss(craftingCostrecord: CraftingCost) {
+	if (craftingCostrecord.CraftingCost === 0) {
 		return 0;
 	}
 
-	const avgPrice = recipe.UniversalisEntry?.AveragePrice ?? 0;
+	const avgPrice = craftingCostrecord.AveragePrice ?? 0;
 	if (avgPrice === 0) {
 		return 0;
 	}
 
 	return (
-		getLowestMarketPrice(recipe.UniversalisEntry, recipe.AmountResult) -
-		craftingCost
+		getLowestMarketPrice(
+			craftingCostrecord,
+			craftingCostrecord.Recipe.AmountResult,
+		) - craftingCostrecord.CraftingCost
 	);
 }

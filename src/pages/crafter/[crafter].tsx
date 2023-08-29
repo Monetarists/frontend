@@ -65,6 +65,7 @@ import NextLink from "next/link";
 import { MarketboardApiResponse } from "../../@types/MarketboardApiResponse";
 import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
 import { customAxiosApi, globalConfig } from "../../lib/axios";
+import { CraftingCost } from "../../@types/game/CraftingCost";
 
 type Name = string | number | boolean;
 
@@ -80,11 +81,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const [_localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
-	const [recipes, setRecipes] = useState<Recipe[] | undefined>(undefined);
+	const [craftingCosts, setCraftingCosts] = useState<
+		CraftingCost[] | undefined
+	>(undefined);
 	const [_iscGrouped, setIscGrouped] = useState<
 		Record<number, Array<ItemSearchCategory>>
 	>({});
-	const [data, setData] = useState<Recipe[]>(() => []);
+	const [data, setData] = useState<CraftingCost[]>(() => []);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
 		{
 			id: "craftingProfit",
@@ -158,9 +161,9 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					},
 				)
 				.then((res: AxiosResponse<RecipeApiResponse>) => {
-					if (res.data.recipes) {
-						setRecipes(res.data.recipes);
-						setData(res.data.recipes);
+					if (res.data.craftingCosts) {
+						setCraftingCosts(res.data.craftingCosts);
+						setData(res.data.craftingCosts);
 					}
 				})
 				.catch((err) => {
@@ -173,94 +176,102 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					});
 				});
 		}
-	}, [realm, crafter, setRecipes, setData, toast, csrfToken]);
+	}, [realm, crafter, setCraftingCosts, setData, toast, csrfToken]);
 
-	const columnHelper = createColumnHelper<Recipe>();
+	const columnHelper = createColumnHelper<CraftingCost>();
 
 	const columns = [
-		columnHelper.accessor((row) => row[localisedNameKey as keyof Recipe], {
-			id: "name",
-			header: () => (
-				// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
-				<span>
-					<Trans>Recipe</Trans>
-				</span>
-				// </Tooltip>
-			),
-			cell: (info) => {
-				let recipe = info.row.original;
+		columnHelper.accessor(
+			(row) => {
+				let recipe = row.Recipe;
+				return recipe[localisedNameKey as keyof Recipe];
+			},
+			{
+				id: "name",
+				header: () => (
+					// <Tooltip label={t`Click the recipe to see a more detailed breakdown of prices and expected profits.`} aria-label={t`Recipe column explanation`}>
+					<span>
+						<Trans>Recipe</Trans>
+					</span>
+					// </Tooltip>
+				),
+				cell: (info) => {
+					let craftingCostrecord = info.row.original;
+					let recipe = craftingCostrecord.Recipe;
 
-				let recipeName = (
-					recipe as unknown as {
-						[key: string]: Name;
-					}
-				)[localisedNameKey as keyof Recipe];
+					let recipeName = (
+						recipe as unknown as {
+							[key: string]: Name;
+						}
+					)[localisedNameKey as keyof Recipe];
 
-				let searchCategoryName = (
-					recipe.Item.ItemSearchCategory as unknown as {
-						[key: string]: Name;
-					}
-				)[localisedNameKey as keyof Category];
+					let searchCategoryName = (
+						recipe.Item.ItemSearchCategory as unknown as {
+							[key: string]: Name;
+						}
+					)[localisedNameKey as keyof Category];
 
-				return (
-					<Link
-						as={NextLink}
-						href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
-						isExternal={true}
-						_hover={{
-							textDecoration: "none",
-						}}
-					>
-						<Flex
-							key={recipe.Id}
-							align="center"
-							role="group"
-							cursor="pointer"
-							position="relative"
+					return (
+						<Link
+							as={NextLink}
+							href={`https://www.garlandtools.org/db/#item/${recipe.Item.Id}`}
+							isExternal={true}
 							_hover={{
-								bg: "gray.700",
-								color: "white",
+								textDecoration: "none",
 							}}
 						>
-							<GameItemIcon
-								id={recipe.Item.Id}
-								width={38}
-								height={38}
-								className="recipeIcon"
-							/>
-							&nbsp;
-							<Tooltip
-								label={t`Recipe ID: ${recipe.Id}`}
-								aria-label={t`Recipe ID helper`}
+							<Flex
+								key={recipe.Id}
+								align="center"
+								role="group"
+								cursor="pointer"
+								position="relative"
+								_hover={{
+									bg: "gray.700",
+									color: "white",
+								}}
 							>
-								<>
-									<Text textTransform={"capitalize"}>
-										{recipeName}
-										<br />
-										<Text
-											as="span"
-											fontSize="xs"
-											color={textColor}
-										>
-											{searchCategoryName}
+								<GameItemIcon
+									id={recipe.Item.Id}
+									width={38}
+									height={38}
+									className="recipeIcon"
+								/>
+								&nbsp;
+								<Tooltip
+									label={t`Recipe ID: ${recipe.Id}`}
+									aria-label={t`Recipe ID helper`}
+								>
+									<>
+										<Text textTransform={"capitalize"}>
+											{recipeName}
+											<br />
+											<Text
+												as="span"
+												fontSize="xs"
+												color={textColor}
+											>
+												{searchCategoryName}
+											</Text>
 										</Text>
-									</Text>
-								</>
-							</Tooltip>
-						</Flex>
-					</Link>
-				);
+									</>
+								</Tooltip>
+							</Flex>
+						</Link>
+					);
+				},
+				footer: (info) => info.column.id,
 			},
-			footer: (info) => info.column.id,
-		}),
+		),
 
 		columnHelper.accessor(
-			(row) => (row.Item.ItemSearchCategory?.Id ?? 0) + "",
+			(row) => (row.Recipe.Item.ItemSearchCategory?.Id ?? 0) + "",
 			{
 				id: "recipeCategory",
 				header: () => "",
 				cell: (info) => {
-					let recipe = info.row.original;
+					let craftingCostrecord = info.row.original;
+					let recipe = craftingCostrecord.Recipe;
 
 					let searchCategoryName = (
 						recipe.Item.ItemSearchCategory as unknown as {
@@ -308,8 +319,8 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 		columnHelper.accessor(
 			(row) => ({
-				nq: row.UniversalisEntry?.NqListingsCount ?? 0,
-				hq: row.UniversalisEntry?.HqListingsCount ?? 0,
+				nq: row.NqListingsCount ?? 0,
+				hq: row.HqListingsCount ?? 0,
 			}),
 			{
 				id: "listings",
@@ -343,9 +354,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		),
 
 		columnHelper.accessor(
-			(row) =>
-				(row.UniversalisEntry?.NqSaleCount ?? 0) +
-				(row.UniversalisEntry?.HqSaleCount ?? 0),
+			(row) => (row.NqSaleCount ?? 0) + (row.HqSaleCount ?? 0),
 			{
 				id: "sold",
 				header: () => (
@@ -372,8 +381,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		),
 
 		columnHelper.accessor(
-			(row) =>
-				getLowestMarketPrice(row.UniversalisEntry, row.AmountResult),
+			(row) => getLowestMarketPrice(row, row.Recipe.AmountResult),
 			{
 				id: "minListingPrice",
 				header: () => (
@@ -436,7 +444,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						renderText={(formattedValue) => (
 							<Link
 								as={NextLink}
-								href={`https://universalis.app/market/${info.row.original.Item.Id}/`}
+								href={`https://universalis.app/market/${info.row.original.Recipe.Item.Id}/`}
 								isExternal={true}
 								_hover={{
 									textDecoration: "none",
@@ -496,11 +504,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					config,
 				)
 				.then((res: AxiosResponse<MarketboardApiResponse>) => {
-					if ((res.data?.updated ?? 0) > 0) {
-						location.reload();
-					} else {
-						setIsUpdatingData(false);
-					}
+					location.reload();
 				})
 				.catch((err) => {
 					setIsUpdatingData(false);
@@ -554,7 +558,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					</Text>
 				</Box>
 
-				<Skeleton isLoaded={!!recipes}>
+				<Skeleton isLoaded={!!craftingCosts}>
 					<VStack spacing={4} align="stretch">
 						<Box>
 							<FilterNumber
