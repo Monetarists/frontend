@@ -5,8 +5,10 @@
 	},
 	"catalogs": [
 		{
-			"path": "locales/{locale}/messages",
-			"include": ["pages", "components"]
+			"path": "src/locales/{locale}/messages",
+			"include": ["src/pages/", "src/components/"]
 		}
-	]
+	],
+	"format": "po",
+    "sourceLocale": "en"
 }
