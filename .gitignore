@@ -41,5 +41,5 @@ yarn-error.log*
 /public/avatars/
 
 # translations
-/src/locales/_build/
-/src/locales/**/*.js
+src/locales/_build/
+src/locales/**/*.js
