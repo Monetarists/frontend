@@ -63,7 +63,6 @@ import SEO from "../../components/SEO";
 import { Category } from "../../@types/game/Category";
 import { ItemSearchCategory } from "../../@types/game/ItemSearchCategory";
 import NextLink from "next/link";
-import { MarketboardApiResponse } from "../../@types/MarketboardApiResponse";
 import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
 import { customAxiosApi, globalConfig } from "../../lib/axios";
 import { CraftingCost } from "../../@types/game/CraftingCost";
@@ -354,32 +353,29 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 			},
 		),
 
-		columnHelper.accessor(
-			(row) => (row.NqSaleCount ?? 0) + (row.HqSaleCount ?? 0),
-			{
-				id: "sold",
-				header: () => (
-					<Tooltip
-						label={t`The total number of items recently sold, across both NQ and HQ.`}
-						aria-label={t`Sold column explanation`}
-					>
-						<span>
-							<Trans>Sold</Trans>
-						</span>
-					</Tooltip>
-				),
-				cell: (info) => (
-					<NumericFormat
-						value={info.getValue()}
-						displayType={"text"}
-						thousandSeparator={true}
-					/>
-				),
-				footer: (info) => info.column.id,
-				sortDescFirst: true,
-				enableMultiSort: true,
-			},
-		),
+		columnHelper.accessor((row) => row.UnitsSold, {
+			id: "sold",
+			header: () => (
+				<Tooltip
+					label={t`The total number of items recently sold, across both NQ and HQ.`}
+					aria-label={t`Sold column explanation`}
+				>
+					<span>
+						<Trans>Sold</Trans>
+					</span>
+				</Tooltip>
+			),
+			cell: (info) => (
+				<NumericFormat
+					value={info.getValue()}
+					displayType={"text"}
+					thousandSeparator={true}
+				/>
+			),
+			footer: (info) => info.column.id,
+			sortDescFirst: true,
+			enableMultiSort: true,
+		}),
 
 		columnHelper.accessor(
 			(row) => getLowestMarketPrice(row, row.Recipe.AmountResult),
@@ -504,7 +500,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					{},
 					config,
 				)
-				.then((res: AxiosResponse<MarketboardApiResponse>) => {
+				.then(() => {
 					location.reload();
 				})
 				.catch((err) => {

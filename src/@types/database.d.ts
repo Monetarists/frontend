@@ -29,13 +29,12 @@ export interface Database {
 					AveragePrice: number;
 					CraftingCost: number;
 					HqListingsCount: number;
-					HqSaleCount: number;
 					JobId: number;
 					MinPriceHQ: number;
 					MinPriceNQ: number;
 					NqListingsCount: number;
-					NqSaleCount: number;
 					RecipeId: number;
+					UnitsSold: number;
 					UpdatedAt: string;
 					WorldId: number;
 				};
@@ -43,13 +42,12 @@ export interface Database {
 					AveragePrice: number;
 					CraftingCost: number;
 					HqListingsCount: number;
-					HqSaleCount: number;
 					JobId: number;
 					MinPriceHQ: number;
 					MinPriceNQ: number;
 					NqListingsCount: number;
-					NqSaleCount: number;
 					RecipeId: number;
+					UnitsSold: number;
 					UpdatedAt?: string;
 					WorldId: number;
 				};
@@ -57,13 +55,12 @@ export interface Database {
 					AveragePrice?: number;
 					CraftingCost?: number;
 					HqListingsCount?: number;
-					HqSaleCount?: number;
 					JobId?: number;
 					MinPriceHQ?: number;
 					MinPriceNQ?: number;
 					NqListingsCount?: number;
-					NqSaleCount?: number;
 					RecipeId?: number;
+					UnitsSold?: number;
 					UpdatedAt?: string;
 					WorldId?: number;
 				};
@@ -463,11 +460,11 @@ export interface Database {
 					CurrentAveragePriceHQ: number;
 					CurrentAveragePriceNQ: number;
 					HqListingsCount: number;
-					HqSaleCount: number;
 					HqSaleVelocity: number;
 					Id: number;
 					ItemId: number;
 					LastUploadDate: string;
+					ListingsCount: number;
 					MaxPrice: number;
 					MaxPriceHQ: number;
 					MaxPriceNQ: number;
@@ -475,10 +472,12 @@ export interface Database {
 					MinPriceHQ: number;
 					MinPriceNQ: number;
 					NqListingsCount: number;
-					NqSaleCount: number;
 					NqSaleVelocity: number;
 					QueryDate: string;
+					RecentHistoryCount: number;
 					RegularSaleVelocity: number;
+					UnitsForSale: number;
+					UnitsSold: number;
 					WorldId: number;
 				};
 				Insert: {
@@ -489,11 +488,11 @@ export interface Database {
 					CurrentAveragePriceHQ: number;
 					CurrentAveragePriceNQ: number;
 					HqListingsCount: number;
-					HqSaleCount: number;
 					HqSaleVelocity: number;
 					Id?: number;
 					ItemId: number;
 					LastUploadDate: string;
+					ListingsCount: number;
 					MaxPrice: number;
 					MaxPriceHQ: number;
 					MaxPriceNQ: number;
@@ -501,10 +500,12 @@ export interface Database {
 					MinPriceHQ: number;
 					MinPriceNQ: number;
 					NqListingsCount: number;
-					NqSaleCount: number;
 					NqSaleVelocity: number;
 					QueryDate: string;
+					RecentHistoryCount: number;
 					RegularSaleVelocity: number;
+					UnitsForSale: number;
+					UnitsSold: number;
 					WorldId: number;
 				};
 				Update: {
@@ -515,11 +516,11 @@ export interface Database {
 					CurrentAveragePriceHQ?: number;
 					CurrentAveragePriceNQ?: number;
 					HqListingsCount?: number;
-					HqSaleCount?: number;
 					HqSaleVelocity?: number;
 					Id?: number;
 					ItemId?: number;
 					LastUploadDate?: string;
+					ListingsCount?: number;
 					MaxPrice?: number;
 					MaxPriceHQ?: number;
 					MaxPriceNQ?: number;
@@ -527,10 +528,12 @@ export interface Database {
 					MinPriceHQ?: number;
 					MinPriceNQ?: number;
 					NqListingsCount?: number;
-					NqSaleCount?: number;
 					NqSaleVelocity?: number;
 					QueryDate?: string;
+					RecentHistoryCount?: number;
 					RegularSaleVelocity?: number;
+					UnitsForSale?: number;
+					UnitsSold?: number;
 					WorldId?: number;
 				};
 				Relationships: [

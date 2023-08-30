@@ -192,30 +192,31 @@ const handler = async (
 			result?.unresolvedItems?.forEach((itemId) => {
 				if (itemId > 0) {
 					let newEntry: UniversalisEntryInsert = {
-						AveragePrice: 0,
-						AveragePriceHQ: 0,
-						AveragePriceNQ: 0,
+						ItemId: itemId,
+						WorldId: worldResult.data.Id,
+						LastUploadDate: new Date().toISOString(),
+						QueryDate: new Date().toISOString(),
 						CurrentAveragePrice: 0,
 						CurrentAveragePriceHQ: 0,
 						CurrentAveragePriceNQ: 0,
-						HqListingsCount: 0,
+						RegularSaleVelocity: 0,
+						NqSaleVelocity: 0,
 						HqSaleVelocity: 0,
-						ItemId: itemId,
-						LastUploadDate: new Date().toISOString(),
-						MaxPrice: 0,
-						MaxPriceHQ: 0,
-						MaxPriceNQ: 0,
+						AveragePrice: 0,
+						AveragePriceHQ: 0,
+						AveragePriceNQ: 0,
 						MinPrice: 0,
 						MinPriceHQ: 0,
 						MinPriceNQ: 0,
+						MaxPrice: 0,
+						MaxPriceHQ: 0,
+						MaxPriceNQ: 0,
 						NqListingsCount: 0,
-						NqSaleVelocity: 0,
-						QueryDate: new Date().toISOString(),
-						RegularSaleVelocity: 0,
-						WorldId: worldResult.data.Id,
-
-						HqSaleCount: 0,
-						NqSaleCount: 0,
+						HqListingsCount: 0,
+						ListingsCount: 0,
+						RecentHistoryCount: 0,
+						UnitsForSale: 0,
+						UnitsSold: 0,
 					};
 
 					universalisInsert.push(newEntry);
@@ -225,23 +226,6 @@ const handler = async (
 
 			for (let k in result.items) {
 				let item: CurrentlyShownView = result.items[k];
-
-				let sold = 0,
-					soldHistoryNQ: number[] = [],
-					soldHistoryHQ: number[] = [];
-				item?.recentHistory?.forEach((entry) => {
-					if (
-						entry.timestamp >=
-						Math.floor(Date.now() / 1000) - 86400
-					) {
-						sold = sold + entry.quantity;
-						if (entry.hq) {
-							soldHistoryHQ.push(entry.pricePerUnit);
-						} else {
-							soldHistoryNQ.push(entry.pricePerUnit);
-						}
-					}
-				});
 
 				let listings = {
 					nq: 0,
@@ -253,30 +237,31 @@ const handler = async (
 				});
 
 				let newEntry: UniversalisEntryInsert = {
-					AveragePrice: item.averagePrice,
-					AveragePriceHQ: item.averagePriceHQ,
-					AveragePriceNQ: item.averagePriceNQ,
+					ItemId: item.itemID,
+					WorldId: worldResult.data.Id,
+					LastUploadDate: new Date(item.lastUploadTime).toISOString(),
+					QueryDate: new Date().toISOString(),
 					CurrentAveragePrice: item.currentAveragePrice,
 					CurrentAveragePriceHQ: item.currentAveragePriceHQ,
 					CurrentAveragePriceNQ: item.currentAveragePriceNQ,
-					HqListingsCount: listings.hq,
+					RegularSaleVelocity: item.regularSaleVelocity,
+					NqSaleVelocity: item.nqSaleVelocity,
 					HqSaleVelocity: item.hqSaleVelocity,
-					ItemId: item.itemID,
-					LastUploadDate: new Date(item.lastUploadTime).toISOString(),
-					MaxPrice: item.maxPrice,
-					MaxPriceHQ: item.maxPriceHQ,
-					MaxPriceNQ: item.maxPriceNQ,
+					AveragePrice: item.averagePrice,
+					AveragePriceHQ: item.averagePriceHQ,
+					AveragePriceNQ: item.averagePriceNQ,
 					MinPrice: item.minPrice,
 					MinPriceHQ: item.minPriceHQ,
 					MinPriceNQ: item.minPriceNQ,
+					MaxPrice: item.maxPrice,
+					MaxPriceHQ: item.maxPriceHQ,
+					MaxPriceNQ: item.maxPriceNQ,
 					NqListingsCount: listings.nq,
-					NqSaleVelocity: item.nqSaleVelocity,
-					QueryDate: new Date().toISOString(),
-					RegularSaleVelocity: item.regularSaleVelocity,
-					WorldId: worldResult.data.Id,
-
-					HqSaleCount: soldHistoryHQ.length,
-					NqSaleCount: soldHistoryNQ.length,
+					HqListingsCount: listings.hq,
+					ListingsCount: item.listingsCount,
+					RecentHistoryCount: item.recentHistoryCount,
+					UnitsForSale: item.unitsForSale,
+					UnitsSold: item.unitsSold,
 				};
 
 				universalisInsert.push(newEntry);
@@ -315,8 +300,7 @@ const handler = async (
 			AveragePrice: universalisEntry?.AveragePrice ?? 0,
 			NqListingsCount: universalisEntry?.NqListingsCount ?? 0,
 			HqListingsCount: universalisEntry?.HqListingsCount ?? 0,
-			NqSaleCount: universalisEntry?.NqSaleCount ?? 0,
-			HqSaleCount: universalisEntry?.HqSaleCount ?? 0,
+			UnitsSold: universalisEntry?.UnitsSold ?? 0,
 			UpdatedAt: new Date().toISOString(),
 		};
 
@@ -361,6 +345,8 @@ const handler = async (
 			return;
 		}
 	}
+
+	console.log("Done.");
 
 	res.status(200).json({ updated: universalisRefetch.length });
 };

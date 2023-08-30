@@ -76,6 +76,16 @@ interface CurrentlyShownView {
 	worldName?: string;
 	// The last upload times in milliseconds since epoch for each world in the response, if this is a DC request.
 	worldUploadTimes?: Object;
+	// The number of listings retrieved for the request. When using the "listings" limit parameter, this may be
+	// different from the number of sale entries returned in an API response.
+	listingsCount: number;
+	// The number of sale entries retrieved for the request. When using the "entries" limit parameter, this may be
+	// different from the number of sale entries returned in an API response.
+	recentHistoryCount: number;
+	// The number of items (not listings) up for sale.
+	unitsForSale: number;
+	// The number of items (not sale entries) sold over the retrieved sales.
+	unitsSold: number;
 }
 
 interface ListingView {
