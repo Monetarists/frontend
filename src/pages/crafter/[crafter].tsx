@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import ago from "s-ago";
+import { formatDistanceToNow } from "date-fns";
+import { de, fr, ja } from "date-fns/locale";
 import { t, Trans } from "@lingui/macro";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
@@ -77,6 +78,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const textColor = useColorModeValue("white", "gray.300");
 
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
+	const [dateLocale, setDateLocale] = useState({});
 	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
 	const [_localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
@@ -117,12 +119,15 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		switch (settings.monetarist_language) {
 			case "de":
 				setNewJobName(crafter.Name_de);
+				setDateLocale({ locale: de });
 				break;
 			case "fr":
 				setNewJobName(crafter.Name_fr);
+				setDateLocale({ locale: fr });
 				break;
 			case "ja":
 				setNewJobName(crafter.Name_ja);
+				setDateLocale({ locale: ja });
 				break;
 		}
 
@@ -135,6 +140,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		setLocalisedNameKey,
 		setLocalisedNameKeyUpper,
 		setRealm,
+		setDateLocale,
 		crafter,
 	]);
 
@@ -544,7 +550,10 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 							<Trans>Realm:</Trans> {realm} &bull;{" "}
 							<Trans>Last Updated:</Trans>{" "}
 							{craftingCosts && craftingCosts.length > 0 ? (
-								ago(new Date(craftingCosts[0].UpdatedAt))
+								formatDistanceToNow(
+									new Date(craftingCosts[0].UpdatedAt),
+									{ ...dateLocale, ...{ addSuffix: true } },
+								)
 							) : (
 								<Trans>Never</Trans>
 							)}
