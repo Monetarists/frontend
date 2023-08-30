@@ -49,8 +49,8 @@ const AppFooter = () => {
 				</Text>
 				<Text pt={6} fontSize={"sm"} textAlign={"center"}>
 					<Trans>
-						FINAL FANTASY XIV © 2010 - 2020 SQUARE ENIX CO., LTD.
-						All Rights Reserved.
+						FINAL FANTASY XIV © 2010 - {new Date().getFullYear()}{" "}
+						SQUARE ENIX CO., LTD. All Rights Reserved.
 					</Trans>
 				</Text>
 			</Box>
