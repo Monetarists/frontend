@@ -184,7 +184,8 @@ const handler = async (
 				"https://universalis.app/api/v2/" +
 					worldResult.data.Id +
 					"/" +
-					universalisRefetch.slice(i * 100, i * 100 + 100).join(","),
+					universalisRefetch.slice(i * 100, i * 100 + 100).join(",") +
+					"?entriesWithin=86400",
 			).then((res) => {
 				return res.json();
 			});
