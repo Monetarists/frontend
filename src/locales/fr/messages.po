@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: monetarist\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-08-31 00:08\n"
+"PO-Revision-Date: 2023-08-31 01:58\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -18,8 +18,16 @@ msgstr ""
 "X-Crowdin-File: /develop/src/locales/en/messages.po\n"
 "X-Crowdin-File-ID: 9\n"
 
+#: src/components/SettingsModal.tsx:127
+msgid "(Unknown)"
+msgstr ""
+
 #: src/pages/index.tsx:97
 msgid "A shrewd businessman makes use of all tools at their disposal."
+msgstr ""
+
+#: src/components/SettingsModal.tsx:71
+msgid "America"
 msgstr ""
 
 #: src/pages/crafter/[crafter].tsx:608
@@ -62,6 +70,10 @@ msgstr ""
 msgid "Discord"
 msgstr ""
 
+#: src/components/SettingsModal.tsx:69
+msgid "Europe"
+msgstr ""
+
 #: src/components/AppFooter.tsx:51
 msgid "FINAL FANTASY XIV © 2010 - {0} SQUARE ENIX CO., LTD. All Rights Reserved."
 msgstr ""
@@ -90,7 +102,11 @@ msgstr ""
 msgid "Items"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:141
+#: src/components/SettingsModal.tsx:70
+msgid "Japan"
+msgstr ""
+
+#: src/components/SettingsModal.tsx:156
 msgid "Language"
 msgstr ""
 
@@ -126,6 +142,10 @@ msgstr ""
 msgid "Never"
 msgstr ""
 
+#: src/components/SettingsModal.tsx:72
+msgid "Oceania"
+msgstr ""
+
 #: src/pages/404.tsx:9
 msgid "Page Not Found"
 msgstr ""
@@ -155,27 +175,27 @@ msgstr ""
 msgid "Recipe ID: {0}"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:203
+#: src/components/SettingsModal.tsx:218
 msgid "Save Settings"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:144
+#: src/components/SettingsModal.tsx:159
 msgid "Select language"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:96
+#: src/components/SettingsModal.tsx:106
 msgid "Select server"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:174
+#: src/components/SettingsModal.tsx:189
 msgid "Select timezone"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:93
+#: src/components/SettingsModal.tsx:103
 msgid "Server"
 msgstr ""
 
-#: src/components/SettingsModal.tsx:81
+#: src/components/SettingsModal.tsx:91
 msgid "Settings"
 msgstr ""
 
@@ -220,7 +240,7 @@ msgstr ""
 msgid "The total number of items recently sold, across both NQ and HQ."
 msgstr ""
 
-#: src/components/SettingsModal.tsx:171
+#: src/components/SettingsModal.tsx:186
 msgid "Timezone"
 msgstr ""
 
@@ -234,5 +254,13 @@ msgstr ""
 
 #: src/pages/index.tsx:44
 msgid "Welcome, <0>Monetarist</0>"
+msgstr ""
+
+#: src/components/SettingsModal.tsx:74
+msgid "한국"
+msgstr ""
+
+#: src/components/SettingsModal.tsx:73
+msgid "中国"
 msgstr ""
 
