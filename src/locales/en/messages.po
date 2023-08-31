@@ -13,9 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/SettingsModal.tsx:127
+msgid "(Unknown)"
+msgstr "(Unknown)"
+
 #: src/pages/index.tsx:97
 msgid "A shrewd businessman makes use of all tools at their disposal."
 msgstr "A shrewd businessman makes use of all tools at their disposal."
+
+#: src/components/SettingsModal.tsx:71
+msgid "America"
+msgstr "America"
 
 #: src/pages/crafter/[crafter].tsx:608
 msgid "Armour"
@@ -57,6 +65,10 @@ msgstr "Crafting profit column explanation"
 msgid "Discord"
 msgstr "Discord"
 
+#: src/components/SettingsModal.tsx:69
+msgid "Europe"
+msgstr "Europe"
+
 #: src/components/AppFooter.tsx:51
 msgid "FINAL FANTASY XIV © 2010 - {0} SQUARE ENIX CO., LTD. All Rights Reserved."
 msgstr "FINAL FANTASY XIV © 2010 - {0} SQUARE ENIX CO., LTD. All Rights Reserved."
@@ -85,7 +97,11 @@ msgstr "Internal Server Error"
 msgid "Items"
 msgstr "Items"
 
-#: src/components/SettingsModal.tsx:141
+#: src/components/SettingsModal.tsx:70
+msgid "Japan"
+msgstr "Japan"
+
+#: src/components/SettingsModal.tsx:156
 msgid "Language"
 msgstr "Language"
 
@@ -121,6 +137,10 @@ msgstr "Minimum listing price, using HQ price if the item can be HQ."
 msgid "Never"
 msgstr "Never"
 
+#: src/components/SettingsModal.tsx:72
+msgid "Oceania"
+msgstr "Oceania"
+
 #: src/pages/404.tsx:9
 msgid "Page Not Found"
 msgstr "Page Not Found"
@@ -150,27 +170,27 @@ msgstr "Recipe ID helper"
 msgid "Recipe ID: {0}"
 msgstr "Recipe ID: {0}"
 
-#: src/components/SettingsModal.tsx:203
+#: src/components/SettingsModal.tsx:218
 msgid "Save Settings"
 msgstr "Save Settings"
 
-#: src/components/SettingsModal.tsx:144
+#: src/components/SettingsModal.tsx:159
 msgid "Select language"
 msgstr "Select language"
 
-#: src/components/SettingsModal.tsx:96
+#: src/components/SettingsModal.tsx:106
 msgid "Select server"
 msgstr "Select server"
 
-#: src/components/SettingsModal.tsx:174
+#: src/components/SettingsModal.tsx:189
 msgid "Select timezone"
 msgstr "Select timezone"
 
-#: src/components/SettingsModal.tsx:93
+#: src/components/SettingsModal.tsx:103
 msgid "Server"
 msgstr "Server"
 
-#: src/components/SettingsModal.tsx:81
+#: src/components/SettingsModal.tsx:91
 msgid "Settings"
 msgstr "Settings"
 
@@ -215,7 +235,7 @@ msgstr "The page you're looking for does not seem to exist"
 msgid "The total number of items recently sold, across both NQ and HQ."
 msgstr "The total number of items recently sold, across both NQ and HQ."
 
-#: src/components/SettingsModal.tsx:171
+#: src/components/SettingsModal.tsx:186
 msgid "Timezone"
 msgstr "Timezone"
 
@@ -230,3 +250,11 @@ msgstr "Weapons"
 #: src/pages/index.tsx:44
 msgid "Welcome, <0>Monetarist</0>"
 msgstr "Welcome, <0>Monetarist</0>"
+
+#: src/components/SettingsModal.tsx:74
+msgid "한국"
+msgstr "한국"
+
+#: src/components/SettingsModal.tsx:73
+msgid "中国"
+msgstr "中国"
