@@ -25,9 +25,10 @@ import {
 	SettingsModalProps,
 	SettingsModalFormValues,
 } from "../@types/layout/SettingsModal";
-import { getDataCenters } from "../data";
 import timezones from "timezones-list";
 import { t, Trans } from "@lingui/macro";
+import useDataCenters from "../hooks/useDataCenters";
+import { getServerRegionNameMap } from "../util/DataCenters";
 
 const SettingsModal = ({
 	closeOnOverlayClick,
@@ -36,7 +37,7 @@ const SettingsModal = ({
 	onSave,
 }: SettingsModalProps) => {
 	const [settings, setSetting] = useSettings();
-	const dataCenters = getDataCenters();
+	const { data: dataCenters } = useDataCenters();
 
 	const {
 		handleSubmit,
@@ -55,7 +56,7 @@ const SettingsModal = ({
 		if (settings.monetarist_timezone) {
 			setValue("timezone", settings.monetarist_timezone);
 		}
-	}, [settings, setValue]);
+	}, [settings, setValue, dataCenters]);
 
 	const onSubmit: SubmitHandler<SettingsModalFormValues> = (data) => {
 		setSetting("monetarist_server", data.server);
@@ -63,6 +64,15 @@ const SettingsModal = ({
 		setSetting("monetarist_timezone", data.timezone);
 		onSave();
 	};
+
+	const regionNameMapping = getServerRegionNameMap({
+		europe: t`Europe`,
+		japan: t`Japan`,
+		america: t`America`,
+		oceania: t`Oceania`,
+		china: t`中国`,
+		korea: t`한국`,
+	});
 
 	const optionBackground = useColorModeValue("white", "gray.700");
 
@@ -107,19 +117,24 @@ const SettingsModal = ({
 												{(dataCenters || []).map(
 													(dataCenter) => (
 														<optgroup
-															key={`dc-${dataCenter.Name}`}
-															label={
-																dataCenter.Name
-															}
+															key={`dc-${dataCenter.name}`}
+															label={`${
+																dataCenter.name
+															} - ${
+																regionNameMapping.get(
+																	dataCenter.region,
+																) ??
+																t`(Unknown)`
+															}`}
 														>
-															{dataCenter.Servers.map(
-																(
-																	server: string,
-																) => (
+															{dataCenter.worlds.map(
+																(world) => (
 																	<option
-																		key={`server-${server}`}
+																		key={`world-${world.Id}`}
 																	>
-																		{server}
+																		{
+																			world.Name
+																		}
 																	</option>
 																),
 															)}

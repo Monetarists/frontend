@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { de, fr, ja } from "date-fns/locale";
 import { t, Trans } from "@lingui/macro";
@@ -8,15 +8,7 @@ import {
 	chakra,
 	Flex,
 	Heading,
-	HStack,
 	VStack,
-	Input,
-	NumberDecrementStepper,
-	NumberIncrementStepper,
-	NumberInput,
-	NumberInputField,
-	NumberInputProps,
-	NumberInputStepper,
 	Skeleton,
 	Table,
 	TableContainer,
@@ -27,17 +19,13 @@ import {
 	Thead,
 	Tooltip,
 	Tr,
-	InputProps,
 	useColorModeValue,
 	useToast,
-	Select,
-	SelectProps,
 	Link,
 	IconButton,
 } from "@chakra-ui/react";
 import { RepeatIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
-	Column,
 	ColumnFiltersState,
 	createColumnHelper,
 	flexRender,
@@ -67,6 +55,11 @@ import NextLink from "next/link";
 import { RecipeApiResponse } from "../../@types/RecipeApiResponse";
 import { customAxiosApi, globalConfig } from "../../lib/axios";
 import { CraftingCost } from "../../@types/game/CraftingCost";
+import {
+	FilterDropdown,
+	FilterNumber,
+	FilterText,
+} from "../../components/Filters";
 
 type Name = string | number | boolean;
 
@@ -80,13 +73,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [dateLocale, setDateLocale] = useState({});
 	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
-	const [_localisedNameKeyUpper, setLocalisedNameKeyUpper] =
+	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
 	const [craftingCosts, setCraftingCosts] = useState<
 		CraftingCost[] | undefined
 	>(undefined);
-	const [_iscGrouped, setIscGrouped] = useState<
+	const [iscGrouped, setIscGrouped] = useState<
 		Record<number, Array<ItemSearchCategory>>
 	>({});
 	const [data, setData] = useState<CraftingCost[]>(() => []);
@@ -287,6 +280,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 
 					return <Text>{searchCategoryName}</Text>;
 				},
+				filterFn: "equals",
 				footer: (info) => info.column.id,
 			},
 		),
@@ -481,6 +475,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		initialState: {
 			columnFilters: columnFilters,
 			columnVisibility: { recipeCategory: false },
+			pagination: pagination,
 		},
 		enableSortingRemoval: false,
 		onSortingChange: setSorting,
@@ -590,71 +585,70 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 							/>
 						</Box>
 
-						{/*<Box>*/}
-						{/*	<FilterDropdown*/}
-						{/*		label={t`Category`}*/}
-						{/*		column={table.getColumn("recipeCategory")}*/}
-						{/*		table={table}*/}
-						{/*	>*/}
-						{/*		<option></option>*/}
-						{/*		<optgroup label={t`Weapons`}>*/}
-						{/*			{(iscGrouped[1] || []).map((category) => (*/}
-						{/*				<option*/}
-						{/*					value={category.ID}*/}
-						{/*					key={`filter-category-${category.ID}`}*/}
-						{/*				>*/}
-						{/*					{*/}
-						{/*						category[*/}
-						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
-						{/*						]*/}
-						{/*					}*/}
-						{/*				</option>*/}
-						{/*			))}*/}
-						{/*		</optgroup>*/}
-						{/*		<optgroup label={t`Armour`}>*/}
-						{/*			{(iscGrouped[2] || []).map((category) => (*/}
-						{/*				<option*/}
-						{/*					value={category.ID}*/}
-						{/*					key={`filter-category-${category.ID}`}*/}
-						{/*				>*/}
-						{/*					{*/}
-						{/*						category[*/}
-						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
-						{/*						]*/}
-						{/*					}*/}
-						{/*				</option>*/}
-						{/*			))}*/}
-						{/*		</optgroup>*/}
-						{/*		<optgroup label={t`Items`}>*/}
-						{/*			{(iscGrouped[3] || []).map((category) => (*/}
-						{/*				<option*/}
-						{/*					value={category.ID}*/}
-						{/*					key={`filter-category-${category.ID}`}*/}
-						{/*				>*/}
-						{/*					{*/}
-						{/*						category[*/}
-						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
-						{/*						]*/}
-						{/*					}*/}
-						{/*				</option>*/}
-						{/*			))}*/}
-						{/*		</optgroup>*/}
-						{/*		<optgroup label={t`Housing`}>*/}
-						{/*			{(iscGrouped[4] || []).map((category) => (*/}
-						{/*				<option*/}
-						{/*					value={category.ID}*/}
-						{/*					key={`filter-category-${category.ID}`}*/}
-						{/*				>*/}
-						{/*					{*/}
-						{/*						category[*/}
-						{/*							localisedNameKeyUpper as keyof ItemSearchCategory*/}
-						{/*						]*/}
-						{/*					}*/}
-						{/*				</option>*/}
-						{/*			))}*/}
-						{/*		</optgroup>*/}
-						{/*	</FilterDropdown>*/}
-						{/*</Box>*/}
+						<Box>
+							<FilterDropdown
+								label={t`Category`}
+								column={table.getColumn("recipeCategory")}
+							>
+								<option></option>
+								<optgroup label={t`Weapons`}>
+									{(iscGrouped[1] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
+								</optgroup>
+								<optgroup label={t`Armour`}>
+									{(iscGrouped[2] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
+								</optgroup>
+								<optgroup label={t`Items`}>
+									{(iscGrouped[3] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
+								</optgroup>
+								<optgroup label={t`Housing`}>
+									{(iscGrouped[4] || []).map((category) => (
+										<option
+											value={category.ID}
+											key={`filter-category-${category.ID}`}
+										>
+											{
+												category[
+													localisedNameKeyUpper as keyof ItemSearchCategory
+												]
+											}
+										</option>
+									))}
+								</optgroup>
+							</FilterDropdown>
+						</Box>
 
 						<Box>
 							<FilterText
@@ -746,247 +740,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		</>
 	);
 };
-
-const FilterNumber = ({
-	label,
-	column,
-	initialMinFilterValue,
-	initialMaxFilterValue,
-}: {
-	label: string | React.ReactElement;
-	column: Column<any> | undefined;
-	initialMinFilterValue?: string | number;
-	initialMaxFilterValue?: string | number;
-}) => {
-	if (column === undefined) {
-		return <></>;
-	}
-
-	const columnFilterValue = column.getFilterValue() as [number, number];
-
-	return (
-		<HStack>
-			<Box minW={"80px"}>{label}:</Box>
-			<DebouncedNumberInput
-				value={columnFilterValue?.[0] ?? initialMinFilterValue ?? ""}
-				onValueChange={(value) => {
-					if (value !== columnFilterValue?.[0]) {
-						column.setFilterValue((old: [number, number]) => [
-							value,
-							old?.[1],
-						]);
-					}
-				}}
-			/>
-			<Box> - </Box>
-			<DebouncedNumberInput
-				value={columnFilterValue?.[1] ?? initialMaxFilterValue ?? ""}
-				onValueChange={(value) => {
-					if (value !== columnFilterValue?.[1]) {
-						column.setFilterValue((old: [number, number]) => [
-							old?.[0],
-							value,
-						]);
-					}
-				}}
-			/>
-		</HStack>
-	);
-};
-FilterNumber.whyDidYouRender = true;
-
-const FilterText = ({
-	label,
-	column,
-	initialFilterValue,
-}: {
-	label: string;
-	column: Column<any> | undefined;
-	initialFilterValue?: string;
-}) => {
-	if (column === undefined) {
-		return <></>;
-	}
-
-	const columnFilterValue = (column.getFilterValue() ??
-		initialFilterValue ??
-		"") as string;
-
-	return (
-		<HStack>
-			<Box minW={"80px"}>{label}:</Box>
-			<DebouncedInput
-				type="text"
-				value={columnFilterValue}
-				onChange={(value) => {
-					if (columnFilterValue !== value) {
-						column.setFilterValue(value);
-					}
-				}}
-				placeholder={`Search...`}
-				list={column.id + "list"}
-			/>
-			<Box width={"100%"}>&nbsp;</Box>
-		</HStack>
-	);
-};
-FilterText.whyDidYouRender = true;
-
-const FilterDropdown = ({
-	label,
-	column,
-	initialFilterValue,
-	children,
-}: {
-	label: string;
-	column: Column<any> | undefined;
-	initialFilterValue?: string;
-	children: ReactNode[];
-}) => {
-	if (column === undefined) {
-		return <></>;
-	}
-
-	const columnFilterValue = (column.getFilterValue() ??
-		initialFilterValue ??
-		"") as string;
-
-	return (
-		<HStack>
-			<Box minW={"80px"}>{label}:</Box>
-			<DebouncedSelect
-				value={columnFilterValue}
-				onChange={(value) => {
-					if (columnFilterValue !== value) {
-						column.setFilterValue(value);
-					}
-				}}
-			>
-				{children}
-			</DebouncedSelect>
-			<Box width={"100%"}>&nbsp;</Box>
-		</HStack>
-	);
-};
-FilterDropdown.whyDidYouRender = true;
-
-// A debounced number input react component
-const DebouncedNumberInput = ({
-	value: initialValue,
-	onValueChange,
-	debounce = 500,
-	...props
-}: {
-	value: string | number;
-	onValueChange: (value: string | number) => void;
-	debounce?: number;
-} & Omit<NumberInputProps, "onChange">) => {
-	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		const timeout = setTimeout(() => {
-			onValueChange(value);
-		}, debounce);
-
-		return () => clearTimeout(timeout);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, debounce]);
-
-	return (
-		<NumberInput
-			{...props}
-			value={value}
-			step={1}
-			type="numeric"
-			onChange={(valueAsString: string, _valueAsNumber: number) => {
-				setValue(valueAsString);
-			}}
-		>
-			<NumberInputField />
-			<NumberInputStepper>
-				<NumberIncrementStepper />
-				<NumberDecrementStepper />
-			</NumberInputStepper>
-		</NumberInput>
-	);
-};
-DebouncedNumberInput.whyDidYouRender = true;
-
-// A debounced input react component
-const DebouncedInput = ({
-	value: initialValue,
-	onChange,
-	debounce = 500,
-	...props
-}: {
-	value: string | number;
-	onChange: (value: string | number) => void;
-	debounce?: number;
-} & Omit<InputProps, "onChange">) => {
-	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		const timeout = setTimeout(() => {
-			onChange(value);
-		}, debounce);
-
-		return () => clearTimeout(timeout);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, debounce]);
-
-	return (
-		<Input
-			{...props}
-			value={value}
-			onChange={(e) => setValue(e.target.value)}
-		/>
-	);
-};
-DebouncedInput.whyDidYouRender = true;
-
-// A debounced select react component
-const DebouncedSelect = ({
-	value: initialValue,
-	onChange,
-	debounce = 500,
-	children,
-	...props
-}: {
-	value: string | number;
-	onChange: (value: string | number) => void;
-	debounce?: number;
-	children: ReactNode[];
-} & Omit<SelectProps, "onChange">) => {
-	const [value, setValue] = React.useState(initialValue);
-
-	React.useEffect(() => {
-		const timeout = setTimeout(() => {
-			onChange(value);
-		}, debounce);
-
-		return () => clearTimeout(timeout);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value, debounce]);
-
-	const optionBackground = useColorModeValue("white", "gray.700");
-
-	return (
-		<Select
-			{...props}
-			sx={{
-				"> optgroup > option": {
-					bg: optionBackground,
-				},
-			}}
-			value={value}
-			onChange={(e) => setValue(e.target.value)}
-		>
-			{children}
-		</Select>
-	);
-};
-
-DebouncedSelect.whyDidYouRender = true;
 
 export const getServerSideProps: GetServerSideProps = async (
 	context: GetServerSidePropsContext,
