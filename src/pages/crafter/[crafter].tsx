@@ -76,9 +76,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const [localisedNameKeyUpper, setLocalisedNameKeyUpper] =
 		useState("Name_en");
 	const [realm, setRealm] = useState("");
-	const [craftingCosts, setCraftingCosts] = useState<
-		CraftingCost[] | undefined
-	>(undefined);
 	const [iscGrouped, setIscGrouped] = useState<
 		Record<number, Array<ItemSearchCategory>>
 	>({});
@@ -161,7 +158,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 				)
 				.then((res: AxiosResponse<RecipeApiResponse>) => {
 					if (res.data.craftingCosts) {
-						setCraftingCosts(res.data.craftingCosts);
 						setData(res.data.craftingCosts);
 					}
 				})
@@ -175,7 +171,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					});
 				});
 		}
-	}, [realm, crafter, setCraftingCosts, setData, toast, csrfToken]);
+	}, [realm, crafter, setData, toast, csrfToken]);
 
 	const columnHelper = createColumnHelper<CraftingCost>();
 
@@ -536,7 +532,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					>
 						{jobName}
 					</Heading>
-					<Skeleton isLoaded={!!craftingCosts}>
+					<Skeleton isLoaded={!!data}>
 						<Text
 							color={useColorModeValue("gray.900", "gray.400")}
 							fontWeight={300}
@@ -544,9 +540,9 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						>
 							<Trans>Realm:</Trans> {realm} &bull;{" "}
 							<Trans>Last Updated:</Trans>{" "}
-							{craftingCosts && craftingCosts.length > 0 ? (
+							{data && data.length > 0 ? (
 								formatDistanceToNow(
-									new Date(craftingCosts[0].UpdatedAt),
+									new Date(data[0].UpdatedAt),
 									{ ...dateLocale, ...{ addSuffix: true } },
 								)
 							) : (
@@ -567,7 +563,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					</Skeleton>
 				</Box>
 
-				<Skeleton isLoaded={!!craftingCosts}>
+				<Skeleton isLoaded={!!data}>
 					<VStack spacing={4} align="stretch">
 						<Box>
 							<FilterNumber
