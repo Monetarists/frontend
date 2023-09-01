@@ -21,10 +21,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
     "@chakra-ui/modal": "^2.3.0",
-    "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.0",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@lingui/core": "^4.4.0",
     "@lingui/macro": "^4.4.0",
     "@lingui/react": "^4.4.0",
@@ -38,7 +35,6 @@
     "cross-env": "^7.0.3",
     "date-fns": "^2.30.0",
     "edge-csrf": "^1.0.4",
-    "framer-motion": "^10.16.1",
     "iron-session": "^6.3.1",
     "next": "^13.4.19",
     "react": "^18.2.0",
