@@ -1,0 +1,2 @@
+depcheck:
+  ignoreMatches: ["@lingui/cli","@lingui/swc-plugin","ts-jest","@chakra-ui/next-js","@thewakingsands/axis-font-icons","@types/jest","@types/react-dom"]
