@@ -560,7 +560,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					>
 						{jobName}
 					</Heading>
-					<Skeleton isLoaded={!!data}>
+					<Skeleton isLoaded={!!data && data.length > 0}>
 						<Text
 							color={useColorModeValue("gray.900", "gray.400")}
 							fontWeight={300}
@@ -591,7 +591,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					</Skeleton>
 				</Box>
 
-				<Skeleton isLoaded={!!data}>
+				<Skeleton isLoaded={!!data && data.length > 0}>
 					<VStack spacing={4} align="stretch">
 						<Box>
 							<FilterNumber
