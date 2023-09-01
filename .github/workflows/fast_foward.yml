@@ -55,9 +55,9 @@ jobs:
             git pull origin $BASE_BRANCH
             git rebase $HEAD_BRANCH
             git push origin $BASE_BRANCH
-            echo "::set-output name=message::'PR merged in succesfully.'"
+            echo "{message}='PR merged in succesfully.'" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=message::'PR cannot be merged in.'"
+            echo "{message}='PR cannot be merged in.'" >> $GITHUB_OUTPUT
           fi
 
       # Post a success/failure comment to the PR.
