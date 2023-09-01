@@ -63,8 +63,10 @@ const RefreshModal = ({
 						<Trans>Refreshing data...</Trans>
 					</ModalHeader>
 					<ModalBody>
-						Your realm {realm} has no marketboard data for {crafter}
-						. Please wait while we refresh the data.
+						<Trans>
+							Your realm {realm} has no marketboard data for{" "}
+							{crafter}. Please wait while we refresh the data.
+						</Trans>
 					</ModalBody>
 					<ModalFooter />
 				</ModalContent>
