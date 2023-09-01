@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { de, fr, ja } from "date-fns/locale";
 import { t, Trans } from "@lingui/macro";
@@ -23,6 +23,7 @@ import {
 	useToast,
 	Link,
 	IconButton,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { RepeatIcon, TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import {
@@ -60,16 +61,24 @@ import {
 	FilterNumber,
 	FilterText,
 } from "../../components/Filters";
+import RefreshModal from "../../components/RefreshModal";
+import { CrafterContext } from "../../contexts/CrafterContext";
 
 type Name = string | number | boolean;
 
 const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
-	const [isUpdatingData, setIsUpdatingData] = useState(false);
+
+	const {
+		isOpen: isOpenRefreshModal,
+		onOpen: onOpenRefreshModal,
+		onClose: onCloseRefreshModal,
+	} = useDisclosure();
 
 	const textColor = useColorModeValue("white", "gray.300");
 
+	const [isUpdatingData, setIsUpdatingData] = useState(false);
 	const [jobName, setNewJobName] = useState(crafter.Name_en);
 	const [dateLocale, setDateLocale] = useState({});
 	const [localisedNameKey, setLocalisedNameKey] = useState("Name_en");
@@ -160,6 +169,10 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					if (res.data.craftingCosts) {
 						setData(res.data.craftingCosts);
 					}
+
+					if (!res.data.craftingCosts?.length) {
+						onOpenRefreshModal();
+					}
 				})
 				.catch((err) => {
 					toast({
@@ -171,7 +184,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					});
 				});
 		}
-	}, [realm, crafter, setData, toast, csrfToken]);
+	}, [realm, crafter, setData, toast, csrfToken, onOpenRefreshModal]);
 
 	const columnHelper = createColumnHelper<CraftingCost>();
 
@@ -514,8 +527,16 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		}
 	}, [toast, crafter, realm, csrfToken]);
 
+	const crafterContext = useMemo(() => {
+		return {
+			crafter: crafter.Abbreviation,
+			realm: realm,
+			csrfToken: csrfToken,
+		};
+	}, [crafter, realm, csrfToken]);
+
 	return (
-		<>
+		<CrafterContext.Provider value={crafterContext}>
 			<SEO
 				url={`https://${url}/crafter/${crafter.Abbreviation}`}
 				openGraphType="website"
@@ -524,6 +545,13 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 			/>
 
 			<DefaultLayout>
+				{isOpenRefreshModal && (
+					<RefreshModal
+						closeOnOverlayClick={false}
+						isOpen={isOpenRefreshModal}
+						onClose={onCloseRefreshModal}
+					/>
+				)}
 				<Box as={"header"}>
 					<Heading
 						lineHeight={1.1}
@@ -733,7 +761,7 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 					</TableContainer>
 				</Skeleton>
 			</DefaultLayout>
-		</>
+		</CrafterContext.Provider>
 	);
 };
 
@@ -751,7 +779,7 @@ export const getServerSideProps: GetServerSideProps = async (
 		};
 	}
 
-	const csrfToken = context.res.req.headers["x-csrf-token"] as string;
+	const csrfToken = context.req.headers["x-csrf-token"] as string;
 
 	return {
 		props: {
