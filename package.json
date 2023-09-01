@@ -10,7 +10,7 @@
     "analyze": "cross-env ANALYZE=true next build",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
-    "locale:extract": "lingui extract",
+    "locale:extract": "lingui extract --clean --locale=en",
     "locale:compile": "lingui compile",
     "test": "jest",
     "update-game-data": "dotenv -e .env.development.local -- ts-node update-game-data.ts",

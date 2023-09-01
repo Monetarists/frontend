@@ -73,10 +73,6 @@ msgstr "Europe"
 msgid "FINAL FANTASY XIV © 2010 - {0} SQUARE ENIX CO., LTD. All Rights Reserved."
 msgstr "FINAL FANTASY XIV © 2010 - {0} SQUARE ENIX CO., LTD. All Rights Reserved."
 
-#: src/components/AppFooter.tsx:51
-#~ msgid "FINAL FANTASY XIV © 2010 - 2020 SQUARE ENIX CO., LTD. All Rights Reserved."
-#~ msgstr "FINAL FANTASY XIV © 2010 - 2020 SQUARE ENIX CO., LTD. All Rights Reserved."
-
 #: src/components/AppFooter.tsx:39
 msgid "GitHub"
 msgstr "GitHub"
