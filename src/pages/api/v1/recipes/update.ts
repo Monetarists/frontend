@@ -75,7 +75,7 @@ function getItemObjectFromIngredient(
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== "POST") {
 		res.setHeader("Allow", "POST").status(405).json({
-			message: "This API route is available via POST only.",
+			message: "Updating recipe data is available via POST only.",
 		});
 		return;
 	}

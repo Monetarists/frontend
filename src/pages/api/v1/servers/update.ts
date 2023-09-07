@@ -17,7 +17,7 @@ export const config = {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (req.method !== "POST") {
 		res.setHeader("Allow", "POST").status(405).json({
-			message: "This API route is available via POST only.",
+			message: "Updating server data is available via POST only.",
 		});
 		return;
 	}
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 		return;
 	}
 
-	if (req.headers["x-api-key"] !== process.env.API_KEY) {
+	if (process.env.API_KEY !== req.headers["x-api-key"]) {
 		res.status(403).json({
 			message: "Invalid API key supplied.",
 		});
