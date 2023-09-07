@@ -305,8 +305,6 @@ const handler = async (
 			UpdatedAt: new Date().toISOString(),
 		};
 
-		// let craftingCost = 0;
-
 		const recipeIngredients = ingredients.filter(
 			(ingredient) => ingredient.recipeid === recipe.Id,
 		);

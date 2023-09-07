@@ -29,7 +29,7 @@ customAxiosApi.interceptors.response.use(
 	async (error) => {
 		const { config } = error;
 
-		if (!config || !config.retry || !isRetryableError(error)) {
+		if (!config?.retry || !isRetryableError(error)) {
 			return Promise.reject(error);
 		}
 		config.retry -= 1;
