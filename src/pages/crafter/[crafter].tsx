@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { de, fr, ja } from "date-fns/locale";
 import { t, Trans } from "@lingui/macro";
+import { getCookie } from "cookies-next";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
 	Box,
@@ -63,10 +64,20 @@ import {
 } from "../../components/Filters";
 import RefreshModal from "../../components/RefreshModal";
 import { CrafterContext } from "../../contexts/CrafterContext";
+import { setStoredFiltersServer } from "../../lib/filters";
+import { FilterEntry } from "../../@types/Filters";
+import { setStoredSortingServer } from "../../lib/sorting";
+import { SortingEntry } from "../../@types/Sorting";
 
 type Name = string | number | boolean;
 
-const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
+const Crafter = ({
+	crafter,
+	url,
+	csrfToken,
+	savedFilters,
+	savedSorting,
+}: CrafterProps) => {
 	const toast = useToast();
 	const [settings] = useSettings();
 
@@ -89,26 +100,9 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 		Record<number, Array<ItemSearchCategory>>
 	>({});
 	const [data, setData] = useState<CraftingCost[]>(() => []);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-		{
-			id: "craftingProfit",
-			value: [1, ""],
-		},
-		{
-			id: "sold",
-			value: [1, ""],
-		},
-	]);
-	const [sorting, setSorting] = useState<SortingState>([
-		{
-			id: "sold",
-			desc: true,
-		},
-		{
-			id: "craftingProfit",
-			desc: true,
-		},
-	]);
+	const [columnFilters, setColumnFilters] =
+		useState<ColumnFiltersState>(savedFilters);
+	const [sorting, setSorting] = useState<SortingState>(savedSorting);
 	const [pagination] = useState<PaginationState>({
 		pageSize: 10,
 		pageIndex: 1,
@@ -596,7 +590,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						<Box>
 							<FilterNumber
 								label={t`Profit`}
-								initialMinFilterValue={1}
 								column={table.getColumn("craftingProfit")}
 							/>
 						</Box>
@@ -604,7 +597,6 @@ const Crafter = ({ crafter, url, csrfToken }: CrafterProps) => {
 						<Box>
 							<FilterNumber
 								label={t`Sold`}
-								initialMinFilterValue={1}
 								column={table.getColumn("sold")}
 							/>
 						</Box>
@@ -781,12 +773,50 @@ export const getServerSideProps: GetServerSideProps = async (
 
 	const csrfToken = context.req.headers["x-csrf-token"] as string;
 
+	const filtersFromCookie = getCookie("monetarist_filters", context);
+	let savedFilters: Array<FilterEntry>;
+	if (!filtersFromCookie) {
+		savedFilters = [
+			{
+				id: "craftingProfit",
+				value: [1, ""],
+			},
+			{
+				id: "sold",
+				value: [1, ""],
+			},
+		];
+		setStoredFiltersServer(savedFilters, context.req, context.res);
+	} else {
+		savedFilters = JSON.parse(filtersFromCookie);
+	}
+
+	const sortingFromCookie = getCookie("monetarist_sorting", context);
+	let savedSorting: Array<SortingEntry>;
+	if (!sortingFromCookie) {
+		savedSorting = [
+			{
+				id: "sold",
+				desc: true,
+			},
+			{
+				id: "craftingProfit",
+				desc: true,
+			},
+		];
+		setStoredSortingServer(savedSorting, context.req, context.res);
+	} else {
+		savedSorting = JSON.parse(sortingFromCookie);
+	}
+
 	return {
 		props: {
 			url: context?.req?.headers?.host,
 			classJobs: getClassJobs(),
 			crafter: crafter,
 			csrfToken,
+			savedFilters: savedFilters,
+			savedSorting: savedSorting,
 		},
 	};
 };

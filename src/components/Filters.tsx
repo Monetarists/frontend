@@ -15,17 +15,14 @@ import {
 	SelectProps,
 	useColorModeValue,
 } from "@chakra-ui/react";
+import { updateFilterValue } from "../lib/filters";
 
 const FilterNumber = ({
 	label,
 	column,
-	initialMinFilterValue,
-	initialMaxFilterValue,
 }: {
 	label: string | React.ReactElement;
 	column: Column<any> | undefined;
-	initialMinFilterValue?: string | number;
-	initialMaxFilterValue?: string | number;
 }) => {
 	if (column === undefined) {
 		return <></>;
@@ -37,25 +34,52 @@ const FilterNumber = ({
 		<HStack>
 			<Box minW={"80px"}>{label}:</Box>
 			<DebouncedNumberInput
-				value={columnFilterValue?.[0] ?? initialMinFilterValue ?? ""}
+				value={columnFilterValue?.[0]}
 				onValueChange={(value) => {
 					if (value !== columnFilterValue?.[0]) {
 						column.setFilterValue((old: [number, number]) => [
 							value,
 							old?.[1],
 						]);
+
+						const newValue = [
+							value ?? "",
+							columnFilterValue?.[1] ?? "",
+						];
+						console.log(newValue);
+
+						updateFilterValue({
+							id: column.id,
+							value:
+								newValue[0] !== "" || newValue[1] !== ""
+									? newValue
+									: null,
+						});
 					}
 				}}
 			/>
 			<Box> - </Box>
 			<DebouncedNumberInput
-				value={columnFilterValue?.[1] ?? initialMaxFilterValue ?? ""}
+				value={columnFilterValue?.[1]}
 				onValueChange={(value) => {
 					if (value !== columnFilterValue?.[1]) {
 						column.setFilterValue((old: [number, number]) => [
 							old?.[0],
 							value,
 						]);
+
+						const newValue = [
+							columnFilterValue?.[0] ?? "",
+							value ?? "",
+						];
+
+						updateFilterValue({
+							id: column.id,
+							value:
+								newValue[0] !== "" || newValue[1] !== ""
+									? newValue
+									: null,
+						});
 					}
 				}}
 			/>
@@ -67,19 +91,15 @@ FilterNumber.whyDidYouRender = true;
 const FilterText = ({
 	label,
 	column,
-	initialFilterValue,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	initialFilterValue?: string;
 }) => {
 	if (column === undefined) {
 		return <></>;
 	}
 
-	const columnFilterValue = (column.getFilterValue() ??
-		initialFilterValue ??
-		"") as string;
+	const columnFilterValue = (column.getFilterValue() ?? "") as string;
 
 	return (
 		<HStack>
@@ -90,6 +110,11 @@ const FilterText = ({
 				onChange={(value) => {
 					if (columnFilterValue !== value) {
 						column.setFilterValue(value);
+
+						updateFilterValue({
+							id: column.id,
+							value: value !== "" ? value : null,
+						});
 					}
 				}}
 				placeholder={`Search...`}
@@ -104,21 +129,17 @@ FilterText.whyDidYouRender = true;
 const FilterDropdown = ({
 	label,
 	column,
-	initialFilterValue,
 	children,
 }: {
 	label: string;
 	column: Column<any> | undefined;
-	initialFilterValue?: string;
 	children: ReactNode[];
 }) => {
 	if (column === undefined) {
 		return <></>;
 	}
 
-	const columnFilterValue = (column.getFilterValue() ??
-		initialFilterValue ??
-		"") as string;
+	const columnFilterValue = (column.getFilterValue() ?? "") as string;
 
 	return (
 		<HStack>
@@ -128,6 +149,11 @@ const FilterDropdown = ({
 				onChange={(value) => {
 					if (columnFilterValue !== value) {
 						column.setFilterValue(value);
+
+						updateFilterValue({
+							id: column.id,
+							value: value !== "" ? value : null,
+						});
 					}
 				}}
 			>
