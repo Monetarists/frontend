@@ -114,7 +114,7 @@ const SettingsModal = ({
 													},
 												}}
 											>
-												{(dataCenters || []).map(
+												{(dataCenters ?? []).map(
 													(dataCenter) => (
 														<optgroup
 															key={`dc-${dataCenter.name}`}
