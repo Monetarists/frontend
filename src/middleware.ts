@@ -4,6 +4,11 @@ import type { NextRequest } from "next/server";
 
 // initalize protection function
 const csrfProtect = csrf({
+	excludePathPrefixes: [
+		"/_next/",
+		"/api/v1/recipes/update",
+		"/api/v1/servers/update",
+	],
 	cookie: {
 		secure: process.env.NODE_ENV === "production",
 	},

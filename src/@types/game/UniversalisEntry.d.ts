@@ -2,7 +2,7 @@ import { World } from "./World";
 import { Database } from "../database";
 import { ClassJob } from "./ClassJob";
 
-interface UniversalisPost {
+export interface UniversalisPost {
 	RetainerName: string;
 	Price: number;
 	Amount: number;
@@ -11,11 +11,22 @@ interface UniversalisPost {
 	LastReviewDate: Date;
 }
 
-interface UniversalisHistory {
+export interface UniversalisHistory {
 	HighQuality: boolean;
 	SaleDate: Date;
 	BuyerName: string;
 	Total: number;
+}
+
+export interface UniversalisDataCenter {
+	name: string;
+	region: string;
+	worlds: number[];
+}
+
+export interface UniversalisWorld {
+	id: number;
+	name: string;
 }
 
 export type UniversalisEntry =
